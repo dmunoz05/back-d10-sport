@@ -17,7 +17,12 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use('/api/', routes());
+app.use('/d10/server/v1', routes());
+
+
+app.get('/', (req, res) => {
+    res.json('Working');
+})
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

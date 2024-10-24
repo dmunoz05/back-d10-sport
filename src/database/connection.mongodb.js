@@ -15,7 +15,8 @@ const connectionMongoDB = async () => {
 
 const getConnection = async () => {
   try {
-    await connectionMongoDB();
+    const con = await connectionMongoDB();
+    if (!con) return false;
     return true;
   } catch (error) {
     return false;

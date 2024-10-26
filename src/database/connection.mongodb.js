@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 
+// Connects to the MongoDB database using ODM
 const connectionMongoDB = async () => {
   try {
     const url = process.env.URL_DB || '';
@@ -13,6 +14,7 @@ const connectionMongoDB = async () => {
   }
 }
 
+// Obtener respuesta de la conexion
 const getConnection = async () => {
   try {
     const con = await connectionMongoDB();

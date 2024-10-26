@@ -1,0 +1,16 @@
+name: Check Pull Request Branch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if pull request is from 'laboratory'
+        if: github.base_ref == 'main' && github.head_ref != 'laboratory'
+        run: |
+          echo "Pull requests to main must originate from the 'laboratory' branch."
+          exit 1

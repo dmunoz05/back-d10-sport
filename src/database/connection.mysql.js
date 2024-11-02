@@ -1,21 +1,6 @@
-import mysql2 from 'mysql2';
+import connectionMysql from "../config/database.js";
 
-// Connects to the Mysql database
-const connectionMysql = async () => {
-  try {
-    const connection = mysql2.createConnection({
-      host: process.env.MYSQL_HOST || '',
-      user: process.env.MYSQL_USER || '',
-      password: process.env.MYSQL_PASSWORD || '',
-      database: process.env.MYSQL_DATABASE || ''
-    });
-    return connection;
-  } catch (error) {
-    console.error("Error connecting to MySQL:", error);
-  }
-}
-
-// Obtener respuesta de la conexion
+// Obtener respuesta de la conexion a la base de datos
 const getConnection = async () => {
   try {
     const pool = await connectionMysql();

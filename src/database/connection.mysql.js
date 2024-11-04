@@ -4,7 +4,7 @@ import connectionMysql from "../config/database.js";
 const getConnection = async () => {
   try {
     const pool = await connectionMysql();
-    const ping = await pool.promise().query('SELECT 1');
+    const ping = await pool.ping();
     if (!ping) {
       return false;
     }

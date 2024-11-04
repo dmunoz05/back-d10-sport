@@ -8,6 +8,8 @@ on:
 jobs:
   check-branch:
     runs-on: ubuntu-latest
+    if: github.repository == 'dmunoz05/back-d10-sport'
+
     steps:
       - name: Check if pull request is from 'laboratory'
         if: github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref != 'laboratory'

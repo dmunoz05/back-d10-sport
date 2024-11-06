@@ -1,20 +1,11 @@
 import getConnection from "../database/connection.mysql.js";
 
-
-export const getConnect = async (req, res) => {
+export const getUsers = async (req, res) => {
         const conn = await getConnection();
-        if (!conn) return res.json({
+        const select = await conn.query('SELECT * FROM users');
+        if (!select) return res.json({
                 status: 500,
                 message: 'Error connecting'
         });
-        const select = await conn.query('SELECT 1');
-        return res.json({
-                status: 200,
-                message: 'Conected',
-                query: select[0]
-        });
-}
-
-export const getUsers = async (req, res) => {
-        return res.json('Users');
+        return res.json(select[0]);
 }

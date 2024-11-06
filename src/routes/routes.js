@@ -1,9 +1,11 @@
 import express from 'express';
-import { getUsers, getConnect } from '../controllers/users.controller.js';
+import { ConexionVerify } from '../middlewares/connection.js';
+import { getUsers } from '../controllers/users.controller.js';
+import { getConnect } from '../controllers/conection.controller.js';
 const router = express();
 
 export const routes = () => {
-    router.get('/user/', getUsers);
-    router.get('/conect/', getConnect);
+    router.get('/user/users', ConexionVerify, getUsers);
+    router.get('/conect/', ConexionVerify, getConnect);
     return router;
 }

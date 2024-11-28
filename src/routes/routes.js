@@ -6,7 +6,14 @@ import { getDataServices, saveDataServices } from '../controllers/landing/servic
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getAdminPage, validLoginAdmin } from '../controllers/landing/admin.controller.js';
-import { getConnect } from '../database/conection.controller.js';
+
+import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
+import { getAthletes } from '../controllers/academy/athletes.controller.js';
+import { getClub } from '../controllers/academy/club.controller.js';
+import { getCoach } from '../controllers/academy/coach.controller.js';
+import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
+
+import { getConnect } from '../controllers/conection.controller.js';
 const router = express();
 
 export const routes = () => {
@@ -22,6 +29,13 @@ export const routes = () => {
     router.get('/landing/g/home', ConexionVerify, getDataHome);
     router.post('/landing/admin/login', ConexionVerify, validLoginAdmin);
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
+
+    router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);
+    router.get('/academy/g/athletes', ConexionVerify, getAthletes);
+    router.get('/academy/g/club', ConexionVerify, getClub);
+    router.get('/academy/g/coach', ConexionVerify, getCoach);
+    router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
+
     router.get('/conect/', ConexionVerify, getConnect);
     return router;
 }

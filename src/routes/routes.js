@@ -6,7 +6,7 @@ import { getDataServices, saveDataServices } from '../controllers/landing/servic
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getAdminPage, validLoginAdmin } from '../controllers/landing/admin.controller.js';
-import { getConnect } from '../controllers/conection.controller.js';
+import { getConnect } from '../database/conection.controller.js';
 const router = express();
 
 export const routes = () => {

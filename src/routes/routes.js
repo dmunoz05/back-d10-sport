@@ -13,7 +13,8 @@ import { getClub } from '../controllers/academy/club.controller.js';
 import { getCoach } from '../controllers/academy/coach.controller.js';
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 
-import { getConnect } from '../controllers/conection.controller.js';
+import { getConnect } from '../database/conection.controller.js';
+
 const router = express();
 
 export const routes = () => {

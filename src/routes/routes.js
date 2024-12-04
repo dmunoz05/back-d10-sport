@@ -6,6 +6,7 @@ import { getDataServices, saveDataServices } from '../controllers/landing/servic
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getAdminPage, validLoginAdmin } from '../controllers/landing/admin.controller.js';
+import { getDataContact } from '../controllers/landing/contact.controller.js';
 
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
 import { getAthletes } from '../controllers/academy/athletes.controller.js';
@@ -30,6 +31,7 @@ export const routes = () => {
     router.get('/landing/g/home', ConexionVerify, getDataHome);
     router.post('/landing/admin/login', ConexionVerify, validLoginAdmin);
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
+    router.get('/landing/g/contact', ConexionVerify, getDataContact);
 
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);
     router.get('/academy/g/athletes', ConexionVerify, getAthletes);

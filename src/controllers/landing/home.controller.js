@@ -27,7 +27,7 @@ export const getDataHome = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `
-    SELECT id, section_one, section_two, section_three, section_four, section_five, section_six
+    SELECT section_one, section_two, section_three, section_four, section_five, section_six
     FROM ${db}.parametersHome`;
   const select = await conn.query(query);
   if (!select) return res.json({

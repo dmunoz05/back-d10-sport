@@ -11,7 +11,6 @@ import { getDataCollections, saveDataCollections } from '../controllers/landing/
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getAdminPage, validLoginAdmin } from '../controllers/landing/admin.controller.js';
-import { getDataContact } from '../controllers/landing/contact.controller.js';
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';

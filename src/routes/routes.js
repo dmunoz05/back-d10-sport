@@ -25,16 +25,16 @@ const router = express();
 
 export const routes = () => {
     // Landing
-    router.post('/landing/i/contact', ConexionVerify, saveDataContact);
-    router.get('/landing/g/contact', ConexionVerify, getDataContact);
-    router.post('/landing/i/news', ConexionVerify, saveDataNews);
-    router.get('/landing/g/news', ConexionVerify, getDataNews);
+    router.post('/landing/i/contact', ConexionVerify, AuthorizationVerify, saveDataContact);
+    router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
+    router.post('/landing/i/news', ConexionVerify, AuthorizationVerify, saveDataNews);
+    router.get('/landing/g/news', ConexionVerify, AuthorizationVerify, getDataNews);
     router.get('/landing/i/collections', ConexionVerify, AuthorizationVerify, saveDataCollections);
     router.get('/landing/g/collections', ConexionVerify, AuthorizationVerify, getDataCollections);
-    router.get('/landing/i/services', ConexionVerify, saveDataServices);
-    router.get('/landing/g/services', ConexionVerify, getDataServices);
-    router.get('/landing/i/aboutus', ConexionVerify, saveDataAboutUs);
-    router.get('/landing/g/aboutus', ConexionVerify, getDataAboutUs);
+    router.get('/landing/i/services', ConexionVerify, AuthorizationVerify, saveDataServices);
+    router.get('/landing/g/services', ConexionVerify, AuthorizationVerify, getDataServices);
+    router.get('/landing/i/aboutus', ConexionVerify, AuthorizationVerify, saveDataAboutUs);
+    router.get('/landing/g/aboutus', ConexionVerify, AuthorizationVerify, getDataAboutUs);
     router.post('/landing/i/home', ConexionVerify, AuthorizationVerify, saveDataHome);
     router.get('/landing/g/home', ConexionVerify, AuthorizationVerify, getDataHome);
 

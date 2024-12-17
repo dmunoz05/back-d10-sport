@@ -4,6 +4,7 @@ import { ConexionVerify } from '../middlewares/connection.js';
 import { AuthorizationVerify } from '../middlewares/authorization.js';
 
 // Landing
+import { getDataLayout, saveDataLayout } from '../controllers/landing/layout.controller.js';
 import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
@@ -25,6 +26,8 @@ const router = express();
 
 export const routes = () => {
     // Landing
+    router.post('/landing/i/layout', ConexionVerify, AuthorizationVerify, saveDataLayout);
+    router.get('/landing/g/layout', ConexionVerify, AuthorizationVerify, getDataLayout);
     router.post('/landing/i/contact', ConexionVerify, AuthorizationVerify, saveDataContact);
     router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
     router.post('/landing/i/news', ConexionVerify, AuthorizationVerify, saveDataNews);

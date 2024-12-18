@@ -4,6 +4,7 @@ import { ConexionVerify } from '../middlewares/connection.js';
 import { AuthorizationVerify } from '../middlewares/authorization.js';
 
 // Landing
+import { getDataLayout, saveDataLayout } from '../controllers/landing/layout.controller.js';
 import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
@@ -25,16 +26,18 @@ const router = express();
 
 export const routes = () => {
     // Landing
-    router.post('/landing/i/contact', ConexionVerify, saveDataContact);
-    router.get('/landing/g/contact', ConexionVerify, getDataContact);
-    router.post('/landing/i/news', ConexionVerify, saveDataNews);
-    router.get('/landing/g/news', ConexionVerify, getDataNews);
+    router.post('/landing/i/layout', ConexionVerify, AuthorizationVerify, saveDataLayout);
+    router.get('/landing/g/layout', ConexionVerify, AuthorizationVerify, getDataLayout);
+    router.post('/landing/i/contact', ConexionVerify, AuthorizationVerify, saveDataContact);
+    router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
+    router.post('/landing/i/news', ConexionVerify, AuthorizationVerify, saveDataNews);
+    router.get('/landing/g/news', ConexionVerify, AuthorizationVerify, getDataNews);
     router.get('/landing/i/collections', ConexionVerify, AuthorizationVerify, saveDataCollections);
     router.get('/landing/g/collections', ConexionVerify, AuthorizationVerify, getDataCollections);
-    router.get('/landing/i/services', ConexionVerify, saveDataServices);
-    router.get('/landing/g/services', ConexionVerify, getDataServices);
-    router.get('/landing/i/aboutus', ConexionVerify, saveDataAboutUs);
-    router.get('/landing/g/aboutus', ConexionVerify, getDataAboutUs);
+    router.get('/landing/i/services', ConexionVerify, AuthorizationVerify, saveDataServices);
+    router.get('/landing/g/services', ConexionVerify, AuthorizationVerify, getDataServices);
+    router.get('/landing/i/aboutus', ConexionVerify, AuthorizationVerify, saveDataAboutUs);
+    router.get('/landing/g/aboutus', ConexionVerify, AuthorizationVerify, getDataAboutUs);
     router.post('/landing/i/home', ConexionVerify, AuthorizationVerify, saveDataHome);
     router.get('/landing/g/home', ConexionVerify, AuthorizationVerify, getDataHome);
 

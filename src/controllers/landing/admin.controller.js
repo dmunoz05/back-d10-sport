@@ -1,5 +1,5 @@
 import getConnection from "../../database/connection.mysql.js";
-import { variablesDB } from "../../utils/const.database.js";
+import { variablesDB } from "../../utils/params/const.database.js";
 
 export const getAdminPage = async (req, res) => {
   const conn = await getConnection();
@@ -12,7 +12,7 @@ export const getAdminPage = async (req, res) => {
   return res.json(select[0]);
 }
 
-export const validLoginAdmin = async (req, res) => {
+export const validLoginAdminLanding = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
   const { user, password } = req.body;

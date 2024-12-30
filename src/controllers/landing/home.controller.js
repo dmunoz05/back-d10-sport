@@ -1,5 +1,5 @@
 import getConnection from "../../database/connection.mysql.js"
-import { variablesDB } from "../../utils/const.database.js";
+import { variablesDB } from "../../utils/params/const.database.js";
 
 export const saveDataHome = async (req, res) => {
   const conn = await getConnection();

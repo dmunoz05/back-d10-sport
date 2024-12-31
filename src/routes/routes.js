@@ -22,6 +22,7 @@ import { getCoach, registerCoach } from '../controllers/academy/coach.controller
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 
+// Database
 import { getConnect } from '../database/conection.controller.js';
 
 const router = express();

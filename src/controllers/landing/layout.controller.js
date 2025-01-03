@@ -26,7 +26,7 @@ export const getDataLayout = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `
-    SELECT id, section_one, section_two
+    SELECT id, section_one, section_two, maintenance
     FROM ${db}.parametersLayout`;
   const select = await conn.query(query);
   if (!select) return res.json({

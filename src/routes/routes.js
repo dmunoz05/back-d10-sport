@@ -28,7 +28,6 @@ import { getConnect } from '../database/conection.controller.js';
 const router = express();
 
 export const routes = () => {
-
     // Landing
     router.post('/landing/i/layout', ConexionVerify, AuthorizationVerify, saveDataLayout);
     router.get('/landing/g/layout', ConexionVerify, AuthorizationVerify, getDataLayout);

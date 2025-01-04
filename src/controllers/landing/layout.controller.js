@@ -22,11 +22,25 @@ export const saveDataLayout = async (req, res) => {
   });
 }
 
+export const getDataMaintenance = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.landing;
+  const query = `
+    SELECT id, maintenance
+    FROM ${db}.parametersLayout`;
+  const select = await conn.query(query);
+  if (!select) return res.json({
+    status: 500,
+    message: 'Error connecting'
+  });
+  return res.json(select[0]);
+}
+
 export const getDataLayout = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `
-    SELECT id, section_one, section_two, maintenance
+    SELECT id, header, footer, maintenance, dark_mode
     FROM ${db}.parametersLayout`;
   const select = await conn.query(query);
   if (!select) return res.json({

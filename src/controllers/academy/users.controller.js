@@ -46,7 +46,13 @@ async function updatePasswordHashUser(data) {
     const pool = await getConnection()
     const db = variablesDB.academy
     try {
-        const response = await pool.query(`UPDATE ${db}.login_users SET password=?, verify=?, verified_at=CURRENT_TIMESTAMP() WHERE id_user=?`, [password, id, verify])
+        const response = await pool.query(`UPDATE ${db}.login_users SET password=?, verify=?, verified_at=CURRENT_TIMESTAMP() WHERE id_user=?`, [password, verify, id])
+        if(response[0].affectedRows === 0) {
+            return responseAuth.error({
+                message: "Error update",
+                data: response[0]
+            });
+        }
         return responseAuth.success({
             message: "Success update",
             data: response[0]

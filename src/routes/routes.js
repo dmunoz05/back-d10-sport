@@ -62,7 +62,7 @@ export const routes = () => {
     router.get('/academy/g/coach', ConexionVerify, getCoach);
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
-    router.post('/academy/users/login', ConexionVerify, validLoginUsersAcademy);
+    router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

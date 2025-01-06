@@ -1,4 +1,5 @@
 import express from 'express';
+
 // Middlewares
 import { ConexionVerify } from '../middlewares/connection.js';
 import { AuthorizationVerify } from '../middlewares/authorization.js';

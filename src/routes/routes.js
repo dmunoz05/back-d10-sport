@@ -23,6 +23,9 @@ import { getCoach, registerCoach } from '../controllers/academy/coach.controller
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 
+// Test
+import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
+
 // Database
 import { getConnect } from '../database/conection.controller.js';
 
@@ -64,6 +67,9 @@ export const routes = () => {
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
+
+    // Test
+    router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

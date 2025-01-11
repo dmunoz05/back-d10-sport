@@ -19,22 +19,22 @@ import { getDataError, saveDataError } from '../controllers/landing/error.contro
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
 import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
 import { getClub, registerClub } from '../controllers/academy/club.controller.js';
-import { getCoach, registerCoach } from '../controllers/academy/coach.controller.js';
+import { getCoach, searchCoachFilter, registerCoach } from '../controllers/academy/coach.controller.js';
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 
 // External
 import {
-    getAllCountries,
-    getCountriesAmerica,
-    getCountriesRegion,
-    getDateColombian,
-    getDateCityID,
+    getAllCountriesRestCountries,
+    getCountriesAmericaRestCountries,
+    getCountriesRegionRestCountries,
+    getDateColombianRestCountries,
+    getDateCityIDRestCountries,
     getCitiesColombianGeoNames,
     getCitiesOneCountryIDGeoNames,
+    getCountriesRapidapi,
     getDepartmentColombianRapidapi,
-    getCitiesOnContryAntioquiaColombiaRapidapi,
     getCitiesOneCountryIDAndDepartmentIDRapidapi
 } from '../controllers/academy/external.controller.js';
 
@@ -76,23 +76,24 @@ export const routes = () => {
     router.get('/academy/g/club', ConexionVerify, getClub);
     router.post('/academy/register/club', ConexionVerify, registerClub);
     router.get('/academy/g/coach', ConexionVerify, getCoach);
+    router.get('/academy/g/search/coach/:filter', ConexionVerify, searchCoachFilter);
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
     router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
 
     //External
-    router.get('/external/g/rest/countries/', AuthorizationVerify, getAllCountries);
-    router.get('/external/g/rest/countries/america', AuthorizationVerify, getCountriesAmerica);
-    router.get('/external/g/restcountries/countries/:region', AuthorizationVerify, getCountriesRegion);
-    router.get('/external/g/rest/country/data/col', AuthorizationVerify, getDateColombian);
-    router.get('/external/g/rest/country/data/:contryID', AuthorizationVerify, getDateCityID);
+    router.get('/external/g/rest/countries/', AuthorizationVerify, getAllCountriesRestCountries);
+    router.get('/external/g/rest/countries/america', AuthorizationVerify, getCountriesAmericaRestCountries);
+    router.get('/external/g/restcountries/countries/:region', AuthorizationVerify, getCountriesRegionRestCountries);
+    router.get('/external/g/rest/country/data/col', AuthorizationVerify, getDateColombianRestCountries);
+    router.get('/external/g/rest/country/data/:contryID', AuthorizationVerify, getDateCityIDRestCountries);
 
     router.get('/external/g/geon/cities/col/', AuthorizationVerify, getCitiesColombianGeoNames);
     router.get('/external/g/geon/cities/:countryID', AuthorizationVerify, getCitiesOneCountryIDGeoNames);
 
-    router.get('/external/g/rapi/depart/col/:countryID', AuthorizationVerify, getDepartmentColombianRapidapi);
-    router.get('/external/g/rapi/cities/depart/ant/col', AuthorizationVerify, getCitiesOnContryAntioquiaColombiaRapidapi);
+    router.get('/external/g/rapi/countries/', AuthorizationVerify, getCountriesRapidapi);
+    router.get('/external/g/rapi/depart/col/', AuthorizationVerify, getDepartmentColombianRapidapi);
     router.get('/external/g/rapi/cities/depart/:departmentID/:countryID', AuthorizationVerify, getCitiesOneCountryIDAndDepartmentIDRapidapi);
 
     // Database

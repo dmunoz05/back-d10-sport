@@ -6,7 +6,7 @@ import {
   restcountrieApiGetDatesCountryID
 } from "../../lib/api/restcounties.cities.api.js";
 import {
-  rapidapiGetCitiesAntioquiaColombian,
+  rapidapiGetCountries,
   rapidapiGetCitiesByDeparmentIDAndCountryID,
   rapidapiGetDeparmentColombian
 } from "../../lib/api/rapidapi.geodbcities.api.js";
@@ -19,32 +19,32 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
 // RestCountries
 
-export const getAllCountries = async (req, res) => {
+export const getAllCountriesRestCountries = async (req, res) => {
   const countries = await restcountrieApiGetAllCountries();
   if (!countries) return res.json(responseQueries.error({ message: "Error" }));
   return res.json(responseQueries.success({ message: "Success", data: countries }));
 }
 
-export const getCountriesAmerica = async (req, res) => {
+export const getCountriesAmericaRestCountries = async (req, res) => {
   const countries = await restcountrieApiGetCountriesAmerica();
   if (!countries) return res.json(responseQueries.error({ message: "Error" }));
   return res.json(responseQueries.success({ message: "Success", data: countries }));
 }
 
-export const getCountriesRegion = async (req, res) => {
+export const getCountriesRegionRestCountries = async (req, res) => {
   const region = req.params.region;
   const countries = await restcountrieApiGetCountriesRegion(region);
   if (!countries) return res.json(responseQueries.error({ message: "Error" }));
   return res.json(responseQueries.success({ message: "Success", data: countries }));
 }
 
-export const getDateColombian = async (req, res) => {
+export const getDateColombianRestCountries = async (req, res) => {
   const data = await restcountrieApiGetDatesColombia(req, res);
   if (!data) return res.json(responseQueries.error({ message: "Error" }));
   return res.json(responseQueries.success({ message: "Success", data: data }));
 }
 
-export const getDateCityID = async (req, res) => {
+export const getDateCityIDRestCountries = async (req, res) => {
   const contryID = req.params.contryID;
   const data = await restcountrieApiGetDatesCountryID(contryID);
   if (!data) return res.json(responseQueries.error({ message: "Error" }));
@@ -70,17 +70,16 @@ export const getCitiesOneCountryIDGeoNames = async (req, res) => {
 
 // RapidApi
 
-export const getDepartmentColombianRapidapi = async (req, res) => {
-  const countryID = req.params.countryID;
-  const cities = await rapidapiGetDeparmentColombian(countryID);
-  if (!cities) return res.json(responseQueries.error({ message: "Error" }));
-  return res.json(responseQueries.success({ message: "Success", data: cities }));
+export const getCountriesRapidapi = async (req, res) => {
+  const countries = await rapidapiGetCountries();
+  if (!countries) return res.json(responseQueries.error({ message: "Error" }));
+  return res.json(responseQueries.success({ message: "Success", data: countries }));
 }
 
-export const getCitiesOnContryAntioquiaColombiaRapidapi = async (req, res) => {
-  const cities = await rapidapiGetCitiesAntioquiaColombian();
-  if (!cities) return res.json(responseQueries.error({ message: "Error" }));
-  return res.json(responseQueries.success({ message: "Success", data: cities }));
+export const getDepartmentColombianRapidapi = async (req, res) => {
+  const department = await rapidapiGetDeparmentColombian();
+  if (!department) return res.json(responseQueries.error({ message: "Error" }));
+  return res.json(responseQueries.success({ message: "Success", data: department }));
 }
 
 export const getCitiesOneCountryIDAndDepartmentIDRapidapi = async (req, res) => {

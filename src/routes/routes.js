@@ -22,6 +22,7 @@ import { getClub, registerClub } from '../controllers/academy/club.controller.js
 import { getCoach, registerCoach } from '../controllers/academy/coach.controller.js';
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
+import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 
 // External
 import {
@@ -78,6 +79,7 @@ export const routes = () => {
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
+    router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
 
     //External
     router.get('/external/g/rest/countries/', AuthorizationVerify, getAllCountries);

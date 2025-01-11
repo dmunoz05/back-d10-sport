@@ -1,4 +1,5 @@
 import { hashPassword, verifyPassword } from "../../utils/auth/handle-password.js";
+import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { responseAuth } from "../../common/enum/auth/response.auth.js";
 import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
 import { variablesDB } from "../../utils/params/const.database.js";
@@ -40,6 +41,7 @@ async function searchUserLogin(data) {
         });
     }
 }
+
 // Actualizar password del usuario
 async function updatePasswordHashUser(data) {
     const { id, password, verify } = data
@@ -119,5 +121,30 @@ export const validLoginUsersAcademy = async (req, res) => {
         }
     } else {
         return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))
+    }
+}
+
+//Crear solicitud de registro de usuario
+async function createRequestRegisterUser(data) {
+    const { username, email, password, role_user } = data
+    const pool = await getConnection()
+    const db = variablesDB.academy
+    try {
+        const response = await pool.query(`INSERT INTO ${db}.request_register_users (username, email, password, role_user) VALUES (?, ?, ?, ?)`, [username, email, password, role_user])
+        if(response[0].affectedRows === 0) {
+            return responseAuth.error({
+                message: "Error insert",
+                data: response[0]
+            });
+        }
+        return responseAuth.success({
+            message: "Success insert",
+            data: response[0]
+        });
+    } catch (error) {
+        return responseAuth.error({
+            message: "Error insert",
+            error
+        });
     }
 }

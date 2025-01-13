@@ -11,6 +11,16 @@ export const getClub = async (req, res) => {
   return res.json(responseQueries.success({ data: select[0] }));
 }
 
+// Filtrar Club
+export const searchClubFilter = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const filter = req.params.filter;
+  const select = await conn.query(`SELECT id, name_club, president FROM ${db}.club_user WHERE name_club LIKE '%${filter}%'`);
+  if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
+  return res.json(responseQueries.success({ data: select[0] }));
+}
+
 // Registro de club
 export const registerClub = async (req, res) => {
   const pool = await getConnection()

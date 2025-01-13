@@ -6,6 +6,10 @@ async function restcountrieApiGetAllCountries(req, res) {
     const countries = response.data.map(country => ({
       name: country.name.common,
       code: country.cca2,
+      id: country.ccn3,
+      googlemap: country.maps.googleMaps,
+      openstreetmap: country.maps.openStreetMaps,
+      flag: country.flags.png
     }));
     return countries;
   } catch (error) {
@@ -19,6 +23,10 @@ async function restcountrieApiGetCountriesAmerica(req, res) {
     const cities = response.data.flatMap(country => ({
       name: country.name.common,
       code: country.cca2,
+      id: country.ccn3,
+      googlemap: country.maps.googleMaps,
+      openstreetmap: country.maps.openStreetMaps,
+      flag: country.flags.png
     }));
     return cities;
   } catch (error) {
@@ -32,6 +40,10 @@ async function restcountrieApiGetCountriesRegion(region) {
     const cities = response.data.flatMap(country => ({
       name: country.name.common,
       code: country.cca2,
+      id: country.ccn3,
+      googlemap: country.maps.googleMaps,
+      openstreetmap: country.maps.openStreetMaps,
+      flag: country.flags.png
     }));
     return cities;
   } catch (error) {

@@ -13,12 +13,13 @@ app.use(express.json());
 
 const corsOptions = {
     origin: "*",
-    methods: ["POST", "GET"],
+    methods: ["POST", "GET", "DELETE"],
     credentials: true
 };
 
 app.use(cors(corsOptions));
 app.use('/d10/server/v1', routes());
+
 
 //Conect database
 const connDb = await getConnection();
@@ -33,6 +34,7 @@ else {
     console.log("*****************************\n");
 }
 
+// API Working
 app.get('/', (req, res) => {
     res.json('Working');
 })

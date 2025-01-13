@@ -2,6 +2,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 
+// Obtener todos los entrenadores
 export const getCoach = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
@@ -10,6 +11,17 @@ export const getCoach = async (req, res) => {
   return res.json(responseQueries.success({ data: select[0] }));
 }
 
+// Filtrar entrenador
+export const searchCoachFilter = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const filter = req.params.filter;
+  const select = await conn.query(`SELECT id, first_names, last_names FROM ${db}.coach_user WHERE first_names LIKE '%${filter}%' OR last_names LIKE '%${filter}%'`);
+  if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
+  return res.json(responseQueries.success({ data: select[0] }));
+}
+
+// Insertar Entrenador
 export const registerCoach = async (req, res) => {
   const pool = await getConnection()
   const db = variablesDB.academy

@@ -18,7 +18,7 @@ import { getDataError, saveDataError } from '../controllers/landing/error.contro
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
 import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
-import { getClub, registerClub } from '../controllers/academy/club.controller.js';
+import { getClub, searchClubFilter, registerClub } from '../controllers/academy/club.controller.js';
 import { getCoach, searchCoachFilter, registerCoach } from '../controllers/academy/coach.controller.js';
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
@@ -74,6 +74,7 @@ export const routes = () => {
     router.get('/academy/g/athletes', ConexionVerify, getAthletes);
     router.post('/academy/register/athletes', ConexionVerify, registerAthlete);
     router.get('/academy/g/club', ConexionVerify, getClub);
+    router.get('/academy/g/search/club/:filter', ConexionVerify, searchClubFilter);
     router.post('/academy/register/club', ConexionVerify, registerClub);
     router.get('/academy/g/coach', ConexionVerify, getCoach);
     router.get('/academy/g/search/coach/:filter', ConexionVerify, searchCoachFilter);

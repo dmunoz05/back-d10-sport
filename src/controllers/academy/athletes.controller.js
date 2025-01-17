@@ -15,12 +15,12 @@ export const getAthletes = async (req, res) => {
 export const registerAthlete = async (req, res) => {
   const pool = await getConnection()
   const db = variablesDB.academy
-  const { id_coach, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family } = req.body
+  const { id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family } = req.body
   try {
     const insert = await pool.query(`INSERT INTO ${db}.athletes_user
-      (id_coach, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family)
+      (id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family)
       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-      [id_coach, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family])
+      [id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family])
 
     if (insert[0].affectedRows === 0) {
       return res.json(responseQueries.error({ message: "Uninserted records" }))

@@ -25,12 +25,12 @@ export const searchCoachFilter = async (req, res) => {
 export const registerCoach = async (req, res) => {
   const pool = await getConnection()
   const db = variablesDB.academy
-  const { id_club, first_names, last_names, gender, date_birth, country, city, current_club, contact, mail, social_networks, academic_level, licenses_obtained, other } = req.body
+  const { id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other } = req.body
   try {
     const insert = await pool.query(`INSERT INTO ${db}.coach_user
-      (id_club, first_names, last_names, gender, date_birth, country, city, current_club, contact, mail, social_networks, academic_level, licenses_obtained, other)
-      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id_club, first_names, last_names, gender, date_birth, country, city, current_club, contact, mail, social_networks, academic_level, licenses_obtained, other])
+      (id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other])
 
     if (insert[0].affectedRows === 0) {
       return res.json(responseQueries.error({ message: "Uninserted records" }))

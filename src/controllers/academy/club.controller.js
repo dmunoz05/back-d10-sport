@@ -1,6 +1,7 @@
-import getConnection from "../../database/connection.mysql.js";
-import { variablesDB } from "../../utils/params/const.database.js";
+import { createSolitudLoginUser, createSolitudeRegisterUser } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { variablesDB } from "../../utils/params/const.database.js";
+import getConnection from "../../database/connection.mysql.js";
 
 // Obtener todos los clubes
 export const getClub = async (req, res) => {
@@ -35,10 +36,20 @@ export const registerClub = async (req, res) => {
     if (insert[0].affectedRows === 0) {
       return res.json(responseQueries.error({ message: "Uninserted records" }))
     }
-    res.json(responseQueries.success({
-      message: "Success insert",
-      data: [{ insertId: insert[0].insertId }]
-    }))
+    const insertLogin = await createSolitudLoginUser({ id_athlete: null, id_coach: null, id_club: insert[0].insertId, role_user: 'club' })
+    if (insertLogin.success) {
+      let username = president.replace(/\s/g, '').toLowerCase()
+      const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
+      if (insertSolitudeRegister.success) {
+        return res.json(responseQueries.success({
+          message: "Success insert",
+          data: [{ clubId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId }]
+        }))
+      }
+      return res.json(responseQueries.error({ message: insertSolitudeRegister.message }))
+    } else {
+      return res.json(responseQueries.error({ message: insertLogin.message }))
+    }
   } catch (error) {
     res.json(responseQueries.error({
       message: error?.message || "Error inserting",

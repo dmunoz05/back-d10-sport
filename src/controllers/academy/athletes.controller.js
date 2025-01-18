@@ -1,3 +1,4 @@
+import { createSolitudLoginUser, createSolitudeRegisterUser } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
@@ -25,12 +26,22 @@ export const registerAthlete = async (req, res) => {
     if (insert[0].affectedRows === 0) {
       return res.json(responseQueries.error({ message: "Uninserted records" }))
     }
-    return res.json(responseQueries.success({
-      message: "Success insert",
-      data: [{ insertId: insert[0].insertId }]
-    }))
+    const insertLogin = await createSolitudLoginUser({ id_athlete: insert[0].insertId, id_coach: null, id_club: null, role_user: 'athlete' })
+    if (insertLogin.success) {
+      let username = `${first_names.replace(/\s/g, '').toLowerCase()}${last_names.replace(/\s/g, '').toLowerCase()}`
+      const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
+      if (insertSolitudeRegister.success) {
+        return res.json(responseQueries.success({
+          message: "Success insert",
+          data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId }]
+        }))
+      }
+      return res.json(responseQueries.error({ message: insertSolitudeRegister.message }))
+    } else {
+      return res.json(responseQueries.error({ message: insertLogin.message }))
+    }
   } catch (error) {
-    return res.json(responseQueries.error({
+    res.json(responseQueries.error({
       message: error?.message || "Error inserting",
     }))
   }

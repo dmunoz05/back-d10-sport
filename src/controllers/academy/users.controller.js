@@ -11,7 +11,7 @@ export const getUsers = async (req, res) => {
     const conn = await getConnection();
     const select = await conn.query('SELECT * FROM users');
     if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
-    return res.json(responseQueries.success({ message: "Success" ,data: select[0] }));
+    return res.json(responseQueries.success({ message: "Success", data: select[0] }));
 }
 
 //Buscar usuario por id
@@ -24,7 +24,7 @@ async function searchUserLogin(data) {
             `SELECT id_user, username, password, email, role_user, verify, created_at FROM ${db}.login_users WHERE username = ? AND role_user = ? OR email = ? AND role_user = ?`,
             [username, role_user, username, role_user]
         );
-        if(response[0].length === 0) {
+        if (response[0].length === 0) {
             return responseAuth.error({
                 message: "User not found",
                 data: response[0]
@@ -49,7 +49,7 @@ async function updatePasswordHashUser(data) {
     const db = variablesDB.academy
     try {
         const response = await pool.query(`UPDATE ${db}.login_users SET password=?, verify=?, verified_at=CURRENT_TIMESTAMP() WHERE id_user=?`, [password, verify, id])
-        if(response[0].affectedRows === 0) {
+        if (response[0].affectedRows === 0) {
             return responseAuth.error({
                 message: "Error update",
                 data: response[0]
@@ -125,15 +125,17 @@ export const validLoginUsersAcademy = async (req, res) => {
 }
 
 //Crear solicitud de registro de usuario
-async function createRequestRegisterUser(data) {
-    const { username, email, password, role_user } = data
+export async function createSolitudeRegisterUser(data) {
+    const { id_user, username } = data
     const pool = await getConnection()
     const db = variablesDB.academy
     try {
-        const response = await pool.query(`INSERT INTO ${db}.request_register_users (username, email, password, role_user) VALUES (?, ?, ?, ?)`, [username, email, password, role_user])
-        if(response[0].affectedRows === 0) {
+        const response = await pool.query(`INSERT INTO ${db}.solitude_register
+            (id_user, username, verify)  VALUES(?, ?, ?)`,
+            [id_user, username, 0])
+        if (response[0].affectedRows === 0) {
             return responseAuth.error({
-                message: "Error insert",
+                message: error?.message ?? "Error insert",
                 data: response[0]
             });
         }
@@ -143,7 +145,35 @@ async function createRequestRegisterUser(data) {
         });
     } catch (error) {
         return responseAuth.error({
-            message: "Error insert",
+            message: error?.message ?? "Error insert",
+            error
+        });
+    }
+}
+
+//Crear solicitud login de usuario
+export async function createSolitudLoginUser(data) {
+    const { id_athlete, id_coach, id_club, role_user } = data
+    const pool = await getConnection()
+    const db = variablesDB.academy
+    try {
+        const response = await pool.query(`INSERT INTO ${db}.login_users
+            (id_athlete, id_coach, id_club, username, password, email, role_user, verify, created_at)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP())`,
+            [id_athlete, id_coach, id_club, role_user, 'password', 'email', role_user, 0])
+        if (response[0].affectedRows === 0) {
+            return responseAuth.error({
+                message: error?.message ?? "Error insert",
+                data: response[0]
+            });
+        }
+        return responseAuth.success({
+            message: "Success insert",
+            data: response[0]
+        });
+    } catch (error) {
+        return responseAuth.error({
+            message: error?.message ?? "Error insert",
             error
         });
     }

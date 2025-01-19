@@ -2,55 +2,48 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content__email-approve="width=device-width, initial-scale=1.0"
-    />
-    <title>¡Registro Aprobado por el Club!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro Exitoso</title>
     <style>
       body {
         font-family: Arial, sans-serif;
         margin: 0;
         padding: 0;
-        background-color: #f3f4f6;
+        background-color: #f4f4f4;
       }
 
-      .email-approve {
+      .email-register {
         max-width: 600px;
         margin: 20px auto;
         background-color: #ffffff;
-        border-radius: 10px;
+        border-radius: 8px;
         overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
-      .header__email-approve {
-        background: linear-gradient(
-          135deg,
-          rgba(24, 24, 24, 1) 0%,
-          rgba(61, 61, 61, 1) 100%
-        );
+      .header__email-register {
+        background-image: url(assets/fondo_nav.png);
         color: #ffc702;
         text-align: center;
         padding: 20px;
       }
 
-      .header__email-approve .title__email-approve {
+      .header__email-register .title__email-register {
         margin: 0;
-        font-size: 26px;
+        font-size: 24px;
       }
 
-      .content__email-approve {
+      .content__email-register {
         padding: 20px;
-        color: #444444;
-        text-align: left;
+        color: #333333;
       }
-      .content__email-approve .text__email-approve {
+
+      .content__email-register .text__email-register {
         margin: 15px 0;
         line-height: 1.6;
       }
 
-      .button__email-approve {
+      .button__email-register {
         display: inline-block;
         background: linear-gradient(
           135deg,
@@ -61,13 +54,13 @@
         text-decoration: none;
         padding: 10px 20px;
         border-radius: 5px;
-        margin-top: 20px;
+        margin: 20px 0;
         font-weight: bold;
       }
 
-      .footer__email-approve {
-        background-color: #f3f4f6;
-        color: #777777;
+      .footer__email-register {
+        background-color: #f4f4f4;
+        color: #666666;
         text-align: center;
         padding: 10px;
         font-size: 12px;
@@ -75,38 +68,30 @@
     </style>
   </head>
   <body>
-    <div class="email-approve">
-      <div class="header__email-approve">
-        <h1 class="title__email-approve">¡Tu registro ha sido aprobado!</h1>
+    <div class="email-register">
+      <div class="header__email-register">
+        <h1 class="title__email-register">¡Bienvenido, Deymer!</h1>
       </div>
-      <div class="content__email-approve">
-        <p class="text__email-approve">Hola <b>Deymer</b>,</p>
-        <p class="text__email-approve">
-          ¡Felicitaciones! Nos complace informarte que tu registro en el club ha
-          sido aprobado. Ahora formas parte de nuestra comunidad.
+      <div class="content__email-register">
+        <p class="text__email-register">
+          Tu club a aceptado tu registro. Gracias por registrarte en nuestra
+          plataforma. Estamos encantados de tenerte con nosotros.
         </p>
-        <!-- <p>
-          Desde ahora podrás disfrutar de todos los beneficios que ofrecemos,
-          incluyendo:
+        <p class="text__email-register">
+          A continuación, te compartimos los datos de tu cuenta:
         </p>
-        <ul>
-          <li>Acceso exclusivo a eventos y actividades.</li>
-          <li>Promociones especiales para miembros.</li>
-          <li>Comunicación directa con otros miembros del club.</li>
-        </ul> -->
-        <p class="text__email-approve">
-          Para comenzar, inicia sesión en nuestro sitio utilizando tus
-          credenciales.
+        <p class="text__email-register"><b>Usuario:</b> deymer@example.com</p>
+        <p class="text__email-register"><b>Contraseña:</b> Example123*</p>
+        <p class="text__email-register">
+          Puedes iniciar sesión haciendo clic en el botón de abajo:
         </p>
-        <!-- <p><b>Usuario:</b> bertainesmazo@gmail.com</p>
-        <p><b>Contraseña:</b> Berta123*</p> -->
-        <a href="#" class="button__email-approve">Iniciar sesión</a>
-        <p class="text__email-approve">
-          Si tienes alguna pregunta o necesitas asistencia, no dudes en
-          contactarnos. ¡Estamos aquí para ayudarte!
+        <a href="#" class="button__email-register">Iniciar sesión</a>
+        <p class="text__email-register">
+          ¡Esperamos que disfrutes de nuestra plataforma y le saques el mayor
+          provecho!
         </p>
       </div>
-      <div class="footer__email-approve">
+      <div class="footer__email-register">
         &copy; 2025 D10+. Todos los derechos reservados.
       </div>
     </div>

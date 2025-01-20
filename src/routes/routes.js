@@ -25,6 +25,7 @@ import { validLoginUsersAcademy } from '../controllers/academy/users.controller.
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 
 // External
+import { sendEmail } from '../lib/api/email.api.js';
 import {
     getAllCountriesRestCountries,
     getCountriesAmericaRestCountries,
@@ -40,6 +41,7 @@ import {
 
 // Database
 import { getConnect } from '../database/conection.controller.js';
+
 
 const router = express();
 
@@ -84,6 +86,9 @@ export const routes = () => {
     router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
 
     //External
+
+    router.post('/external/p/send/mail', AuthorizationVerify, sendEmail)
+
     router.get('/external/g/rest/countries/', AuthorizationVerify, getAllCountriesRestCountries);
     router.get('/external/g/rest/countries/america', AuthorizationVerify, getCountriesAmericaRestCountries);
     router.get('/external/g/restcountries/countries/:region', AuthorizationVerify, getCountriesRegionRestCountries);

@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import { variablesAuth } from '../params/const.auth.js'
 import { variablesJWT } from '../params/const.jwt.js'
 
 export async function generateToken(payload) {
@@ -8,6 +7,6 @@ export async function generateToken(payload) {
 }
 
 export async function verifyToken(token) {
-    let secretOrPrivateKey = variablesAuth.JWT_SECRET
+    let secretOrPrivateKey = variablesJWT.jwt_secret
     return jwt.verify(token, secretOrPrivateKey)
 }

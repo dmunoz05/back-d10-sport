@@ -7,9 +7,7 @@ export const responseEmail = {
     mail: mail ?? {
       from: '',
       to: '',
-      subject: '',
-      text: '',
-      html: ''
+      subject: ''
     }
   }),
   error: ({ message = "Error", mail = undefined }) => ({

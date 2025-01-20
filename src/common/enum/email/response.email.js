@@ -1,20 +1,18 @@
 export const responseEmail = {
-  success: ({ message = "Success", mail = undefined }) => ({
+  success: ({ message = "Success",messageId = undefined, mail = undefined }) => ({
     status: 200,
     success: true,
     error: false,
     message,
-    mail: mail ?? {
-      from: '',
-      to: '',
-      subject: ''
-    }
+    messageId,
+    mail
   }),
-  error: ({ message = "Error", mail = undefined }) => ({
+  error: ({ message = "Error", messageId = undefined, mail = undefined }) => ({
     status: 500,
     success: false,
     error: true,
+    messageId,
     message,
-    mail: mail
+    mail
   })
 };

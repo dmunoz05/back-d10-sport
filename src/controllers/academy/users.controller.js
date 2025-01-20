@@ -6,14 +6,6 @@ import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
 import getConnection from "../../database/connection.mysql.js";
 
-//Obtener todos los usuarios
-export const getUsers = async (req, res) => {
-    const conn = await getConnection();
-    const select = await conn.query('SELECT * FROM users');
-    if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
-    return res.json(responseQueries.success({ message: "Success", data: select[0] }));
-}
-
 //Buscar usuario por id
 async function searchUserLogin(data) {
     const { username, role_user } = data

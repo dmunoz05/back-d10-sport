@@ -2,6 +2,7 @@ import { createSolitudLoginUser, createSolitudeRegisterUser } from "./users.cont
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
+import { sendEmailFunction } from "../../lib/api/email.api.js";
 
 // Obtener todos los entrenadores
 export const getCoach = async (req, res) => {
@@ -38,12 +39,14 @@ export const registerCoach = async (req, res) => {
       }
       const insertLogin = await createSolitudLoginUser({ id_athlete: null, id_coach: insert[0].insertId, id_club: null, role_user: 'coach' })
       if (insertLogin.success) {
+        let nameComplete = `${first_names.charAt(0).toUpperCase() + first_names.slice(1)} ${last_names.charAt(0).toUpperCase() + last_names.slice(1)}`
         let username = `${first_names.replace(/\s/g, '').toLowerCase()}${last_names.replace(/\s/g, '').toLowerCase()}`
         const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
         if (insertSolitudeRegister.success) {
+          const sendMail = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: mail, type: 'register'})
           return res.json(responseQueries.success({
             message: "Success insert",
-            data: [{ coachId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId }]
+            data: [{ coachId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMail: sendMail }]
           }))
         }
         return res.json(responseQueries.error({ message: insertSolitudeRegister.message }))

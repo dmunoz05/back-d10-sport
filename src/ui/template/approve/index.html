@@ -89,16 +89,12 @@
         <p class="text__email-register">
           A continuación, te compartimos los datos de tu cuenta:
         </p>
-        <p class="text__email-register">
-          <b>Usuario: </b><span id="emailSpan">Correo@example.com</span>
-        </p>
-        <p class="text__email-register">
-          <b>Contraseña: </b><span id="passwordSpan">Contraseña</span>
-        </p>
+        <p class="text__email-register"><b>Usuario: </b>Correo@example.com</p>
+        <p class="text__email-register"><b>Contraseña: </b>Contraseña</p>
         <p class="text__email-register">
           Puedes iniciar sesión haciendo clic en el botón de abajo:
         </p>
-        <a class="button__email-register" id="loginButton">Iniciar sesión</a>
+        <a class="button__email-register">Iniciar sesión</a>
         <p class="text__email-register">
           ¡Esperamos que disfrutes de nuestra plataforma y le saques el mayor
           provecho!
@@ -108,19 +104,5 @@
         &copy; 2025 D10+. Todos los derechos reservados.
       </div>
     </div>
-    <script>
-      const emailSpan = document.getElementById("emailSpan");
-      const passwordSpan = document.getElementById("passwordSpan");
-
-      document.getElementById("loginButton").addEventListener("click", () => {
-        const email = emailSpan.textContent.trim();
-        const password = passwordSpan.textContent.trim();
-
-        const url = `http://localhost:5173/#/login?email=${encodeURIComponent(
-          email
-        )}&password=${encodeURIComponent(password)}`;
-        window.location.href = url;
-      });
-    </script>
   </body>
 </html>

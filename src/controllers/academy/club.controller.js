@@ -57,7 +57,7 @@ export const registerClub = async (req, res) => {
     }
     const insertLogin = await createSolitudLoginUser({ id_athlete: null, id_coach: null, id_club: insert[0].insertId, role_user: 'club' })
     if (insertLogin.success) {
-      let username = president.replace(/\s/g, '').toLowerCase()
+      let username = mail;
       const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
       if (insertSolitudeRegister.success) {
         return res.json(responseQueries.success({

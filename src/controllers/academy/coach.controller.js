@@ -34,6 +34,14 @@ export const getCoachById = async (req, res) => {
   return responseQueries.success({ data: select[0] });
 }
 
+// Funcion para eliminar entrenador por id
+export async function deleteCoachByIdFunction(id) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const select = await conn.query(`DELETE FROM ${db}.coach_user WHERE id = ?`, [id]);
+  if (!select) return responseQueries.error({ message: "Error connecting" });
+  return responseQueries.success({ data: select[0] });
+}
 
 // Filtrar entrenador
 export const searchCoachFilter = async (req, res) => {
@@ -62,7 +70,7 @@ export const registerCoach = async (req, res) => {
       const insertLogin = await createSolitudLoginUser({ id_athlete: null, id_coach: insert[0].insertId, id_club: null, role_user: 'coach' })
       if (insertLogin.success) {
         let nameComplete = `${first_names.charAt(0).toUpperCase() + first_names.slice(1)} ${last_names.charAt(0).toUpperCase() + last_names.slice(1)}`
-        let username = `${first_names.replace(/\s/g, '').toLowerCase()}${last_names.replace(/\s/g, '').toLowerCase()}`
+        let username = mail;
         const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
         if (insertSolitudeRegister.success) {
           const sendMail = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: mail, type: 'register', role_user: 'coach'})

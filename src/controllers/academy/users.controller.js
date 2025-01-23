@@ -5,6 +5,9 @@ import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
 import getConnection from "../../database/connection.mysql.js";
+import { getAthleteByIdFunction } from "./athletes.controller.js";
+import { getCoachByIdFunction } from "./coach.controller.js";
+import { getClubByIdFunction } from "./club.controller.js";
 
 //Buscar usuario por id
 async function searchUserLogin(data) {
@@ -13,7 +16,7 @@ async function searchUserLogin(data) {
     const db = variablesDB.academy
     try {
         const response = await pool.query(
-            `SELECT id_user, username, password, email, role_user, verify, created_at, verified_at FROM
+            `SELECT id_user, id_athlete, id_coach, id_club, username, password, email, role_user, verify, created_at, verified_at FROM
             ${db}.login_users WHERE username = ? AND role_user = ? AND verified_at IS NOT NULL
             OR email = ? AND role_user = ? AND verified_at IS NOT NULL`,
             [username, role_user, username, role_user]
@@ -61,6 +64,59 @@ async function updatePasswordHashUser(data) {
     }
 }
 
+async function getDataUser(data) {
+    const { id_athlete, id_coach, id_club } = data
+    try {
+        let user = {}
+        if (id_athlete != null && id_athlete != undefined) {
+            const responseAthlete = await getAthleteByIdFunction(id_athlete)
+            const responseClub = await getClubByIdFunction(responseAthlete.data[0].id_club)
+            if (responseClub.error || responseAthlete.error) {
+                return responseAuth.error({
+                    message: "Error query",
+                    error: responseClub.error || responseAthlete.error
+                });
+            }
+            user = responseAthlete.data[0]
+            user.club = responseClub.data[0]
+            delete user.id_club
+        }
+        if (id_coach != null && id_coach != undefined) {
+            const responseCoach = await getCoachByIdFunction(id_coach)
+            const responseClub = await getClubByIdFunction(responseCoach.data[0].id_club)
+            if (responseClub.error || responseCoach.error) {
+                return responseAuth.error({
+                    message: "Error query",
+                    error: responseClub.error || responseCoach.error
+                });
+            }
+            user = responseCoach.data[0]
+            user.club = responseClub.data[0]
+            delete user.id_club
+        }
+        if (id_club != null && id_club != undefined) {
+            const responseClub = await getClubByIdFunction(id_club)
+            if (responseClub.error) {
+                return responseAuth.error({
+                    message: "Error query",
+                    error: responseClub.error
+                });
+            }
+            user = responseClub.data[0]
+        }
+        return responseAuth.success({
+            message: "Success query",
+            data: user
+        });
+    } catch (error) {
+        return responseAuth.error({
+            message: "Error query",
+            error
+        });
+    }
+}
+
+
 // Validar si el usuario existe para logearse
 export const validLoginUsersAcademy = async (req, res) => {
     const userExist = await searchUserLogin({ username: req.body.username, role_user: req.body.role_user })
@@ -68,25 +124,27 @@ export const validLoginUsersAcademy = async (req, res) => {
         res.json(responseJWT.error({ message: userExist.message, status: userExist.status, token: null, user: null }))
         return
     }
-    const { id_user, username, email, password, verify, role_user } = userExist.data[0]
+    const { id_user, username, email, password, verify, role_user, id_athlete, id_coach, id_club } = userExist.data[0]
     if (userExist.success) {
         if (verify === 0) {
             if (req.body.password == password) {
                 const passwordHash = await hashPassword({ id: id_user, username: username, email: email, password: password })
                 const updatePassword = await updatePasswordHashUser({ id: id_user, password: passwordHash.password, verify: !verify })
                 if (updatePassword.success) {
-                    const payload = {
-                        sub: id_user,
-                        name: username
-                    }
+                    const dataUser = await getDataUser({ id_athlete: id_athlete, id_coach: id_coach, id_club: id_club })
                     const user = {
-                        id: id_user,
+                        id_login: id_user,
                         username: username,
                         email: email,
-                        role: role_user
+                        role: role_user,
+                        ...dataUser.data
+                    }
+                    const payload = {
+                        sub: id_user,
+                        user: user
                     }
                     const token = await generateToken(payload)
-                    return res.json(responseJWT.success({ message: 'Success access', token, user: user }))
+                    return res.json(responseJWT.success({ message: 'Success access', token }))
                 } else {
                     return res.json(responseJWT.error({ message: updatePassword.message, status: updatePassword.status, token: null, user: null }))
                 }
@@ -97,18 +155,23 @@ export const validLoginUsersAcademy = async (req, res) => {
         else {
             const isPassword = await verifyPassword(req.body.password, password)
             if (isPassword) {
-                const payload = {
-                    sub: id_user,
-                    name: username
+                const dataUser = await getDataUser({ id_athlete: id_athlete, id_coach: id_coach, id_club: id_club })
+                if (dataUser.error) {
+                    return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
                 }
-                const token = await generateToken(payload)
                 const user = {
-                    id: id_user,
+                    id_login: id_user,
                     username: username,
                     email: email,
-                    role: role_user
+                    role: role_user,
+                    ...dataUser.data
                 }
-                return res.json(responseJWT.success({ message: 'Success access', token, user: user }))
+                const payload = {
+                    sub: id_user,
+                    user: user
+                }
+                const token = await generateToken(payload)
+                return res.json(responseJWT.success({ message: 'Success access', token }))
             } else {
                 return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))
             }

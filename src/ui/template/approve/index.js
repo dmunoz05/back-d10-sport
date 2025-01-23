@@ -87,7 +87,7 @@ export const htmlTemplateApproved = (name, username, password, role_user) => {
               <p class="text__email-register">
                 Puedes iniciar sesión haciendo clic en el botón de abajo:
               </p>
-              <a href="https://academia.d10mas.com/#/login?user=${username}&password=${password}&role_user=${role_user}" class="button__email-register">Iniciar sesión</a>
+              <a href="https://academia.d10mas.com/#/login?username=${username}&password=${password}&role_user=${role_user}" class="button__email-register">Iniciar sesión</a>
               <p class="text__email-register">
                 ¡Esperamos que disfrutes de nuestra plataforma y le saques el mayor
                 provecho!

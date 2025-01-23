@@ -13,6 +13,28 @@ export const getCoach = async (req, res) => {
   return res.json(responseQueries.success({ data: select[0] }));
 }
 
+// Filtrar entrenador por id
+export const getCoachById = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const id = req.params.id;
+  const select = await conn.query(`SELECT * FROM ${db}.coach_user WHERE id = ?`, [id]);
+  if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
+  return res.json(responseQueries.success({ data: select[0] }));
+}
+
+// Funcion para filtrar entrenador por id
+  export async function getCoachByIdFunction(id) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const select = await conn.query(`
+    SELECT id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other
+    FROM ${db}.coach_user WHERE id = ?`, [id]);
+  if (!select) return responseQueries.error({ message: "Error connecting" });
+  return responseQueries.success({ data: select[0] });
+}
+
+
 // Filtrar entrenador
 export const searchCoachFilter = async (req, res) => {
   const conn = await getConnection();

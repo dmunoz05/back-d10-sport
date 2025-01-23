@@ -19,13 +19,13 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-async function mailApproved(name, username, password, email) {
+async function mailApproved(name, username, password, email, role_user) {
     try {
         const my = await transporter.sendMail({
             from: `D10+ Academy <${user_}>`,
             to: `"${email}"`,
             subject: "Solicitud aprobada ⚽😁",
-            html: htmlTemplateApproved(name, username, password),
+            html: htmlTemplateApproved(name, username, password, role_user),
         });
 
         return responseEmail.success({
@@ -94,10 +94,10 @@ async function mailDenied(name, email) {
     }
 }
 
-async function main(name, username, password, email, type) {
+async function main(name, username, password, email, type, role_user) {
     let response;
     if (type == 'approved') {
-        response = await mailApproved(name, username, password, email)
+        response = await mailApproved(name, username, password, email, role_user)
     } else if (type == 'register') {
         response = await mailRegister(name, email)
     } else if (type == 'denied') {
@@ -116,13 +116,13 @@ async function main(name, username, password, email, type) {
 }
 
 export const sendEmailFunction = async (data) => {
-    const { name, username, password, email, type } = data
-    const send = await main(name, username, password, email, type)
+    const { name, username, password, email, type, role_user } = data
+    const send = await main(name, username, password, email, type, role_user)
     return send
 }
 
 export const sendEmail = async (req, res) => {
-    const { name, username, password, email, type } = req.body
-    const send = await main(name, username, password, email, type)
+    const { name, username, password, email, type, role_user } = req.body
+    const send = await main(name, username, password, email, type, role_user)
     res.send(send)
 }

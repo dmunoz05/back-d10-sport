@@ -2,7 +2,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 
-//Obtener todos los usuarios
+//Obtener todas las solicitudes de registro
 export const getSolitudeUsers = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;

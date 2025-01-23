@@ -14,7 +14,8 @@ async function searchUserLogin(data) {
     try {
         const response = await pool.query(
             `SELECT id_user, username, password, email, role_user, verify, created_at, verified_at FROM
-            ${db}.login_users WHERE username = ? AND role_user = ? AND verified_at != NULL OR email = ? AND role_user = ? AND verified_at != NULL`,
+            ${db}.login_users WHERE username = ? AND role_user = ? AND verified_at IS NOT NULL
+            OR email = ? AND role_user = ? AND verified_at IS NOT NULL`,
             [username, role_user, username, role_user]
         );
         if (response[0].length === 0) {

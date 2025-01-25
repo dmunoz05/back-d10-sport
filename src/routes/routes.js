@@ -23,7 +23,7 @@ import { getCoach, searchCoachFilter, registerCoach } from '../controllers/acade
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
-import { getSolitudeUsers } from '../controllers/academy/solitud_register.controller.js';
+import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 
 // External
 import { sendEmail } from '../lib/api/email.api.js';
@@ -86,6 +86,8 @@ export const routes = () => {
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
     router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
     router.get('/academy/solitude/register/users', ConexionVerify, AuthorizationVerify, getSolitudeUsers);
+    router.post('/academy/solitude/approved', ConexionVerify, AuthorizationVerify, approvedSolitude);
+    router.post('/academy/solitude/denied', ConexionVerify, AuthorizationVerify, deniedSolitude);
 
     //External
     router.post('/external/p/send/mail', AuthorizationVerify, sendEmail)

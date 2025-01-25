@@ -1,11 +1,10 @@
 import { hashPassword, verifyPassword } from "../../utils/auth/handle-password.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
-import { responseAuth } from "../../common/enum/auth/response.auth.js";
 import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
-import getConnection from "../../database/connection.mysql.js";
 import { getAthleteByIdFunction } from "./athletes.controller.js";
+import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
 import { getClubByIdFunction } from "./club.controller.js";
 
@@ -22,17 +21,17 @@ async function searchUserLogin(data) {
             [username, role_user, username, role_user]
         );
         if (response[0].length === 0) {
-            return responseAuth.error({
+            return responseQueries.error({
                 message: "User not found",
                 data: response[0]
             });
         }
-        return responseAuth.success({
+        return responseQueries.success({
             message: "Success query",
             data: response[0]
         });
     } catch (error) {
-        return responseAuth.error({
+        return responseQueries.error({
             message: "Error query",
             error
         });
@@ -47,17 +46,17 @@ async function updatePasswordHashUser(data) {
     try {
         const response = await pool.query(`UPDATE ${db}.login_users SET password=?, verify=?, verified_at=CURRENT_TIMESTAMP() WHERE id_user=?`, [password, verify, id])
         if (response[0].affectedRows === 0) {
-            return responseAuth.error({
+            return responseQueries.error({
                 message: "Error update",
                 data: response[0]
             });
         }
-        return responseAuth.success({
+        return responseQueries.success({
             message: "Success update",
             data: response[0]
         });
     } catch (error) {
-        return responseAuth.error({
+        return responseQueries.error({
             message: "Error update",
             error
         });
@@ -72,7 +71,7 @@ async function getDataUser(data) {
             const responseAthlete = await getAthleteByIdFunction(id_athlete)
             const responseClub = await getClubByIdFunction(responseAthlete.data[0].id_club)
             if (responseClub.error || responseAthlete.error) {
-                return responseAuth.error({
+                return responseQueries.error({
                     message: "Error query",
                     error: responseClub.error || responseAthlete.error
                 });
@@ -85,7 +84,7 @@ async function getDataUser(data) {
             const responseCoach = await getCoachByIdFunction(id_coach)
             const responseClub = await getClubByIdFunction(responseCoach.data[0].id_club)
             if (responseClub.error || responseCoach.error) {
-                return responseAuth.error({
+                return responseQueries.error({
                     message: "Error query",
                     error: responseClub.error || responseCoach.error
                 });
@@ -97,19 +96,19 @@ async function getDataUser(data) {
         if (id_club != null && id_club != undefined) {
             const responseClub = await getClubByIdFunction(id_club)
             if (responseClub.error) {
-                return responseAuth.error({
+                return responseQueries.error({
                     message: "Error query",
                     error: responseClub.error
                 });
             }
             user = responseClub.data[0]
         }
-        return responseAuth.success({
+        return responseQueries.success({
             message: "Success query",
             data: user
         });
     } catch (error) {
-        return responseAuth.error({
+        return responseQueries.error({
             message: "Error query",
             error
         });
@@ -191,17 +190,17 @@ export async function createSolitudeRegisterUser(data) {
             (id_user, username, verify)  VALUES(?, ?, ?)`,
             [id_user, username, 0])
         if (response[0].affectedRows === 0) {
-            return responseAuth.error({
+            return responseQueries.error({
                 message: error?.message ?? "Error insert",
                 data: response[0]
             });
         }
-        return responseAuth.success({
+        return responseQueries.success({
             message: "Success insert",
             data: response[0]
         });
     } catch (error) {
-        return responseAuth.error({
+        return responseQueries.error({
             message: error?.message ?? "Error insert",
             error
         });
@@ -219,17 +218,17 @@ export async function createSolitudLoginUser(data) {
             VALUES(?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), NULL)`,
             [id_athlete, id_coach, id_club, role_user, 'password', 'email', role_user, 0])
         if (response[0].affectedRows === 0) {
-            return responseAuth.error({
+            return responseQueries.error({
                 message: error?.message ?? "Error insert",
                 data: response[0]
             });
         }
-        return responseAuth.success({
+        return responseQueries.success({
             message: "Success insert",
             data: response[0]
         });
     } catch (error) {
-        return responseAuth.error({
+        return responseQueries.error({
             message: error?.message ?? "Error insert",
             error
         });

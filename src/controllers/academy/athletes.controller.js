@@ -28,8 +28,17 @@ export const getAthleteById = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`
-    SELECT id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
+    SELECT id, id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
     FROM ${db}.athletes_user WHERE id = ?`, [id]);
+  if (!select) return responseQueries.error({ message: "Error connecting" });
+  return responseQueries.success({ data: select[0] });
+}
+
+// Funcion para eliminar deportista por id
+export async function deleteAthleteByIdFunction(id) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const select = await conn.query(`DELETE FROM ${db}.athletes_user WHERE id = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
 }
@@ -51,7 +60,7 @@ export const registerAthlete = async (req, res) => {
     const insertLogin = await createSolitudLoginUser({ id_athlete: insert[0].insertId, id_coach: null, id_club: null, role_user: 'athlete' })
     if (insertLogin.success) {
       let nameComplete = `${first_names.charAt(0).toUpperCase() + first_names.slice(1)} ${last_names.charAt(0).toUpperCase() + last_names.slice(1)}`
-      let username = `${first_names.replace(/\s/g, '').toLowerCase()}${last_names.replace(/\s/g, '').toLowerCase()}`
+      let username = mail;
       const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
       if (insertSolitudeRegister.success) {
         const sendMail = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: mail, type: 'register', role_user: 'athlete' })

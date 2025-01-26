@@ -3,6 +3,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
+import { getClubByIdFunction } from "./club.controller.js";
 
 // Obtener todos los deportistas
 export const getAthletes = async (req, res) => {
@@ -61,12 +62,17 @@ export const registerAthlete = async (req, res) => {
     if (insertLogin.success) {
       let nameComplete = `${first_names.charAt(0).toUpperCase() + first_names.slice(1)} ${last_names.charAt(0).toUpperCase() + last_names.slice(1)}`
       let username = mail;
+      let club = await getClubByIdFunction(id_club);
+      if(club.error) {
+        return res.json(responseQueries.error({ message: "Error connecting" }));
+      }
       const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
       if (insertSolitudeRegister.success) {
-        const sendMail = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: mail, type: 'register', role_user: 'athlete' })
+        const sendMailUser = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user', role_user: 'athlete' })
+        const sendMailClub = await sendEmailFunction({ name: club.data[0].name_club, username: nameComplete, password: undefined, email: username, type: 'register_club', role_user: 'athlete' })
         return res.json(responseQueries.success({
           message: "Success insert",
-          data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMail: sendMail }]
+          data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMailUser: sendMailUser, sendMailClub: sendMailClub }]
         }))
       }
       return res.json(responseQueries.error({ message: insertSolitudeRegister.message }))

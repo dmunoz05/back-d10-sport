@@ -67,22 +67,6 @@ export const htmlTemplateClub = (club, name, email, rol) => {
               padding: 10px;
               font-size: 12px;
             }
-
-            .button--approve {
-              background-color: #28a745;
-            }
-
-            .button--approve:hover {
-              background-color: #218838;
-            }
-
-            .button--reject {
-              background-color: #dc3545;
-            }
-
-            .button--reject:hover {
-              background-color: #c82333;
-            }
           </style>
         </head>
         <body>
@@ -108,20 +92,15 @@ export const htmlTemplateClub = (club, name, email, rol) => {
                 </li>
               </ul>
               <p>
-                En caso de que <b>Sí</b> pertenezca dale al botón Verde (Aceptar). Si
-                consideras que el usuario <b>NO</b> corresponde al club, deniega su
-                entrada dándole al botón Rojo (Denegar).
+                Recuerda que, si confirmas que el usuario <b>SÍ</b> pertenece al club,
+                debes hacer clic en el botón verde <b>Aceptar</b>. Esto permitirá
+                redirigir al usuario al siguiente paso. En caso de que determines que
+                el usuario <b>NO</b> corresponde al club, selecciona el botón rojo
+                <b>Denegar</b> para finalizar el proceso.
               </p>
               <div>
-                <a
-                  href="mailto:soporte@clubexclusivo.com"
-                  class="button button--approve"
-                  >Aceptar Acceso</a
-                >
-                <a
-                  href="mailto:soporte@clubexclusivo.com"
-                  class="button button--reject"
-                  >Denegar Acceso</a
+                <a href="https://academia.d10mas.com/#/club/solitudes" class="button"
+                  >Lista de usuarios</a
                 >
               </div>
             </div>
@@ -131,5 +110,6 @@ export const htmlTemplateClub = (club, name, email, rol) => {
           </div>
         </body>
       </html>
+
   `
 }

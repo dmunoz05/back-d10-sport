@@ -99,7 +99,7 @@ export const htmlTemplateClub = (club, name, email, rol) => {
                 <b>Denegar</b> para finalizar el proceso.
               </p>
               <div>
-                <a href="https://academia.d10mas.com/#/club-request" class="button"
+                <a href="https://academia.d10mas.com/#/club/solitudes" class="button"
                   >Lista de usuarios</a
                 >
               </div>

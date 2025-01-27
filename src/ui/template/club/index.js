@@ -1,4 +1,4 @@
-export const htmlTemplateClubRequest = (club, name, email, rol) => {
+export const htmlTemplateClub = (club, name, email, rol) => {
   return `
     <!DOCTYPE html>
       <html lang="es">

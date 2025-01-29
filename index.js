@@ -20,7 +20,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use('/d10/server/v1', routes());
 
-
 //Conect database
 const connDb = await getConnection();
 if (!connDb) {

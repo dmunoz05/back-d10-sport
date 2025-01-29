@@ -4,6 +4,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
+import { generateToken } from "../../utils/token/handle-token.js";
 
 
 // Actualizar solicitud de registro
@@ -81,7 +82,21 @@ export const approvedSolitude = async (req, res) => {
       user.id_user = id_user;
       const updateLogin = await updateLoginUserAthlete(user);
       if (updateLogin.success) {
-        const sendMail = await sendEmailFunction({ name: nombre, username: user.username, password: user.password, email: user.email, type: 'approved', role_user: role_user })
+
+        const tokenUsername = await generateToken({
+          sub: user.id_user,
+          username: user.username
+        })
+        const tokenPassword = await generateToken({
+          sub: user.id_user,
+          password: user.password
+        })
+        const tokenRole = await generateToken({
+          sub: user.id_user,
+          role: role_user
+        })
+
+        const sendMail = await sendEmailFunction({ name: nombre, username: tokenUsername, password: tokenPassword, email: user.email, type: 'approved', role_user: tokenRole })
         return res.json(responseQueries.success({ message: "Success approvade", data: sendMail }));
       }
     } else {

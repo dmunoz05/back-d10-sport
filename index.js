@@ -13,7 +13,7 @@ app.use(express.json());
 
 const allowedOrigins = process.env.NODE_ENV === "production"
     ? ["https://d10mas.com/", "https://academia.d10mas.com"]
-    : ["http://localhost:1600", "http://localhost:5173"];
+    : ["http://localhost:1600", "http://localhost:5173", "http://localhost:5174"];
 
 const corsOptions = {
     origin: function (origin, callback) {

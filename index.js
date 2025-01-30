@@ -11,9 +11,19 @@ const app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
+const allowedOrigins = process.env.NODE_ENV === "production"
+    ? ["https://d10mas.com/", "https://academia.d10mas.com"]
+    : ["http://localhost:1600", "http://localhost:5173"];
+
 const corsOptions = {
-    origin: "https://d10mas.com",
-    methods: ["POST", "GET", "DELETE"],
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("No permitido por CORS"));
+        }
+    },
+    methods: ["POST", "GET"],
     credentials: true
 };
 

@@ -12,8 +12,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
 const corsOptions = {
-    origin: "*",
+    origin: "https://d10mas.com/",
     methods: ["POST", "GET", "DELETE"],
+    optionsSuccessStatus: 200,
     credentials: true
 };
 

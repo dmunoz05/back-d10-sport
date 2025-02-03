@@ -52,7 +52,6 @@ export const getProxyHome = async (req, res) => {
         JSON_EXTRACT(section_one, '$.bg_photo') AS section_one_bg,
         JSON_EXTRACT(section_two, '$.bg_photo') AS section_two_bg,
         JSON_EXTRACT(section_three, '$.video') AS section_three_video,
-        JSON_EXTRACT(section_four, '$.news.link') AS section_four_news_link,
         JSON_EXTRACT(section_four, '$.collection[0].photo') AS section_four_photo_1,
         JSON_EXTRACT(section_four, '$.collection[1].photo') AS section_four_photo_2,
         JSON_EXTRACT(section_four, '$.collection[2].photo') AS section_four_photo_3,
@@ -60,10 +59,7 @@ export const getProxyHome = async (req, res) => {
         JSON_EXTRACT(section_four, '$.collection[4].photo') AS section_four_photo_5,
         JSON_EXTRACT(section_five, '$.bg_photo') AS section_five_bg,
         JSON_EXTRACT(section_six, '$.icons[0].icon') AS section_six_icon_1,
-        JSON_EXTRACT(section_six, '$.icons[1].icon') AS section_six_icon_2,
-        JSON_EXTRACT(section_six, '$.icons[2].icon') AS section_six_icon_3,
-        JSON_EXTRACT(section_six, '$.icons[3].icon') AS section_six_icon_4,
-        JSON_EXTRACT(section_six, '$.icons[4].icon') AS section_six_icon_5
+        JSON_EXTRACT(section_six, '$.icons[1].icon') AS section_six_icon_2
       FROM ${db}.parametersHome`;
 
     const [rows] = await conn.query(query);
@@ -72,7 +68,7 @@ export const getProxyHome = async (req, res) => {
       return res.status(404).json({ error: "No se encontraron imágenes o videos" });
     }
 
-    res.json(rows[0]); // Retorna un JSON con todas las URLs extraídas
+    res.json(rows[0]); // Retorna un JSON con las URLs encriptadas
 
   } catch (error) {
     console.error("Error en el proxy de imágenes y videos:", error);
@@ -80,31 +76,20 @@ export const getProxyHome = async (req, res) => {
   }
 };
 
+// Nueva función para servir imágenes como blob
+export const getImageProxy = async (req, res) => {
+  try {
+    const { url } = req.query;
+    if (!url) return res.status(400).json({ error: "Falta la URL de la imagen" });
 
-// export const getProxyHome = async (req, res) => {
-//   try {
-//     const conn = await getConnection();
-//     const db = variablesDB.landing;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Error al obtener la imagen");
 
-//     const query = `
-//             SELECT JSON_EXTRACT(section_one, '$.bg_photo') AS bg_photo
-//             FROM ${db}.parametersHome`;
-//     const [rows] = await conn.query(query);
+    res.setHeader("Content-Type", response.headers.get("content-type"));
+    response.body.pipe(res);
 
-//     if (!rows.length || !rows[0].bg_photo) {
-//       return res.status(404).json({ error: "Imagen no encontrada" });
-//     }
-
-//     const imageUrl = rows[0].bg_photo;
-
-//     const response = await fetch(imageUrl);
-//     if (!response.ok) throw new Error("Error al obtener la imagen");
-
-//     res.setHeader("Content-Type", response.headers.get("content-type"));
-//     response.body.pipe(res);
-
-//   } catch (error) {
-//     console.error("Error en el proxy de imagen:", error);
-//     res.status(500).json({ error: "Error interno del servidor" });
-//   }
-// };
+  } catch (error) {
+    console.error("Error al obtener la imagen:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};

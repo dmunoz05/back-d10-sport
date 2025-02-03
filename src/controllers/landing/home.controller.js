@@ -51,7 +51,7 @@ export const getProxyHome = async (req, res) => {
       SELECT 
         JSON_EXTRACT(section_one, '$.bg_photo') AS section_one_bg,
         JSON_EXTRACT(section_two, '$.bg_photo') AS section_two_bg,
-        JSON_EXTRACT(section_three, '$.video') AS section_three_video,
+        JSON_EXTRACT(section_three, '$.video') AS section_three_video,  -- URL del video
         JSON_EXTRACT(section_four, '$.collection[0].photo') AS section_four_photo_1,
         JSON_EXTRACT(section_four, '$.collection[1].photo') AS section_four_photo_2,
         JSON_EXTRACT(section_four, '$.collection[2].photo') AS section_four_photo_3,
@@ -68,7 +68,7 @@ export const getProxyHome = async (req, res) => {
       return res.status(404).json({ error: "No se encontraron imágenes o videos" });
     }
 
-    res.json(rows[0]); // Retorna un JSON con las URLs encriptadas
+    res.json(rows[0]); // Retorna JSON con las URLs encriptadas
 
   } catch (error) {
     console.error("Error en el proxy de imágenes y videos:", error);
@@ -76,20 +76,39 @@ export const getProxyHome = async (req, res) => {
   }
 };
 
-// Nueva función para servir imágenes como blob
-export const getImageProxy = async (req, res) => {
+// Nueva función para servir imágenes y videos como `blob`
+const cache = new Map(); // Caché en memoria
+
+export const getMediaProxy = async (req, res) => {
   try {
     const { url } = req.query;
-    if (!url) return res.status(400).json({ error: "Falta la URL de la imagen" });
+    if (!url) return res.status(400).json({ error: "Falta la URL del archivo" });
 
+    // Verificar si el archivo ya está en caché
+    if (cache.has(url)) {
+      console.log("📦 Sirviendo desde caché:", url);
+      const { contentType, buffer } = cache.get(url);
+      res.setHeader("Content-Type", contentType);
+      res.send(buffer);
+      return;
+    }
+
+    console.log("🔄 Descargando archivo:", url);
     const response = await fetch(url);
-    if (!response.ok) throw new Error("Error al obtener la imagen");
+    if (!response.ok) throw new Error("Error al obtener el archivo");
 
-    res.setHeader("Content-Type", response.headers.get("content-type"));
-    response.body.pipe(res);
+    const contentType = response.headers.get("content-type");
+    const buffer = await response.arrayBuffer();
 
+    // Guardar en caché por 10 minutos
+    cache.set(url, { contentType, buffer });
+    setTimeout(() => cache.delete(url), 10 * 60 * 1000);
+
+    res.setHeader("Content-Type", contentType);
+    res.send(Buffer.from(buffer));
   } catch (error) {
-    console.error("Error al obtener la imagen:", error);
+    console.error("Error al obtener el archivo:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
+

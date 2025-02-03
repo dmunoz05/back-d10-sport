@@ -6,14 +6,14 @@ import { AuthorizationVerify } from '../middlewares/authorization.js';
 
 // Landing
 import { getDataLayout, saveDataLayout, getDataMaintenance } from '../controllers/landing/layout.controller.js';
-import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
+import { getDataHome, saveDataHome, getProxyHome } from '../controllers/landing/home.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin.controller.js';
-import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
+import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';  
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -66,6 +66,10 @@ export const routes = () => {
     router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
     router.post('/landing/i/error', ConexionVerify, AuthorizationVerify, saveDataError);
     router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
+
+    // Proxy
+
+    router.get('/landing/proxy/home', ConexionVerify, AuthorizationVerify, getProxyHome);
 
     // Admin
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);

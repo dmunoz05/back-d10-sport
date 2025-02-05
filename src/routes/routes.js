@@ -6,7 +6,7 @@ import { AuthorizationVerify } from '../middlewares/authorization.js';
 
 // Landing
 import { getDataLayout, saveDataLayout, getDataMaintenance } from '../controllers/landing/layout.controller.js';
-import { getDataHome, saveDataHome, getProxyHome, getImageProxy, getProxyVideo, getVideoStream } from '../controllers/landing/home.controller.js';
+import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
@@ -66,14 +66,6 @@ export const routes = () => {
     router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
     router.post('/landing/i/error', ConexionVerify, AuthorizationVerify, saveDataError);
     router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
-
-    // Proxy
-
-    router.get('/landing/proxy/home', ConexionVerify, AuthorizationVerify, getProxyHome);
-    router.get('/landing/proxy/image', ConexionVerify, AuthorizationVerify, getImageProxy);
-    router.get('/landing/proxy/video', ConexionVerify, AuthorizationVerify, getProxyVideo);
-    router.get('/landing/proxy/video-stream', ConexionVerify, AuthorizationVerify, getVideoStream);
-    
 
     // Admin
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);

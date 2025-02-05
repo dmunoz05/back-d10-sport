@@ -1,5 +1,8 @@
-import getConnection from "../../database/connection.mysql.js"
+import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { generateTokenNoExpire } from "../../utils/token/handle-token.js";
 import { variablesDB } from "../../utils/params/const.database.js";
+import getConnection from "../../database/connection.mysql.js"
+import { generateURLsignature } from "../../lib/s3/s3.js";
 
 export const saveDataHome = async (req, res) => {
   const conn = await getConnection();
@@ -24,15 +27,24 @@ export const saveDataHome = async (req, res) => {
 }
 
 export const getDataHome = async (req, res) => {
+
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `
-    SELECT section_one, section_two, section_three, section_four, section_five, section_six
+    SELECT id, section_one, section_two, section_three, section_four, section_five, section_six
     FROM ${db}.parametersHome`;
+
   const select = await conn.query(query);
-  if (!select) return res.json({
-    status: 500,
-    message: 'Error connecting'
-  });
-  return res.json(select[0]);
-}
+
+  let responseData = {}
+
+  const urlSignature = await generateURLsignature(select[0][0].section_one.bg_photo)
+
+  if (!select || select.length === 0) {
+    return res.json(responseQueries.error({ message: "Error connecting" }));
+  }
+
+  const encryptedData = await generateTokenNoExpire({ sub: select[0][0].id, data: select[0] });
+
+  return res.json(responseQueries.success({ data: encryptedData }));
+};

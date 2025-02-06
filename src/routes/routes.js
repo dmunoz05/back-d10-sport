@@ -23,6 +23,7 @@ import { getCoach, searchCoachFilter, registerCoach } from '../controllers/acade
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
+import { getClassAcademy } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 
 // External
@@ -84,7 +85,8 @@ export const routes = () => {
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
-    router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
+    router.get('/academy/g/courses', ConexionVerify, AuthorizationVerify, getCoursesAcademy);
+    router.get('/academy/g/class/:id_course', ConexionVerify, AuthorizationVerify, getClassAcademy);
     router.get('/academy/solitude/register/users', ConexionVerify, AuthorizationVerify, getSolitudeUsers);
     router.post('/academy/solitude/approved', ConexionVerify, AuthorizationVerify, approvedSolitude);
     router.post('/academy/solitude/denied', ConexionVerify, AuthorizationVerify, deniedSolitude);

@@ -14,6 +14,7 @@ import { getDataNews, saveDataNews } from '../controllers/landing/news.controlle
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
+import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -23,6 +24,7 @@ import { getCoach, searchCoachFilter, registerCoach } from '../controllers/acade
 import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
+import { getClassMenu, getClassContent, getClassComments } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 
 // External
@@ -66,6 +68,7 @@ export const routes = () => {
     router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
     router.post('/landing/i/error', ConexionVerify, AuthorizationVerify, saveDataError);
     router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
+    router.get('/landing/g/gallery', ConexionVerify, AuthorizationVerify, getDataGallery)
 
     // Admin
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);
@@ -84,7 +87,10 @@ export const routes = () => {
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
     router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
-    router.get('/academy/g/courses', ConexionVerify, getCoursesAcademy);
+    router.get('/academy/g/courses', ConexionVerify, AuthorizationVerify, getCoursesAcademy);
+    router.get('/academy/g/class/menu', ConexionVerify, AuthorizationVerify, getClassMenu);
+    router.get('/academy/g/class/content', ConexionVerify, AuthorizationVerify, getClassContent);
+    router.get('/academy/g/class/comments', ConexionVerify, AuthorizationVerify, getClassComments);
     router.get('/academy/solitude/register/users', ConexionVerify, AuthorizationVerify, getSolitudeUsers);
     router.post('/academy/solitude/approved', ConexionVerify, AuthorizationVerify, approvedSolitude);
     router.post('/academy/solitude/denied', ConexionVerify, AuthorizationVerify, deniedSolitude);

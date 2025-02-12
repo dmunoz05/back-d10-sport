@@ -34,7 +34,7 @@ export async function generateURLsignature(url) {
 
         const signedUrl = s3.getSignedUrl('getObject', params);
 
-        console.log(signedUrl);
+        // console.log(signedUrl);
 
         // const signedUrl = s3.getSignedUrl('getObject', params);
 

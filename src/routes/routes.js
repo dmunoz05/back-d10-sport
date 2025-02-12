@@ -14,6 +14,7 @@ import { getDataNews, saveDataNews } from '../controllers/landing/news.controlle
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
+import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -67,6 +68,7 @@ export const routes = () => {
     router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
     router.post('/landing/i/error', ConexionVerify, AuthorizationVerify, saveDataError);
     router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
+    router.get('/landing/g/gallery', ConexionVerify, AuthorizationVerify, getDataGallery)
 
     // Admin
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);

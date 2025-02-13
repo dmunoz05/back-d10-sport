@@ -76,14 +76,14 @@ export const htmlTemplateApproved = (name, username, password, role_user, token)
             </div>
             <div class="content__email-register">
               <p class="text__email-register">
-                El club a aceptado su registro. Gracias por registrarte en nuestra
+                Gracias por registrarte en nuestra
                 plataforma. Estamos encantados de tenerte con nosotros.
               </p>
               <p class="text__email-register">
                 A continuación, te compartimos los datos de tu cuenta:
               </p>
-              <p class="text__email-register"><b>Usuario:</b>${username}</p>
-              <p class="text__email-register"><b>Contraseña:</b>${password}</p>
+              <p class="text__email-register"><b>Usuario: </b>${username}</p>
+              <p class="text__email-register"><b>Contraseña: </b>${password}</p>
               <p class="text__email-register">
                 Puedes iniciar sesión haciendo clic en el botón de abajo:
               </p>

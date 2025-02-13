@@ -1,4 +1,4 @@
-import { createSolitudLoginUser, createSolitudeRegisterUser } from "./users.controller.js";
+import { createSolitudLoginUser, createSolitudeRegisterUser, validateNotRegisterMail } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
@@ -60,6 +60,10 @@ export const registerCoach = async (req, res) => {
   const db = variablesDB.academy
   const { id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other } = req.body
   try {
+    const existMail = await validateNotRegisterMail(mail, 'athlete_user');
+    if (existMail.success) {
+      return res.json(responseQueries.error({ message: existMail.message }))
+    }
     const insert = await pool.query(`INSERT INTO ${db}.coach_user
       (id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other)
       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,

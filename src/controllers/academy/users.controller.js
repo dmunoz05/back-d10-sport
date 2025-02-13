@@ -15,10 +15,10 @@ async function searchUserLogin(data) {
     const db = variablesDB.academy
     try {
         const response = await pool.query(
-            `SELECT id_user, id_athlete, id_coach, id_club, username, password, email, role_user, verify, created_at, verified_at FROM
-            ${db}.login_users WHERE username = ? AND role_user = ? AND verified_at IS NOT NULL
-            OR email = ? AND role_user = ? AND verified_at IS NOT NULL`,
-            [username, role_user, username, role_user]
+            `SELECT id_user, username, password, email, verify, created_at, verified_at FROM
+            ${db}.login_users WHERE username = ? AND verified_at IS NOT NULL
+            OR email = ? AND verified_at IS NOT NULL`,
+            [username, username]
         );
         if (response[0].length === 0) {
             return responseQueries.error({
@@ -123,7 +123,7 @@ export const validLoginUsersAcademy = async (req, res) => {
         res.json(responseJWT.error({ message: userExist.message, status: userExist.status, token: null, user: null }))
         return
     }
-    const { id_user, username, email, password, verify, role_user, id_athlete, id_coach, id_club } = userExist.data[0]
+    const { id_user, username, email, password, verify, role_user } = userExist.data[0]
     if (userExist.success) {
         if (verify === 0) {
             if (req.body.password == password) {
@@ -209,14 +209,14 @@ export async function createSolitudeRegisterUser(data) {
 
 //Crear solicitud login de usuario
 export async function createSolitudLoginUser(data) {
-    const { id_athlete, id_coach, id_club, role_user } = data
+    const { email } = data
     const pool = await getConnection()
     const db = variablesDB.academy
     try {
         const response = await pool.query(`INSERT INTO ${db}.login_users
-            (id_athlete, id_coach, id_club, username, password, email, role_user, verify, created_at, verified_at)
-            VALUES(?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), NULL)`,
-            [id_athlete, id_coach, id_club, role_user, 'password', 'email', role_user, 0])
+            (username, password, email, verify, created_at, verified_at)
+            VALUES(?, ?, ?, ?, CURRENT_TIMESTAMP(), NULL)`,
+            [email, 'password', email, 0])
         if (response[0].affectedRows === 0) {
             return responseQueries.error({
                 message: error?.message ?? "Error insert",
@@ -233,4 +233,13 @@ export async function createSolitudLoginUser(data) {
             error
         });
     }
+}
+
+// Buscar correos ya registrados
+export async function validateNotRegisterMail(mail) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const [rows] = await conn.query(`SELECT * FROM ${db}.login_users WHERE email = '${mail}';`);
+  if (rows.length > 0) return responseQueries.success({ message: "Mail already exists" });
+  return responseQueries.error({ message: "Mail not exists" });
 }

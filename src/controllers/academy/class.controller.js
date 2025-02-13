@@ -34,7 +34,7 @@ export const getClassComments = async (req, res) => {
                 lu.email correo
         FROM ${db}.comments_couser cm
         LEFT JOIN ${db}.login_users lu ON lu.id_user = cm.id_user
-        LEFT JOIN ${db}.athletes_user au ON au.id = lu.id_athlete
+        LEFT JOIN ${db}.athlete_user au ON au.id = lu.id_athlete
         LEFT JOIN ${db}.coach_user ca ON ca.id = lu.id_coach
         LEFT JOIN ${db}.club_user cu ON cu.id = lu.id_club
         WHERE cm.id_class = ?`,

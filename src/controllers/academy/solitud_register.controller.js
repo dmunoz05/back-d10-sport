@@ -26,7 +26,7 @@ export async function deleteSolitude(id) {
 }
 
 // Eliminar login usuario y contraseña default para athleta
-async function deleteLoginUserAthlete(id) {
+export async function deleteLoginUserAthlete(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const update = await conn.query(`DELETE FROM ${db}.login_users WHERE id_athlete = ${id};`);
@@ -34,36 +34,15 @@ async function deleteLoginUserAthlete(id) {
   return responseQueries.success({ message: "Success" });
 }
 
-// Crear login usuario y contraseña default para athleta
-async function updateLoginUserAthlete(data) {
+// Crear login usuario y contraseña default
+export async function updateLoginUser(data) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const update = await conn.query(`
-    UPDATE ${db}.login_users SET username = '${data.username}', password = '${data.password}',
-    email = '${data.email}', verified_at = CURRENT_TIMESTAMP() WHERE id_athlete = ${data.id_user};`);
+    UPDATE ${db}.login_users SET password = '${data.password}', verified_at = CURRENT_TIMESTAMP() WHERE id_user = ${data.id_user};`);
   if (update[0].affectedRows === 0) {
     return responseQueries.error({ message: "Error query" });
   }
-  return responseQueries.success({ message: "Success" });
-}
-
-// Eliminar login usuario y contraseña default para coach
-async function deleteLoginUserCoach(id) {
-  const conn = await getConnection();
-  const db = variablesDB.academy;
-  const update = await conn.query(`DELETE FROM ${db}.login_users WHERE id_coach = ${id};`);
-  if (!update) return responseQueries.error({ message: "Error query" });
-  return responseQueries.success({ message: "Success" });
-}
-
-// Crear login usuario y contraseña default para athleta
-async function updateLoginUserCoach(data) {
-  const conn = await getConnection();
-  const db = variablesDB.academy;
-  const update = await conn.query(`
-    UPDATE ${db}.login_users SET username = '${data.username}', password = '${data.password}',
-    email = '${data.email}', verified_at = CURRENT_TIMESTAMP() WHERE id_coach = ${data.id_user};`);
-  if (!update) return responseQueries.error({ message: "Error query" });
   return responseQueries.success({ message: "Success" });
 }
 
@@ -80,9 +59,8 @@ export const approvedSolitude = async (req, res) => {
       user.username = searchUser.data[0].mail;
       user.password = `${searchUser.data[0].last_names.charAt(0).toUpperCase() + searchUser.data[0].last_names.slice(1)}${numberRandom}*`
       user.id_user = id_user;
-      const updateLogin = await updateLoginUserAthlete(user);
+      const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
-
         const tokenUsername = await generateToken({
           sub: user.id_user,
           username: user.username
@@ -95,7 +73,6 @@ export const approvedSolitude = async (req, res) => {
           sub: user.id_user,
           role: role_user
         })
-
         const sendMail = await sendEmailFunction({ name: nombre, username: tokenUsername, password: tokenPassword, email: user.email, type: 'approved', role_user: tokenRole })
         return res.json(responseQueries.success({ message: "Success approvade", data: sendMail }));
       }
@@ -111,7 +88,7 @@ export const approvedSolitude = async (req, res) => {
       user.username = searchUser.data[0].mail;
       user.password = `${searchUser.data[0].last_names.charAt(0).toUpperCase() + searchUser.data[0].last_names.slice(1)}${numberRandom}*`
       user.id_user = id_user;
-      const updateLogin = await updateLoginUserCoach(user);
+      const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
         const sendMail = await sendEmailFunction({ name: nombre, username: user.username, password: user.password, email: user.email, type: 'approved', role_user: role_user })
         return res.json(responseQueries.success({ message: "Success approvade", data: sendMail }));
@@ -178,7 +155,7 @@ export const getSolitudeUsers = async (req, res) => {
     UNION ALL
     SELECT sr.id id_solitude, au.id_club, lu.id_athlete id_user, lu.role_user,
     CONCAT(IFNULL(au.first_names, ''), ' ', IFNULL(au.last_names, '')) AS nombre, lu.username, sr.verify
-    FROM ${db}.athletes_user au
+    FROM ${db}.athlete_user au
     INNER JOIN ${db}.login_users lu ON lu.id_athlete = au.id
     INNER JOIN ${db}.solitude_register sr ON sr.id_user = lu.id_user
     WHERE sr.verify = 0;

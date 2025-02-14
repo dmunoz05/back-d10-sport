@@ -24,7 +24,7 @@ export const getClassContent = async (req, res) => {
 }
 
 export const getClassComments = async (req, res) => {
-    const { id_class } = req.query; // Usar id_class en lugar de id_course
+    const { id_class } = req.query;
     const conn = await getConnection();
     const db = variablesDB.academy;
 
@@ -45,3 +45,19 @@ export const getClassComments = async (req, res) => {
     return res.json(responseQueries.success({ data: select[0] }));
 };
 
+// ----------------------------------------
+
+export const saveClassComment = async (req, res) => {
+    const { id_class, comment, id_user } = req.body;
+    if (!id_class || !comment || !id_user) {
+        return res.json(responseQueries.error({ message: "Datos incompletos" }));
+    }
+    const conn = await getConnection();
+    const db = variablesDB.academy;
+    const insert = await conn.query(
+        `INSERT INTO ${db}.comments_couser (id_class, id_user, comment) VALUES (?, ?, ?)`,
+        [id_class, id_user, comment]
+    );
+    if (!insert) return res.json(responseQueries.error({ message: "Error al guardar comentario" }));
+    return res.json(responseQueries.success({ message: "Comentario publicado" }));
+};

@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken'
 import { variablesJWT } from '../params/const.jwt.js'
 
-export async function generateToken(payload) {
+export async function generateToken(payload, time) {
     let secretOrPrivateKey = variablesJWT.jwt_secret
-    return jwt.sign(payload, secretOrPrivateKey, { expiresIn: '15min', algorithm: variablesJWT.algorithm })
+    return jwt.sign(payload, secretOrPrivateKey, { expiresIn: time, algorithm: variablesJWT.algorithm })
 }
 
 export async function generateTokenNoExpire(payload) {

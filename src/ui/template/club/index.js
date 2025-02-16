@@ -93,10 +93,10 @@ export const htmlTemplateClub = (club, name, email, rol) => {
               </ul>
               <p>
                 Recuerda que, si confirmas que el usuario <b>SÍ</b> pertenece al club,
-                debes hacer clic en el botón verde <b>Aceptar</b>. Esto permitirá
-                redirigir al usuario al siguiente paso. En caso de que determines que
-                el usuario <b>NO</b> corresponde al club, selecciona el botón rojo
-                <b>Denegar</b> para finalizar el proceso.
+                Sele dara acceso a la plataform y esto permitirá redirigir al usuario
+                al siguiente paso. En caso de que determines que el usuario <b>NO</b>
+                corresponde al club, ka solicitud sera denegada y se le notificara
+                al usuario para finalizar el proceso.
               </p>
               <div>
                 <a href="https://academia.d10mas.com/#/club/solitudes" class="button"

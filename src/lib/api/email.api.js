@@ -26,7 +26,7 @@ async function mailApproved(name, username, password, email, role_user) {
     let tokenDecoded = await generateToken({
         sub: username,
         token: url
-    })
+    }, '30min')
     let usernameDecoded = await verifyToken(username);
     let passwordDecoded = await verifyToken(password);
     let roleDecoded = await verifyToken(role_user);

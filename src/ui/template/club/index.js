@@ -77,7 +77,7 @@ export const htmlTemplateClub = (club, name, email, rol) => {
             <div class="content">
               <p>Hola <b>${club}</b>,</p>
               <p>
-                Te informamos que hay un usuario de tu club que desea ingresar a la
+                Te informamos que hay un entrenador de tu club que desea ingresar a la
                 plataforma, su información es la siguiente:
               </p>
               <ul>

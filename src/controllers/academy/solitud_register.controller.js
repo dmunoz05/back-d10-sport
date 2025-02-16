@@ -39,7 +39,7 @@ export async function updateLoginUser(data) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const update = await conn.query(`
-    UPDATE ${db}.login_users SET password = '${data.password}', verified_at = CURRENT_TIMESTAMP() WHERE id_user = ${data.id_user};`);
+    UPDATE ${db}.login_users SET password = '${data.password}', verified_at = ${data.verified_at} WHERE id_user = ${data.id_user};`);
   if (update[0].affectedRows === 0) {
     return responseQueries.error({ message: "Error query" });
   }
@@ -59,6 +59,7 @@ export const approvedSolitude = async (req, res) => {
       user.username = searchUser.data[0].mail;
       user.password = `${searchUser.data[0].last_names.charAt(0).toUpperCase() + searchUser.data[0].last_names.slice(1)}${numberRandom}*`
       user.id_user = id_user;
+      user.verified_at = 'CURRENT_TIMESTAMP()';
       const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
         const tokenUsername = await generateToken({
@@ -88,6 +89,7 @@ export const approvedSolitude = async (req, res) => {
       user.username = searchUser.data[0].mail;
       user.password = `${searchUser.data[0].last_names.charAt(0).toUpperCase() + searchUser.data[0].last_names.slice(1)}${numberRandom}*`
       user.id_user = id_user;
+      user.verified_at = 'CURRENT_TIMESTAMP()';
       const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
         const sendMail = await sendEmailFunction({ name: nombre, username: user.username, password: user.password, email: user.email, type: 'approved', role_user: role_user })
@@ -148,14 +150,14 @@ export const getSolitudeUsers = async (req, res) => {
   const select = await conn.query(`
     SELECT sr.id id_solitude, cu.id_club, lu.id_coach id_user, lu.role_user,
     CONCAT(IFNULL(cu.first_names, ''), ' ', IFNULL(cu.last_names, '')) AS nombre, lu.username, sr.verify
-    FROM ${db}.coach_user cu
+    FROM ${db}.coach cu
     INNER JOIN ${db}.login_users lu ON lu.id_coach = cu.id
     INNER JOIN ${db}.solitude_register sr ON sr.id_user = lu.id_user
     WHERE sr.verify = 0
     UNION ALL
     SELECT sr.id id_solitude, au.id_club, lu.id_athlete id_user, lu.role_user,
     CONCAT(IFNULL(au.first_names, ''), ' ', IFNULL(au.last_names, '')) AS nombre, lu.username, sr.verify
-    FROM ${db}.athlete_user au
+    FROM ${db}.athlete au
     INNER JOIN ${db}.login_users lu ON lu.id_athlete = au.id
     INNER JOIN ${db}.solitude_register sr ON sr.id_user = lu.id_user
     WHERE sr.verify = 0;

@@ -7,16 +7,17 @@ import { getAthleteByIdFunction } from "./athletes.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
 import { getClubByIdFunction } from "./club.controller.js";
+import { getRoleUser } from "./role.controller.js";
 
 //Buscar usuario por id
 async function searchUserLogin(data) {
-    const { username, role_user } = data
+    const { username } = data
     const pool = await getConnection()
     const db = variablesDB.academy
     try {
         const response = await pool.query(
             `SELECT id_user, username, password, email, verify, created_at, verified_at FROM
-            ${db}.login_users WHERE username = ? AND verified_at IS NOT NULL
+            ${db}.login_users WHERE username = ? AND verified_at IS NULL
             OR email = ? AND verified_at IS NOT NULL`,
             [username, username]
         );
@@ -69,16 +70,13 @@ async function getDataUser(data) {
         let user = {}
         if (id_athlete != null && id_athlete != undefined) {
             const responseAthlete = await getAthleteByIdFunction(id_athlete)
-            const responseClub = await getClubByIdFunction(responseAthlete.data[0].id_club)
-            if (responseClub.error || responseAthlete.error) {
+            if (responseAthlete.error) {
                 return responseQueries.error({
                     message: "Error query",
-                    error: responseClub.error || responseAthlete.error
+                    error: responseAthlete.error
                 });
             }
             user = responseAthlete.data[0]
-            user.club = responseClub.data[0]
-            delete user.id_club
         }
         if (id_coach != null && id_coach != undefined) {
             const responseCoach = await getCoachByIdFunction(id_coach)
@@ -118,24 +116,34 @@ async function getDataUser(data) {
 
 // Validar si el usuario existe para logearse
 export const validLoginUsersAcademy = async (req, res) => {
-    const userExist = await searchUserLogin({ username: req.body.username, role_user: req.body.role_user })
+    const userExist = await searchUserLogin({ username: req.body.username })
     if (userExist.error) {
         res.json(responseJWT.error({ message: userExist.message, status: userExist.status, token: null, user: null }))
         return
     }
-    const { id_user, username, email, password, verify, role_user } = userExist.data[0]
+    const { id_user, username, email, password, verify } = userExist.data[0]
+    const role = await getRoleUser(id_user);
+    if(role.error){
+        res.json(responseJWT.error({ message: role.message, status: role.status, token: null, user: null }))
+        return
+    }
+    if(role.data[0].name_role !== req.body.role_user){
+        res.json(responseJWT.error({ message: 'Invalid role', status: 200, token: null, user: null }))
+        return
+    }
     if (userExist.success) {
         if (verify === 0) {
             if (req.body.password == password) {
                 const passwordHash = await hashPassword({ id: id_user, username: username, email: email, password: password })
                 const updatePassword = await updatePasswordHashUser({ id: id_user, password: passwordHash.password, verify: !verify })
                 if (updatePassword.success) {
-                    const dataUser = await getDataUser({ id_athlete: id_athlete, id_coach: id_coach, id_club: id_club })
+                    const dataUser = await getDataUser({ id_athlete: id_user, id_coach: null, id_club: null })
                     const user = {
                         id_login: id_user,
                         username: username,
                         email: email,
-                        role: role_user,
+                        role: role.data[0].name_role ,
+                        id_role: role.data[0].id_role,
                         ...dataUser.data
                     }
                     const payload = {
@@ -154,7 +162,7 @@ export const validLoginUsersAcademy = async (req, res) => {
         else {
             const isPassword = await verifyPassword(req.body.password, password)
             if (isPassword) {
-                const dataUser = await getDataUser({ id_athlete: id_athlete, id_coach: id_coach, id_club: id_club })
+                const dataUser = await getDataUser({ id_athlete: id_user, id_coach: null, id_club: null })
                 if (dataUser.error) {
                     return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
                 }
@@ -162,7 +170,8 @@ export const validLoginUsersAcademy = async (req, res) => {
                     id_login: id_user,
                     username: username,
                     email: email,
-                    role: role_user,
+                    role: role.data[0].name_role ,
+                    id_role: role.data[0].id_role,
                     ...dataUser.data
                 }
                 const payload = {
@@ -187,8 +196,8 @@ export async function createSolitudeRegisterUser(data) {
     const db = variablesDB.academy
     try {
         const response = await pool.query(`INSERT INTO ${db}.solitude_register
-            (id_user, username, verify)  VALUES(?, ?, ?)`,
-            [id_user, username, 0])
+            (id_user, username, email, verify)  VALUES(?, ?, ?, ?)`,
+            [id_user, username, username, 0])
         if (response[0].affectedRows === 0) {
             return responseQueries.error({
                 message: error?.message ?? "Error insert",
@@ -240,6 +249,6 @@ export async function validateNotRegisterMail(mail) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const [rows] = await conn.query(`SELECT * FROM ${db}.login_users WHERE email = '${mail}';`);
-  if (rows.length > 0) return responseQueries.success({ message: "Mail already exists" });
+  if (rows.length > 0) return responseQueries.success({ message: "User already exists" });
   return responseQueries.error({ message: "Mail not exists" });
 }

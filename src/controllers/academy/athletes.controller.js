@@ -3,6 +3,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { updateLoginUser } from "./solitud_register.controller.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
+import { getIdRole, createRoleUser } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
 import { getClubByIdFunction } from "./club.controller.js";
@@ -11,7 +12,7 @@ import { getClubByIdFunction } from "./club.controller.js";
 export const getAthletes = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
-  const select = await conn.query(`SELECT * FROM ${db}.athlete_user`);
+  const select = await conn.query(`SELECT * FROM ${db}.athlete`);
   if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
   return res.json(responseQueries.success({ data: select[0] }));
 }
@@ -21,7 +22,7 @@ export const getAthleteById = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const id = req.params.id;
-  const select = await conn.query(`SELECT * FROM ${db}.athlete_user WHERE id = ?`, [id]);
+  const select = await conn.query(`SELECT * FROM ${db}.athlete WHERE id = ?`, [id]);
   if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
   return res.json(responseQueries.success({ data: select[0] }));
 }
@@ -31,8 +32,8 @@ export async function getAthleteByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`
-    SELECT id, id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
-    FROM ${db}.athlete_user WHERE id = ?`, [id]);
+    SELECT first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
+    FROM ${db}.athlete WHERE id_user = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
 }
@@ -41,7 +42,7 @@ export async function getAthleteByIdFunction(id) {
 export async function deleteAthleteByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
-  const select = await conn.query(`DELETE FROM ${db}.athlete_user WHERE id = ?`, [id]);
+  const select = await conn.query(`DELETE FROM ${db}.athlete WHERE id_user = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
 }
@@ -58,10 +59,10 @@ export const registerAthlete = async (req, res) => {
     }
     const insertLogin = await createSolitudLoginUser({ email: mail })
     if (insertLogin.success) {
-      const insert = await pool.query(`INSERT INTO ${db}.athlete_user
+      const insert = await pool.query(`INSERT INTO ${db}.athlete
         (id_user, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family)
         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
-        [insertLogin.data.insertId, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family])
+        [insertLogin.data.insertId, first_names, last_names, gender, date_birth, country, city, contact, mail, JSON.stringify(social_networks), academic_level, first_names_family, last_names_family, contact_family])
       if (insert[0].affectedRows === 0) {
         return res.json(responseQueries.error({ message: "Uninserted records" }))
       }
@@ -72,8 +73,20 @@ export const registerAthlete = async (req, res) => {
       user.username = mail;
       user.password = `${last_names.charAt(0).toUpperCase() + last_names.slice(1)}${numberRandom}*`
       user.id_user = insertLogin.data.insertId;
+      user.verified_at = 'NULL';
       const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
+        const role_id = await getIdRole('athlete');
+        if (role_id.error) {
+          return res.json(responseQueries.error({ message: role_id.message }))
+        }
+        if (role_id.data.length === 0){
+          return res.json(responseQueries.error({ message: "Role not found" }))
+        }
+        const insertRole = await createRoleUser({ id_user: user.id_user, id_role: role_id.data[0].id })
+        if (insertRole.error) {
+          return res.json(responseQueries.error({ message: insertRole.message }))
+        }
         const tokenUsername = await generateToken({
           sub: user.id_user,
           username: user.username
@@ -106,7 +119,7 @@ export const solitudeRegisterAthlete = async (req, res) => {
   const db = variablesDB.academy
   const { id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family } = req.body
   try {
-    const insert = await pool.query(`INSERT INTO ${db}.athlete_user
+    const insert = await pool.query(`INSERT INTO ${db}.athlete
       (id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family)
       VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`,
       [id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family])

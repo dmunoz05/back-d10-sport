@@ -29,14 +29,14 @@ export const getClassComments = async (req, res) => {
     const db = variablesDB.academy;
 
     const select = await conn.query(
-        `SELECT cm.comment comentario, 
+        `SELECT cm.comment comentario,
                 COALESCE(CONCAT(au.first_names, ' ', au.last_names), cu.name_club, 'Usuario Desconocido') AS nombre, 
                 lu.email correo
         FROM ${db}.comments_couser cm
         LEFT JOIN ${db}.login_users lu ON lu.id_user = cm.id_user
-        LEFT JOIN ${db}.athlete_user au ON au.id = lu.id_athlete
-        LEFT JOIN ${db}.coach_user ca ON ca.id = lu.id_coach
-        LEFT JOIN ${db}.club_user cu ON cu.id = lu.id_club
+        LEFT JOIN ${db}.athlete au ON au.id = lu.id_athlete
+        LEFT JOIN ${db}.coach ca ON ca.id = lu.id_coach
+        LEFT JOIN ${db}.club cu ON cu.id = lu.id_club
         WHERE cm.id_class = ?`,
         [id_class]
     );

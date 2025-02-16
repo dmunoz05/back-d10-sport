@@ -90,15 +90,15 @@ export const registerAthlete = async (req, res) => {
         const tokenUsername = await generateToken({
           sub: user.id_user,
           username: user.username
-        })
+        }, '15min')
         const tokenPassword = await generateToken({
           sub: user.id_user,
           password: user.password
-        })
+        }, '15min')
         const tokenRole = await generateToken({
           sub: user.id_user,
           role: 'athlete'
-        })
+        }, '15min')
         const sendMail = await sendEmailFunction({ name: user.name, username: tokenUsername, password: tokenPassword, email: user.email, type: 'approved', role_user: tokenRole })
         return res.json(responseQueries.success({ message: "Success approvade", data: sendMail }));
       }

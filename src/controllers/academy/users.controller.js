@@ -150,7 +150,7 @@ export const validLoginUsersAcademy = async (req, res) => {
                         sub: id_user,
                         user: user
                     }
-                    const token = await generateToken(payload)
+                    const token = await generateToken(payload, '30min')
                     return res.json(responseJWT.success({ message: 'Success access', token }))
                 } else {
                     return res.json(responseJWT.error({ message: updatePassword.message, status: updatePassword.status, token: null, user: null }))
@@ -178,7 +178,7 @@ export const validLoginUsersAcademy = async (req, res) => {
                     sub: id_user,
                     user: user
                 }
-                const token = await generateToken(payload)
+                const token = await generateToken(payload, '30min')
                 return res.json(responseJWT.success({ message: 'Success access', token }))
             } else {
                 return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))

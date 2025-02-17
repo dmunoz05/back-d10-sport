@@ -64,15 +64,15 @@ export const approvedSolitude = async (req, res) => {
       const tokenUsername = await generateToken({
         sub: user.id_user,
         username: user.username
-      }, '30min')
+      })
       const tokenPassword = await generateToken({
         sub: user.id_user,
         password: user.password
-      }, '30min')
+      })
       const tokenRole = await generateToken({
         sub: user.id_user,
         role: role_user
-      }, '30min')
+      })
       const sendMail = await sendEmailFunction({ name: nombre, username: tokenUsername, password: tokenPassword, email: user.email, type: 'approved', role_user: tokenRole })
       const deleteRegister = await deleteSolitude(id_solitude);
       if (deleteRegister.error) {

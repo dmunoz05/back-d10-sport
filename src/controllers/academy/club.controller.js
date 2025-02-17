@@ -26,7 +26,16 @@ export const getClubById = async (req, res) => {
 export async function getClubByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
-  const select = await conn.query(`SELECT id, name_club, mail, city, country, president FROM ${db}.club WHERE id = ?`, [id]);
+  const select = await conn.query(`SELECT id, id_user, name_club, mail, city, country, president FROM ${db}.club WHERE id = ?`, [id]);
+  if (!select) return responseQueries.error({ message: "Error connecting" });
+  return responseQueries.success({ data: select[0] });
+}
+
+// Function para filtrar club por id_user
+export async function getClubByIdUserFunction(id) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const select = await conn.query(`SELECT id, id_user, name_club, mail, city, country, president FROM ${db}.club WHERE id_user = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
 }

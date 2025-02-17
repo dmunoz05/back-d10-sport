@@ -23,10 +23,10 @@ const transporter = nodemailer.createTransport({
 
 async function mailApproved(name, username, password, email, role_user) {
     let url = `username=${username}&password=${password}&role_user=${role_user}`
-    let tokenDecoded = await generateToken({
+    let tokenCode = await generateToken({
         sub: username,
         token: url
-    }, '30min')
+    }, '1h')
     let usernameDecoded = await verifyToken(username);
     let passwordDecoded = await verifyToken(password);
     let roleDecoded = await verifyToken(role_user);
@@ -36,7 +36,7 @@ async function mailApproved(name, username, password, email, role_user) {
             from: `D10+ Academy <${user_}>`,
             to: `"${email}"`,
             subject: "Solicitud aprobada ⚽😁",
-            html: htmlTemplateApproved(name, usernameDecoded.username, passwordDecoded.password, roleDecoded.role, tokenDecoded),
+            html: htmlTemplateApproved(name, usernameDecoded.username, passwordDecoded.password, roleDecoded.role, tokenCode),
         });
 
         return responseEmail.success({
@@ -81,12 +81,17 @@ async function mailRegisterUser(name, email) {
 }
 
 async function mailRegisterClub(club, name, email, rol) {
+    let url = `username=${club.username}&password=${club.password}&role_user=${club.role_user}`
+    let tokenCode = await generateToken({
+        sub: club.username,
+        token: url
+    })
     try {
         const my = await transporter.sendMail({
             from: `D10+ Academy <${user_}>`,
             to: `"${email}"`,
             subject: "Nuevo registro solicitado ⚽😉",
-            html: htmlTemplateClub(club, name, email, rol)
+            html: htmlTemplateClub(club.name, name, email, rol, tokenCode),
         });
 
         return responseEmail.success({

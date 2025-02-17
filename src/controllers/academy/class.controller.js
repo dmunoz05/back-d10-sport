@@ -7,9 +7,7 @@ export const getClassMenu = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.academy;
     const select = await conn.query(`SELECT co.id AS class_id, cc.class_title, cc.class_description
-    FROM ${db}.content_course cc
-    INNER JOIN ${db}.class_course co ON co.id_content = cc.id
-    WHERE cc.id_course = ?`, [id_course]);
+    FROM ${db}.content_course cc INNER JOIN ${db}.class_course co ON co.id_content = cc.id WHERE cc.id_course = ?`, [id_course]);
     if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
     return res.json(responseQueries.success({ data: select[0] }));
 }
@@ -32,11 +30,11 @@ export const getClassComments = async (req, res) => {
         `SELECT cm.comment comentario,
                 COALESCE(CONCAT(au.first_names, ' ', au.last_names), cu.name_club, 'Usuario Desconocido') AS nombre, 
                 lu.email correo
-        FROM ${db}.comments_couser cm
+        FROM ${db}.comments_course cm
         LEFT JOIN ${db}.login_users lu ON lu.id_user = cm.id_user
-        LEFT JOIN ${db}.athlete au ON au.id = lu.id_athlete
-        LEFT JOIN ${db}.coach ca ON ca.id = lu.id_coach
-        LEFT JOIN ${db}.club cu ON cu.id = lu.id_club
+        LEFT JOIN ${db}.athlete au ON au.id = lu.id_user
+        LEFT JOIN ${db}.coach ca ON ca.id = lu.id_user
+        LEFT JOIN ${db}.club cu ON cu.id = lu.id_user
         WHERE cm.id_class = ?`,
         [id_class]
     );
@@ -55,7 +53,7 @@ export const saveClassComment = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.academy;
     const insert = await conn.query(
-        `INSERT INTO ${db}.comments_couser (id_class, id_user, comment) VALUES (?, ?, ?)`,
+        `INSERT INTO ${db}.comments_course (id_class, id_user, comment) VALUES (?, ?, ?)`,
         [id_class, id_user, comment]
     );
     if (!insert) return res.json(responseQueries.error({ message: "Error al guardar comentario" }));

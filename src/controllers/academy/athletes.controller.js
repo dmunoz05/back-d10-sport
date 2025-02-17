@@ -32,7 +32,7 @@ export async function getAthleteByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`
-    SELECT first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
+    SELECT id_user, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
     FROM ${db}.athlete WHERE id_user = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
@@ -90,15 +90,15 @@ export const registerAthlete = async (req, res) => {
         const tokenUsername = await generateToken({
           sub: user.id_user,
           username: user.username
-        }, '15min')
+        })
         const tokenPassword = await generateToken({
           sub: user.id_user,
           password: user.password
-        }, '15min')
+      })
         const tokenRole = await generateToken({
           sub: user.id_user,
           role: 'athlete'
-        }, '15min')
+        })
         const sendMail = await sendEmailFunction({ name: user.name, username: tokenUsername, password: tokenPassword, email: user.email, type: 'approved', role_user: tokenRole })
         return res.json(responseQueries.success({ message: "Success approvade", data: sendMail }));
       }

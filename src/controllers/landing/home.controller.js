@@ -1,5 +1,5 @@
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
-import { generateTokenNoExpire } from "../../utils/token/handle-token.js";
+import { generateToken } from "../../utils/token/handle-token.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js"
 import { generateURLsignature } from "../../lib/s3/s3.js";
@@ -44,7 +44,7 @@ export const getDataHome = async (req, res) => {
     return res.json(responseQueries.error({ message: "Error connecting" }));
   }
 
-  const encryptedData = await generateTokenNoExpire({ sub: select[0][0].id, data: select[0] });
+  const encryptedData = await generateToken({ sub: select[0][0].id, data: select[0] });
 
   return res.json(responseQueries.success({ data: encryptedData }));
 };

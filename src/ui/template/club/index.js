@@ -1,4 +1,4 @@
-export const htmlTemplateClub = (club, name, email, rol) => {
+export const htmlTemplateClub = (club, name, email, rol, token) => {
   return `
     <!DOCTYPE html>
       <html lang="es">
@@ -24,11 +24,7 @@ export const htmlTemplateClub = (club, name, email, rol) => {
             }
 
             .header {
-              background: linear-gradient(
-                135deg,
-                rgba(24, 24, 24, 1) 0%,
-                rgba(61, 61, 61, 1) 100%
-              );
+              background-image: url("https://landing-page-d10.s3.sa-east-1.amazonaws.com/images/fondo_nav.png");
               color: #ffc702;
               text-align: center;
               padding: 20px;
@@ -52,12 +48,17 @@ export const htmlTemplateClub = (club, name, email, rol) => {
 
             .button {
               display: inline-block;
-              background-color: #007bff;
-              color: white;
+              background: linear-gradient(
+                135deg,
+                rgba(24, 24, 24, 1) 0%,
+                rgba(61, 61, 61, 1) 100%
+              );
+              color: #ffc702 !important;
               text-decoration: none;
               padding: 10px 20px;
               border-radius: 5px;
               margin-top: 20px;
+              font-weight: bold;
             }
 
             .footer {
@@ -99,13 +100,13 @@ export const htmlTemplateClub = (club, name, email, rol) => {
                 al usuario para finalizar el proceso.
               </p>
               <div>
-                <a href="https://academia.d10mas.com/#/club/solitudes" class="button"
+                <a href="https://academia.d10mas.com/#/club/solitudes?CwcfFzgQ50HM=${token}" class="button"
                   >Lista de usuarios</a
                 >
               </div>
             </div>
             <div class="footer">
-              &copy; 2025 Club Exclusivo. Todos los derechos reservados.
+              &copy; 2025 D10+. Todos los derechos reservados.
             </div>
           </div>
         </body>

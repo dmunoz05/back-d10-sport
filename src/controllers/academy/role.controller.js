@@ -3,6 +3,30 @@ import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 
 
+// Obtener todos los roles del sistema
+export async function getAllRoles() {
+  const pool = await getConnection()
+  const db = variablesDB.academy
+  try {
+      const response = await pool.query(`SELECT * FROM ${db}.role_system;`)
+      if (response[0].length === 0) {
+          return responseQueries.error({
+              message: "Error query",
+              data: response[0]
+          });
+      }
+      return responseQueries.success({
+          message: "Success query",
+          data: response[0]
+      });
+  } catch (error) {
+      return responseQueries.error({
+          message: "Error query",
+          error
+      });
+  }
+}
+
 // Obtener rol de usuario
 export async function getRoleUser(id) {
   const pool = await getConnection()
@@ -34,7 +58,7 @@ export async function getIdRole(role) {
   const pool = await getConnection()
   const db = variablesDB.academy
   try {
-      const response = await pool.query(`SELECT id FROM ${db}.role_system rs where rs.name_role = '${role}';`)
+      const response = await pool.query(`SELECT rs.id, rs.description_role FROM ${db}.role_system rs where rs.name_role = '${role}';`)
       if (response[0].length === 0) {
           return responseQueries.error({
               message: "Error query",

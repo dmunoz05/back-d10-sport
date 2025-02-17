@@ -52,7 +52,7 @@ export const htmlTemplateApproved = (name, username, password, role_user, token)
                 rgba(24, 24, 24, 1) 0%,
                 rgba(61, 61, 61, 1) 100%
               );
-              color: #ffc702;
+              color: #ffc702 !important;
               text-decoration: none;
               padding: 10px 20px;
               border-radius: 5px;

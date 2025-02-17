@@ -1,7 +1,8 @@
-import { createSolitudLoginUser, createSolitudeRegisterUser, validateNotRegisterMail } from "./users.controller.js";
+import { createSolitudLoginUser, createSolitudeRegisterUser, validateNotRegisterMail, searchLoginUserById } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
-import { variablesDB } from "../../utils/params/const.database.js";
 import { getIdRole, createRoleUser } from "./role.controller.js";
+import { variablesDB } from "../../utils/params/const.database.js";
+import { generateToken } from "../../utils/token/handle-token.js";
 import getConnection from "../../database/connection.mysql.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
 import { getClubByIdFunction } from "./club.controller.js";
@@ -30,7 +31,7 @@ export async function getCoachByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`
-    SELECT first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other
+    SELECT id_club, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, licenses_obtained, other
     FROM ${db}.coach WHERE id_user = ?`, [id]);
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
@@ -78,7 +79,7 @@ export const registerCoach = async (req, res) => {
       if (insert[0].affectedRows === 0) {
         return res.json(responseQueries.error({ message: "Uninserted records" }))
       }
-      const role_id = await getIdRole('coach');
+      const role_id = await getIdRole(req.body.role);
       if (role_id.error) {
         return res.json(responseQueries.error({ message: role_id.message }))
       }
@@ -90,8 +91,24 @@ export const registerCoach = async (req, res) => {
       let username = mail;
       const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
       if (insertSolitudeRegister.success) {
-        const sendMailUser = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user', role_user: 'coach' })
-        const sendMailClub = await sendEmailFunction({ name: club.data[0].name_club, username: nameComplete, password: undefined, email: club.data[0].mail, type: 'register_club', role_user: 'coach' })
+        const loginClub = await searchLoginUserById({ id: club.data[0].id_user })
+        if (loginClub.error) {
+          return res.json(responseQueries.error({ message: loginClub.message, status: loginClub.status, token: null, user: null }))
+        }
+        const tokenUsername = await generateToken({
+          sub: loginClub.data[0].id_user,
+          username: loginClub.data[0].username
+        })
+        const tokenPassword = await generateToken({
+          sub: loginClub.data[0].id_user,
+          password: loginClub.data[0].password
+        })
+        const tokenRole = await generateToken({
+          sub: loginClub.data[0].id_user,
+          role: 'club'
+        })
+        const sendMailUser = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user', role_user: role_id.data[0].description_role })
+        const sendMailClub = await sendEmailFunction({ name: { name: club.data[0].name_club, username: tokenUsername, password: tokenPassword, role_user: tokenRole }, username: nameComplete, password: undefined, email: username, type: 'register_club', role_user: role_id.data[0].description_role })
         return res.json(responseQueries.success({
           message: "Success insert",
           data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMailUser: sendMailUser, sendMailClub: sendMailClub }]

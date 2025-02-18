@@ -6,8 +6,7 @@ export const getClassMenu = async (req, res) => {
     const { id_course } = req.query;
     const conn = await getConnection();
     const db = variablesDB.academy;
-    const select = await conn.query(`SELECT co.id AS class_id, cc.class_title, cc.class_description
-    FROM ${db}.content_course cc INNER JOIN ${db}.class_course co ON co.id_content = cc.id WHERE cc.id_course = ?`, [id_course]);
+    const select = await conn.query(`SELECT co.id_content AS class_id, cc.class_title, cc.class_description FROM ${db}.content_course cc INNER JOIN ${db}.class_course co ON co.id_content = cc.id WHERE cc.id_course = ?`, [id_course]);
     if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
     return res.json(responseQueries.success({ data: select[0] }));
 }
@@ -42,8 +41,6 @@ export const getClassComments = async (req, res) => {
     if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
     return res.json(responseQueries.success({ data: select[0] }));
 };
-
-// ----------------------------------------
 
 export const saveClassComment = async (req, res) => {
     const { id_class, comment, id_user } = req.body;

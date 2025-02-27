@@ -26,6 +26,7 @@ import { validLoginUsersAcademy } from '../controllers/academy/users.controller.
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
+import { getAdminCourseAcademy, saveAdminCourse } from '../controllers/academy/admin-course.controller.js';
 
 // External
 import { sendEmail } from '../lib/api/email.api.js';
@@ -74,6 +75,8 @@ export const routes = () => {
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
     router.get('/landing/g/contact', ConexionVerify, getDataContact);
+    router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
+    router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, saveAdminCourse);
 
     // Academy
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);

@@ -2,6 +2,10 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
+// -----------------------------------------------------------------------
+// ----------------------------- Get Course ------------------------------
+// -----------------------------------------------------------------------
+
 export const getAdminCourseAcademy = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
@@ -12,6 +16,10 @@ export const getAdminCourseAcademy = async (req, res) => {
   });
   return res.json(select[0]);
 }
+
+// -----------------------------------------------------------------------
+// ----------------------------- Post Course -----------------------------
+// -----------------------------------------------------------------------
 
 export const saveAdminCourse = async (req, res) => {
   const { course_title, description_course } = req.body;
@@ -27,4 +35,44 @@ export const saveAdminCourse = async (req, res) => {
   );
   if (!insert) return res.json(responseQueries.error({ message: "Error al crear curso" }));
   return res.json(responseQueries.success({ message: "Curso creado con éxito" }));
+};
+
+// -----------------------------------------------------------------------
+// ----------------------------- Delete Course ---------------------------
+// -----------------------------------------------------------------------
+
+export const deleteAdminCourse = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({
+      status: 400,
+      message: 'El ID es obligatorio'
+    });
+  }
+
+  try {
+    const conn = await getConnection();
+    const db = variablesDB.academy;
+
+    const result = await conn.query(`DELETE FROM ${db}.course_user WHERE id = ?`, [id]);
+
+    if (result[0].affectedRows === 0) {
+      return res.status(404).json({
+        status: 404,
+        message: 'Curso no encontrado'
+      });
+    }
+
+    return res.json({
+      status: 200,
+      message: (`Curso #${id} eliminado correctamente`)
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      status: 500,
+      message: 'Error al eliminar el curso',
+      error: error.message
+    });
+  }
 };

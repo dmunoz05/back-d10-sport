@@ -76,3 +76,34 @@ export const deleteAdminCourse = async (req, res) => {
     });
   }
 };
+
+// -----------------------------------------------------------------------
+// ----------------------------- Update Course ---------------------------
+// -----------------------------------------------------------------------
+
+export const updateAdminCourse = async (req, res) => {
+  const { id } = req.params;
+  const { course_title, description_course } = req.body;
+
+  if (!id || !course_title || !description_course) {
+    return res.json(responseQueries.error({ message: "Datos incompletos" }));
+  }
+
+  try {
+    const conn = await getConnection();
+    const db = variablesDB.academy;
+
+    const update = await conn.query(
+      `UPDATE ${db}.course_user SET course_title = ?, description_course = ? WHERE id = ?`,
+      [course_title, description_course, id]
+    );
+
+    if (update.affectedRows === 0) {
+      return res.json(responseQueries.error({ message: "No se encontró el curso" }));
+    }
+
+    return res.json(responseQueries.success({ message: "Curso actualizado con éxito" }));
+  } catch (error) {
+    return res.json(responseQueries.error({ message: "Error al actualizar curso", error }));
+  }
+};

@@ -26,7 +26,7 @@ import { validLoginUsersAcademy } from '../controllers/academy/users.controller.
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
-import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse } from '../controllers/academy/admin-course.controller.js';
+import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/academy/admin-course.controller.js';
 
 // External
 import { sendEmail } from '../lib/api/email.api.js';
@@ -78,6 +78,7 @@ export const routes = () => {
     router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
     router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, saveAdminCourse);
     router.delete('/academy/d/delete-course/:id', ConexionVerify, AuthorizationVerify, deleteAdminCourse);
+    router.put('/academy/u/update-course/:id', ConexionVerify, AuthorizationVerify, updateAdminCourse);
 
     // Academy
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);

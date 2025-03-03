@@ -22,47 +22,33 @@ export const getAdminClassAcademy = async (req, res) => {
 // -----------------------------------------------------------------------
 
 export const saveAdminClass = async (req, res) => {
-    const { id_course, class_title, class_description, class_content } = req.body;
+    const conn = await getConnection();
+    if (!conn) return res.json({ message: "Error en la conexión a la base de datos" });
 
-    if (!id_course || !class_title || !class_description || !class_content) {
-        return res.json(responseQueries.error({ message: "Datos incompletos" }));
-    }
-
-    let conn;
     try {
-        conn = await getConnection();
-        const db = variablesDB.academy;
-
         await conn.beginTransaction();
 
         const [insertContent] = await conn.query(
-            `INSERT INTO ${db}.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
-            [id_course, class_title, class_description, JSON.stringify(class_content)]
+            `INSERT INTO d10Academy.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
+            [req.body.id_course, req.body.class_title, req.body.class_description, JSON.stringify(req.body.class_content || { video: "https://example.com/default-video.mp4" })]
         );
 
-        if (!insertContent.insertId) {
-            throw new Error("Error al insertar en content_course");
-        }
+        if (!insertContent.insertId) throw new Error("Error al insertar en content_course");
 
         const lastContentId = insertContent.insertId;
 
         const [insertClass] = await conn.query(
-            `INSERT INTO ${db}.class_course (id_course, id_content) VALUES (?, ?)`,
-            [id_course, lastContentId]
+            `INSERT INTO d10Academy.class_course (id_course, id_content) VALUES (?, ?)`,
+            [req.body.id_course, lastContentId]
         );
 
-        if (!insertClass.affectedRows) {
-            throw new Error("Error al insertar en class_course");
-        }
+        if (!insertClass.affectedRows) throw new Error("Error al insertar en class_course");
 
         await conn.commit();
-
-        return res.json(responseQueries.success({ message: "Clase creada con éxito" }));
+        return res.json({ message: "Clase creada con éxito" });
     } catch (error) {
-        if (conn) await conn.rollback();
-        return res.json(responseQueries.error({ message: error.message }));
-    } finally {
-        if (conn) conn.release();
+        await conn.rollback();
+        return res.json({ message: error.message });
     }
 };
 

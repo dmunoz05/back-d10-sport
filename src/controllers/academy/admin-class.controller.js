@@ -6,7 +6,7 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 // ----------------------------- Get Class -------------------------------
 // -----------------------------------------------------------------------
 
-export const getAdminClassAcademy = async (req, res) => {
+export const getAdminClass = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.academy;
     const select = await conn.query(`SELECT * FROM ${db}.course_user`);
@@ -23,13 +23,14 @@ export const getAdminClassAcademy = async (req, res) => {
 
 export const saveAdminClass = async (req, res) => {
     const conn = await getConnection();
+    const db = variablesDB.academy;
     if (!conn) return res.json({ message: "Error en la conexión a la base de datos" });
 
     try {
         await conn.beginTransaction();
 
         const [insertContent] = await conn.query(
-            `INSERT INTO d10Academy.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
+            `INSERT INTO ${db}.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
             [req.body.id_course, req.body.class_title, req.body.class_description, JSON.stringify(req.body.class_content || { video: "https://example.com/default-video.mp4" })]
         );
 
@@ -38,17 +39,17 @@ export const saveAdminClass = async (req, res) => {
         const lastContentId = insertContent.insertId;
 
         const [insertClass] = await conn.query(
-            `INSERT INTO d10Academy.class_course (id_course, id_content) VALUES (?, ?)`,
+            `INSERT INTO ${db}.class_course (id_course, id_content) VALUES (?, ?)`,
             [req.body.id_course, lastContentId]
         );
 
         if (!insertClass.affectedRows) throw new Error("Error al insertar en class_course");
 
         await conn.commit();
-        return res.json({ message: "Clase creada con éxito" });
+        return res.json(responseQueries.success({ message: "Curso creado con éxito" }));
     } catch (error) {
         await conn.rollback();
-        return res.json({ message: error.message });
+        return res.json(responseQueries.error({ message: "Error al crear curso" }));
     }
 };
 
@@ -69,24 +70,23 @@ export const deleteAdminClass = async (req, res) => {
         const conn = await getConnection();
         const db = variablesDB.academy;
 
-        const result = await conn.query(`DELETE FROM ${db}.course_user WHERE id = ?`, [id]);
+        const [result] = await conn.query(`DELETE FROM ${db}.content_course WHERE id = ?`, [id]);
 
-        if (result[0].affectedRows === 0) {
+        if (result.affectedRows === 0) {
             return res.status(404).json({
                 status: 404,
-                message: 'Curso no encontrado'
+                message: 'Contenido no encontrado'
             });
         }
 
         return res.json({
             status: 200,
-            message: (`Curso #${id} eliminado correctamente`)
+            message: `Contenido #${id} eliminado correctamente`
         });
-
     } catch (error) {
         return res.status(500).json({
             status: 500,
-            message: 'Error al eliminar el curso',
+            message: 'Error al eliminar el contenido',
             error: error.message
         });
     }
@@ -98,9 +98,9 @@ export const deleteAdminClass = async (req, res) => {
 
 export const updateAdminClass = async (req, res) => {
     const { id } = req.params;
-    const { course_title, description_course } = req.body;
+    const { class_title, class_description } = req.body;
 
-    if (!id || !course_title || !description_course) {
+    if (!id || !class_title || !class_description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -109,16 +109,16 @@ export const updateAdminClass = async (req, res) => {
         const db = variablesDB.academy;
 
         const update = await conn.query(
-            `UPDATE ${db}.course_user SET course_title = ?, description_course = ? WHERE id = ?`,
-            [course_title, description_course, id]
+            `UPDATE ${db}.content_course SET class_title = ?, class_description = ? WHERE id = ?`,
+            [class_title, class_description, id]
         );
 
         if (update.affectedRows === 0) {
-            return res.json(responseQueries.error({ message: "No se encontró el curso" }));
+            return res.json(responseQueries.error({ message: "No se encontró el contenido" }));
         }
 
-        return res.json(responseQueries.success({ message: "Curso actualizado con éxito" }));
+        return res.json(responseQueries.success({ message: "Contenido actualizado con éxito" }));
     } catch (error) {
-        return res.json(responseQueries.error({ message: "Error al actualizar curso", error }));
+        return res.json(responseQueries.error({ message: "Error al actualizar contenido", error }));
     }
 };

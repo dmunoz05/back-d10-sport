@@ -28,6 +28,8 @@ import { getClassMenu, getClassContent, getClassComments, saveClassComment } fro
 import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/academy/admin-course.controller.js';
 
+import { getAdminClassAcademy, saveAdminClass, deleteAdminClass, updateAdminClass } from '../controllers/academy/admin-class.controller.js';
+
 // External
 import { sendEmail } from '../lib/api/email.api.js';
 import {
@@ -75,10 +77,16 @@ export const routes = () => {
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
     router.get('/landing/g/contact', ConexionVerify, getDataContact);
+
     router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
     router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, saveAdminCourse);
     router.delete('/academy/d/delete-course/:id', ConexionVerify, AuthorizationVerify, deleteAdminCourse);
     router.put('/academy/u/update-course/:id', ConexionVerify, AuthorizationVerify, updateAdminCourse);
+
+    router.get('/academy/g/admin-class', ConexionVerify, AuthorizationVerify, getAdminClassAcademy);
+    router.post('/academy/i/add-class', ConexionVerify, AuthorizationVerify, saveAdminClass);
+    router.delete('/academy/d/delete-class/:id', ConexionVerify, AuthorizationVerify, deleteAdminClass);
+    router.put('/academy/u/update-class/:id', ConexionVerify, AuthorizationVerify, updateAdminClass);
 
     // Academy
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);

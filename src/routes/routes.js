@@ -15,6 +15,7 @@ import { getDataContact, saveDataContact } from '../controllers/landing/contact.
 import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
+import { updateAdminHome } from '../controllers/landing/admin-home.controller.js'
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -77,6 +78,12 @@ export const routes = () => {
     router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
     router.get('/landing/g/contact', ConexionVerify, getDataContact);
+
+    // Admin Academy
+
+    router.put('/landing/u/update-home/:id', ConexionVerify, AuthorizationVerify, updateAdminHome);
+
+    // Admin Academy
 
     router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
     router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, saveAdminCourse);

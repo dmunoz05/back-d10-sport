@@ -1,4 +1,4 @@
-export const htmlTemplateRegister = (name) => {
+export const htmlTemplateRegisterCoach = (name) => {
   return `
     <!DOCTYPE html>
       <html lang="es">
@@ -8,7 +8,7 @@ export const htmlTemplateRegister = (name) => {
             name="viewport"
             content__email-approve="width=device-width, initial-scale=1.0"
           />
-          <title>¡Registro Aprobado por el Club!</title>
+          <title>¡Registro realizado</title>
           <style>
             body {
               font-family: Arial, sans-serif;

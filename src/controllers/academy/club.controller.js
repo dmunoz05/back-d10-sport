@@ -1,7 +1,11 @@
-import { createSolitudLoginUser, createSolitudeRegisterUser } from "./users.controller.js";
+import { createSolitudLoginUser, createSolitudeRegisterUser, validateNotRegisterMail, searchLoginUserById } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
+import { generateToken } from "../../utils/token/handle-token.js";
+import { getIdRole, getRoleByIdRole, createRoleUser } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
+import { sendEmailFunction } from "../../lib/api/email.api.js";
+import { searchAdminAvailable } from "./admin.controller.js";
 
 // Obtener todos los clubes
 export const getClub = async (req, res) => {
@@ -31,6 +35,15 @@ export async function getClubByIdFunction(id) {
   return responseQueries.success({ data: select[0] });
 }
 
+// Funcion para eliminar club por id
+export async function deleteClubByIdFunction(id) {
+  const conn = await getConnection();
+  const db = variablesDB.academy;
+  const select = await conn.query(`DELETE FROM ${db}.club WHERE id_user = ?`, [id]);
+  if (!select) return responseQueries.error({ message: "Error connecting" });
+  return responseQueries.success({ data: select[0] });
+}
+
 // Function para filtrar club por id_user
 export async function getClubByIdUserFunction(id) {
   const conn = await getConnection();
@@ -54,24 +67,59 @@ export const searchClubFilter = async (req, res) => {
 export const registerClub = async (req, res) => {
   const pool = await getConnection()
   const db = variablesDB.academy
-  const { name_club, date_founded, country, city, president, comet, contact, mail, social_networks, website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites } = req.body
+  const { name_club, date_founded, country, city, president, comet, contact, mail, social_networks, website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites, role } = req.body
   try {
-    const insert = await pool.query(`INSERT INTO ${db}.club
-      (name_club, date_founded, country, city, president, comet, contact, mail, socal_networks, website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites)
-      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [name_club, date_founded, country, city, president, comet, contact, mail, social_networks, website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites]);
-
-    if (insert[0].affectedRows === 0) {
-      return res.json(responseQueries.error({ message: "Uninserted records" }))
+    const existMail = await validateNotRegisterMail(mail);
+    if (existMail.success) {
+      return res.json(responseQueries.error({ message: existMail.message }))
     }
-    const insertLogin = await createSolitudLoginUser({ id_athlete: null, id_coach: null, id_club: insert[0].insertId, role_user: 'club' })
+    const insertLogin = await createSolitudLoginUser({ email: mail })
     if (insertLogin.success) {
-      let username = mail;
-      const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: username })
+      const insert = await pool.query(`INSERT INTO ${db}.club
+      (id_user, name_club, date_founded, country, city, president, comet, contact, mail, social_networks, website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites)
+      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [insertLogin.data.insertId, name_club, date_founded, country, city, president, comet, contact, mail, JSON.stringify(social_networks), website, number_athletes, categories, local_league, national_tournament, u13_u15_u17_u20, number_coaches, assistants, interns, venues, sites]);
+      if (insert[0].affectedRows === 0) {
+        return res.json(responseQueries.error({ message: "Uninserted records" }))
+      }
+      const insertRole = await createRoleUser({ id_user: insertLogin.data.insertId, id_role: role.role_id })
+      if (insertRole.error) {
+        return res.json(responseQueries.error({ message: insertRole.message }))
+      }
+      const insertSolitudeRegister = await createSolitudeRegisterUser({ id_user: insertLogin.data.insertId, username: mail })
       if (insertSolitudeRegister.success) {
+        const adminUser = await searchAdminAvailable();
+        if (adminUser.error) {
+          return res.json(responseQueries.error({ message: adminUser.message }))
+        }
+        const roleAdmin = await getRoleByIdRole(role.role_id);
+        if (roleAdmin.error) {
+          return res.json(responseQueries.error({ message: roleAdmin.message }))
+        }
+        let nameCompleteAdmin = `${adminUser.data[0].first_names.charAt(0).toUpperCase() + adminUser.data[0].first_names.slice(1)} ${adminUser.data[0].last_names.charAt(0).toUpperCase() + adminUser.data[0].last_names.slice(1)}`
+        const loginAdmin = await searchLoginUserById({ id: adminUser.data[0].id_user })
+        if (loginAdmin.error) {
+          return res.json(responseQueries.error({ message: loginAdmin.message, status: loginAdmin.status, token: null, user: null }))
+        }
+        let nameComplete = `${name_club.charAt(0).toUpperCase() + name_club.slice(1)}`
+        let username = mail;
+        const tokenUsername = await generateToken({
+          sub: loginAdmin.data[0].id_user,
+          username: loginAdmin.data[0].username
+        })
+        const tokenPassword = await generateToken({
+          sub: loginAdmin.data[0].id_user,
+          password: loginAdmin.data[0].password
+        })
+        const tokenRole = await generateToken({
+          sub: loginAdmin.data[0].id_user,
+          role: roleAdmin.data[0].name_role
+        })
+        const sendMailUserClub = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user_club', role_user: role.description_role })
+        const sendMailAdmin = await sendEmailFunction({ name: { email: loginAdmin.data[0].username, name: nameCompleteAdmin, username: tokenUsername, password: tokenPassword, role_user: tokenRole }, username: nameComplete, password: undefined, email: username, type: 'register_admin', role_user: role.description_role })
         return res.json(responseQueries.success({
           message: "Success insert",
-          data: [{ clubId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId }]
+          data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMailUserClub: sendMailUserClub, sendMailAdmin: sendMailAdmin }]
         }))
       }
       return res.json(responseQueries.error({ message: insertSolitudeRegister.message }))

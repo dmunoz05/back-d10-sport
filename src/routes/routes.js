@@ -17,6 +17,7 @@ import { getDataError, saveDataError } from '../controllers/landing/error.contro
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/landing/admin-home.controller.js'
 import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/academy/admin-services.controller.js'
+import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/academy/admin-aboutus.controller.js';
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -93,6 +94,12 @@ export const routes = () => {
     router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesOne);
     router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTwo);
     router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesThree);
+
+    router.put('/landing/u/update-aboutus-conocenos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsConocenos);
+    router.put('/landing/u/update-aboutus-fundador/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsFundador);
+    router.put('/landing/u/update-aboutus-objetivos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsObjetivos);
+    router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsMision);
+    router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsVision);
 
     // Admin Academy
 

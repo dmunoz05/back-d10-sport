@@ -16,6 +16,7 @@ import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/adm
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/landing/admin-home.controller.js'
+import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/academy/admin-services.controller.js'
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -79,7 +80,7 @@ export const routes = () => {
     router.get('/landing/admin/user', ConexionVerify, getAdminPage);
     router.get('/landing/g/contact', ConexionVerify, getDataContact);
 
-    // Admin Academy
+    // Admin Landing
 
     router.put('/landing/u/update-home/:id', ConexionVerify, AuthorizationVerify, updateAdminHome);
     router.put('/landing/u/update-nosotros/:id', ConexionVerify, AuthorizationVerify, updateAdminNosotros);
@@ -87,6 +88,11 @@ export const routes = () => {
     router.put('/landing/u/update-news/:id', ConexionVerify, AuthorizationVerify, updateAdminNews);
     router.put('/landing/u/update-academia/:id', ConexionVerify, AuthorizationVerify, updateAdminAcademia);
     router.put('/landing/u/update-aliados/:id', ConexionVerify, AuthorizationVerify, updateAdminAliados);
+
+    router.put('/landing/u/update-services-title/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTitle);
+    router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesOne);
+    router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTwo);
+    router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesThree);
 
     // Admin Academy
 

@@ -162,7 +162,7 @@ export const updateAdminAboutUsVision = async (req, res) => {
 
         const update = await conn.query(
             `UPDATE ${db}.parametersAboutUs 
-             SET section_four = JSON_SET(section_four, 
+             SET section_six = JSON_SET(section_six, 
                 '$.title', ?, 
                 '$.description', ?)
              WHERE id = ?`,

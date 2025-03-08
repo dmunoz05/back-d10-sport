@@ -19,6 +19,8 @@ import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdmin
 import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/academy/admin-services.controller.js'
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/academy/admin-aboutus.controller.js';
 
+import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/academy/admin-gallery.controller.js';
+
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
 import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
@@ -100,6 +102,10 @@ export const routes = () => {
     router.put('/landing/u/update-aboutus-objetivos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsObjetivos);
     router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsMision);
     router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsVision);
+
+    router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, saveGalleryImage)
+    router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)
+    router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
 
     // Admin Academy
 

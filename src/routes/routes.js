@@ -20,6 +20,7 @@ import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTw
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/academy/admin-aboutus.controller.js';
 
 import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/academy/admin-gallery.controller.js';
+import { saveNews, updateNews, deleteNews } from '../controllers/academy/admin-news.controller.js';
 
 // Academy
 import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
@@ -106,6 +107,10 @@ export const routes = () => {
     router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, saveGalleryImage)
     router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)
     router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
+
+    router.put('/landing/i/save-news-admin/:id', ConexionVerify, AuthorizationVerify, saveNews)
+    router.put('/landing/u/update-news-admin/:id', ConexionVerify, AuthorizationVerify, updateNews)
+    router.put('/landing/d/delete-news-admin/:id', ConexionVerify, AuthorizationVerify, deleteNews)
 
     // Admin Academy
 

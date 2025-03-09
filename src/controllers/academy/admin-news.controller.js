@@ -8,7 +8,6 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
 export const saveNews = async (req, res) => {
     try {
-
         const { id } = req.params;
         const { date, image, title, description } = req.body;
 
@@ -47,8 +46,6 @@ export const saveNews = async (req, res) => {
 // -----------------------------------------------------------------------
 
 export const updateNews = async (req, res) => {
-    console.log("updateNews ejecutándose"); // ✅ Verifica si entra a la función
-    console.log("Body recibido:", req.body); // ✅ Verifica qué datos están llegando
     try {
         const { id } = req.params;
         const { index, date, image, title, description } = req.body;

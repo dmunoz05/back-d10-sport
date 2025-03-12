@@ -32,7 +32,6 @@ import { validLoginUsersAcademy } from '../controllers/academy/users.controller.
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsersCoach, getSolitudeUsersClub, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
-import { getSolitudeUsers, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/academy/admin-course.controller.js';
 import { getAdminClass, saveAdminClass, deleteAdminClass, updateAdminClass } from '../controllers/academy/admin-class.controller.js';
 

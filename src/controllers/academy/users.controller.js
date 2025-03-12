@@ -5,9 +5,10 @@ import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
 import { getAthleteByIdFunction } from "./athletes.controller.js";
+import { getAdminByIdUserFunction } from "./admin.controller.js";
+import { getRoleUser, getAllRoles } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
-import { getRoleUser, getAllRoles } from "./role.controller.js";
 
 
 // Buscar usuario por id
@@ -16,7 +17,7 @@ export async function searchLoginUserById(data) {
     const pool = await getConnection()
     const db = variablesDB.academy
     try {
-        const response = await pool.query(`SELECT id_user, username, email, verify, created_at, verified_at FROM ${db}.login_users WHERE id_user = ?`, [id])
+        const response = await pool.query(`SELECT id_user, username, email, password, verify, created_at, verified_at FROM ${db}.login_users WHERE id_user = ?`, [id])
         if (response[0].length === 0) {
             return responseQueries.error({
                 message: "User not found",
@@ -29,7 +30,7 @@ export async function searchLoginUserById(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: "Error query",
+            message: "Error query search user",
             error
         });
     }
@@ -59,7 +60,7 @@ export async function searchUserLogin(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: "Error query",
+            message: "Error query search user",
             error
         });
     }
@@ -74,7 +75,7 @@ async function updatePasswordHashUser(data) {
         const response = await pool.query(`UPDATE ${db}.login_users SET password=?, verify=?, verified_at=CURRENT_TIMESTAMP() WHERE id_user=?`, [password, verify, id])
         if (response[0].affectedRows === 0) {
             return responseQueries.error({
-                message: "Error update",
+                message: "Error update password",
                 data: response[0]
             });
         }
@@ -84,7 +85,7 @@ async function updatePasswordHashUser(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: "Error update",
+            message: "Error update password",
             error
         });
     }
@@ -97,14 +98,14 @@ async function getDataUser(data) {
         const roles = await getAllRoles();
         if (roles.error) {
             return responseQueries.error({
-                message: "Error query",
+                message: "Error query roles",
                 error: roles.error
             });
         }
         const roleFilter = roles.data.filter(role => role.name_role === role_user)
         if (roleFilter.length === 0) {
             return responseQueries.error({
-                message: "Error query",
+                message: "Error query roles",
                 error: "Role not found"
             });
         }
@@ -112,7 +113,7 @@ async function getDataUser(data) {
             const responseAthlete = await getAthleteByIdFunction(id_user)
             if (responseAthlete.error) {
                 return responseQueries.error({
-                    message: "Error query",
+                    message: "Error query athlete",
                     error: responseAthlete.error
                 });
             }
@@ -123,7 +124,7 @@ async function getDataUser(data) {
             const responseClub = await getClubByIdFunction(responseCoach.data[0].id_club)
             if (responseClub.error || responseCoach.error) {
                 return responseQueries.error({
-                    message: "Error query",
+                    message: "Error query coach",
                     error: responseClub.error || responseCoach.error
                 });
             }
@@ -135,11 +136,21 @@ async function getDataUser(data) {
             const responseClub = await getClubByIdUserFunction(id_user)
             if (responseClub.error) {
                 return responseQueries.error({
-                    message: "Error query",
+                    message: "Error query club",
                     error: responseClub.error
                 });
             }
             user = responseClub.data[0]
+        }
+        else if (roleFilter[0].name_role == 'admin') {
+            const responseAdmin = await getAdminByIdUserFunction(id_user)
+            if (responseAdmin.error) {
+                return responseQueries.error({
+                    message: "Error query admin",
+                    error: responseAdmin.error
+                });
+            }
+            user = responseAdmin.data[0]
         } else {
             return responseQueries.error({
                 message: "Role not found",
@@ -152,7 +163,7 @@ async function getDataUser(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: "Error query",
+            message: "Error query user",
             error
         });
     }
@@ -245,7 +256,7 @@ export async function createSolitudeRegisterUser(data) {
             [id_user, username, username, 0])
         if (response[0].affectedRows === 0) {
             return responseQueries.error({
-                message: error?.message ?? "Error insert",
+                message: error?.message ?? "Error insert register",
                 data: response[0]
             });
         }
@@ -255,7 +266,7 @@ export async function createSolitudeRegisterUser(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: error?.message ?? "Error insert",
+            message: error?.message ?? "Error insert register",
             error
         });
     }
@@ -273,7 +284,7 @@ export async function createSolitudLoginUser(data) {
             [email, 'password', email, 0])
         if (response[0].affectedRows === 0) {
             return responseQueries.error({
-                message: error?.message ?? "Error insert",
+                message: error?.message ?? "Error insert login",
                 data: response[0]
             });
         }
@@ -283,7 +294,7 @@ export async function createSolitudLoginUser(data) {
         });
     } catch (error) {
         return responseQueries.error({
-            message: error?.message ?? "Error insert",
+            message: error?.message ?? "Error insert login",
             error
         });
     }

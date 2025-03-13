@@ -18,7 +18,6 @@ import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/landing/admin-home.controller.js'
 import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/academy/admin-services.controller.js'
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/academy/admin-aboutus.controller.js';
-
 import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/academy/admin-gallery.controller.js';
 import { saveNews, updateNews, deleteNews } from '../controllers/academy/admin-news.controller.js';
 
@@ -50,6 +49,7 @@ import {
     getDepartmentColombianRapidapi,
     getCitiesOneCountryIDAndDepartmentIDRapidapi
 } from '../controllers/academy/external.controller.js';
+import { uploadFileS3, upload, handleMulterError } from '../lib/s3/s3.js';
 
 // Database
 import { getConnect } from '../database/conection.controller.js';
@@ -160,6 +160,10 @@ export const routes = () => {
     router.get('/external/g/rapi/countries/', AuthorizationVerify, getCountriesRapidapi);
     router.get('/external/g/rapi/depart/col/', AuthorizationVerify, getDepartmentColombianRapidapi);
     router.get('/external/g/rapi/cities/depart/:departmentID/:countryID', AuthorizationVerify, getCitiesOneCountryIDAndDepartmentIDRapidapi);
+
+    //S3
+    router.post('/external/p/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, uploadFileS3);
+
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

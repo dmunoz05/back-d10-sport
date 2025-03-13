@@ -6,9 +6,10 @@ import getConnection from "../../database/connection.mysql.js";
 export async function searchAdminAvailable() {
   const conn = await getConnection();
   const db = variablesDB.academy;
-  const select = await conn.query(`SELECT ru.id_user, ru.id_role, au.first_names, au.last_names, au.gender, au.email
+  const select = await conn.query(`SELECT ru.id_user, ru.id_role, rs.name_role, au.first_names, au.last_names, au.gender, au.email
     FROM ${db}.role_user ru
-    INNER JOIN ${db}.admin_user au ON au.id_user = ru.id_user;
+    INNER JOIN ${db}.admin_user au ON au.id_user = ru.id_user
+    INNER JOIN ${db}.role_system rs ON rs.id = ru.id_role;
   `);
   if (!select) return responseQueries.error({ message: "Error search admin" });
   return responseQueries.success({ data: select[0] });

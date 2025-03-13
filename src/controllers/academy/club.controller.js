@@ -92,10 +92,6 @@ export const registerClub = async (req, res) => {
         if (adminUser.error) {
           return res.json(responseQueries.error({ message: adminUser.message }))
         }
-        const roleAdmin = await getRoleByIdRole(role.role_id);
-        if (roleAdmin.error) {
-          return res.json(responseQueries.error({ message: roleAdmin.message }))
-        }
         let nameCompleteAdmin = `${adminUser.data[0].first_names.charAt(0).toUpperCase() + adminUser.data[0].first_names.slice(1)} ${adminUser.data[0].last_names.charAt(0).toUpperCase() + adminUser.data[0].last_names.slice(1)}`
         const loginAdmin = await searchLoginUserById({ id: adminUser.data[0].id_user })
         if (loginAdmin.error) {
@@ -113,7 +109,7 @@ export const registerClub = async (req, res) => {
         })
         const tokenRole = await generateToken({
           sub: loginAdmin.data[0].id_user,
-          role: roleAdmin.data[0].name_role
+          role: adminUser.data[0].name_role
         })
         const sendMailUserClub = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user_club', role_user: role.description_role })
         const sendMailAdmin = await sendEmailFunction({ name: { email: loginAdmin.data[0].username, name: nameCompleteAdmin, username: tokenUsername, password: tokenPassword, role_user: tokenRole }, username: nameComplete, password: undefined, email: username, type: 'register_admin', role_user: role.description_role })

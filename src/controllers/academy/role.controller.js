@@ -2,9 +2,32 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 
-
 // Obtener todos los roles del sistema
-export async function getAllRoles() {
+export const getAllRoles = async (req, res) => {
+    const pool = await getConnection()
+    const db = variablesDB.academy
+    try {
+        const response = await pool.query(`SELECT * FROM ${db}.role_system;`)
+        if (response[0].length === 0) {
+            return responseQueries.error({
+                message: "Error query roles",
+                data: response[0]
+            });
+        }
+        return res.json(responseQueries.success({
+            message: "Success query",
+            data: response[0]
+        }))
+    } catch (error) {
+        return responseQueries.error({
+            message: "Error query roles",
+            error
+        });
+    }
+}
+
+// Function para todos los roles del sistema
+export async function getAllRolesFunction() {
     const pool = await getConnection()
     const db = variablesDB.academy
     try {

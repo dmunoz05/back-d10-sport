@@ -6,7 +6,7 @@ import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
 import { getAthleteByIdFunction } from "./athletes.controller.js";
 import { getAdminByIdUserFunction } from "./admin.controller.js";
-import { getRoleUser, getAllRoles } from "./role.controller.js";
+import { getRoleUser, getAllRolesFunction } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
 
@@ -95,7 +95,7 @@ async function getDataUser(data) {
     const { id_user, role_user } = data
     try {
         let user = {}
-        const roles = await getAllRoles();
+        const roles = await getAllRolesFunction();
         if (roles.error) {
             return responseQueries.error({
                 message: "Error query roles",

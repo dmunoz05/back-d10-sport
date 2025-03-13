@@ -112,7 +112,7 @@ export const registerClub = async (req, res) => {
           role: adminUser.data[0].name_role
         })
         const sendMailUserClub = await sendEmailFunction({ name: nameComplete, username: undefined, password: undefined, email: username, type: 'register_user_club', role_user: role.description_role })
-        const sendMailAdmin = await sendEmailFunction({ name: { email: loginAdmin.data[0].username, name: nameCompleteAdmin, username: tokenUsername, password: tokenPassword, role_user: tokenRole }, username: nameComplete, password: undefined, email: username, type: 'register_admin', role_user: role.description_role })
+        const sendMailAdmin = await sendEmailFunction({ name: { email: loginAdmin.data[0].username, name: nameCompleteAdmin, username: tokenUsername, password: tokenPassword, role_user: tokenRole }, username: nameComplete, password: undefined, email: username, type: 'register_admin', role_user: role.name_role })
         return res.json(responseQueries.success({
           message: "Success insert",
           data: [{ athleteId: insert[0].insertId, loginId: insertLogin.data.insertId, solitudeId: insertSolitudeRegister.data.insertId, sendMailUserClub: sendMailUserClub, sendMailAdmin: sendMailAdmin }]

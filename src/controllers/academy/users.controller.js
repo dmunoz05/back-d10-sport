@@ -183,7 +183,7 @@ export const validLoginUsersAcademy = async (req, res) => {
         res.json(responseJWT.error({ message: role.message, status: role.status, token: null, user: null }))
         return
     }
-    if (role.data[0].name_role !== req.body.role_user) {
+    if (role.data[0].id_role !== req.body.role_user.role_id ) {
         res.json(responseJWT.error({ message: 'Invalid role', status: 200, token: null, user: null }))
         return
     }
@@ -193,7 +193,7 @@ export const validLoginUsersAcademy = async (req, res) => {
                 const passwordHash = await hashPassword({ id: id_user, username: username, email: email, password: password })
                 const updatePassword = await updatePasswordHashUser({ id: id_user, password: passwordHash.password, verify: !verify })
                 if (updatePassword.success) {
-                    const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user })
+                    const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user.description_role })
                     const user = {
                         id_login: id_user,
                         username: username,
@@ -218,7 +218,7 @@ export const validLoginUsersAcademy = async (req, res) => {
         else {
             const isPassword = await verifyPassword(req.body.password, password)
             if (isPassword) {
-                const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user })
+                const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user.description_role })
                 if (dataUser.error) {
                     return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
                 }

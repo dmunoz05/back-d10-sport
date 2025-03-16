@@ -8,9 +8,9 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
 export const updateAdminHome = async (req, res) => {
     const { id } = req.params;
-    const { slogan, company, slogan_two, slogan_three } = req.body;
+    const { slogan, company, bg_photo, slogan_two, bg_photo_res, slogan_three } = req.body;
 
-    if (!id || !slogan || !company || !slogan_two || !slogan_three) {
+    if (!id || !slogan || !company || !bg_photo || !slogan_two || !bg_photo_res || !slogan_three) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -23,10 +23,12 @@ export const updateAdminHome = async (req, res) => {
              SET section_one = JSON_SET(section_one, 
                 '$.slogan', ?, 
                 '$.company', ?, 
+                '$.bg_photo', ?, 
                 '$.slogan_two', ?, 
+                '$.bg_photo_res', ?, 
                 '$.slogan_three', ?)
              WHERE id = ?`,
-            [slogan, company, slogan_two, slogan_three, id]
+            [slogan, company, bg_photo, slogan_two, bg_photo_res, slogan_three, id]
         );
 
         if (update.affectedRows === 0) {
@@ -45,9 +47,9 @@ export const updateAdminHome = async (req, res) => {
 
 export const updateAdminNosotros = async (req, res) => {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, bg_photo, description } = req.body;
 
-    if (!id || !title || !description) {
+    if (!id || !title || !bg_photo || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -59,9 +61,10 @@ export const updateAdminNosotros = async (req, res) => {
             `UPDATE ${db}.parametersHome 
              SET section_two = JSON_SET(section_two, 
                 '$.title', ?, 
+                '$.bg_photo', ?, 
                 '$.description', ?)
              WHERE id = ?`,
-            [title, description, id]
+            [title, bg_photo, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -150,9 +153,9 @@ export const updateAdminNews = async (req, res) => {
 
 export const updateAdminAcademia = async (req, res) => {
     const { id } = req.params;
-    const { title_1, title_2, text_link } = req.body;
+    const { link, title_1, title_2, bg_photo, text_link } = req.body;
 
-    if (!id || !title_1 || !title_2 || !text_link) {
+    if (!id || !link || !title_1 || !title_2 || !bg_photo || !text_link) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -163,11 +166,13 @@ export const updateAdminAcademia = async (req, res) => {
         const update = await conn.query(
             `UPDATE ${db}.parametersHome 
              SET section_five = JSON_SET(section_five, 
+                '$.link', ?,
                 '$.title_1', ?, 
                 '$.title_2', ?, 
+                '$.bg_photo', ?, 
                 '$.text_link', ?)
              WHERE id = ?`,
-            [title_1, title_2, text_link, id]
+            [link, title_1, title_2, bg_photo, text_link, id]
         );
 
         if (update.affectedRows === 0) {

@@ -43,9 +43,9 @@ export const updateAdminAboutUsConocenos = async (req, res) => {
 
 export const updateAdminAboutUsFundador = async (req, res) => {
     const { id } = req.params;
-    const { title1, title2, subtitle, description } = req.body;
+    const { title1, title2, bg_photo, subtitle, description } = req.body;
 
-    if (!id || !title1 || !title2 || !subtitle || !description) {
+    if (!id || !title1 || !title2 || !bg_photo || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -58,10 +58,11 @@ export const updateAdminAboutUsFundador = async (req, res) => {
              SET section_two = JSON_SET(section_two, 
                 '$.title1', ?, 
                 '$.title2', ?, 
+                '$.bg_photo', ?, 
                 '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [title1, title2, subtitle, description, id]
+            [title1, title2, bg_photo, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -115,9 +116,9 @@ export const updateAdminAboutUsObjetivos = async (req, res) => {
 
 export const updateAdminAboutUsMision = async (req, res) => {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, bg_photo, description } = req.body;
 
-    if (!id || !title || !description) {
+    if (!id || !title || !bg_photo || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -129,9 +130,10 @@ export const updateAdminAboutUsMision = async (req, res) => {
             `UPDATE ${db}.parametersAboutUs 
              SET section_four = JSON_SET(section_four, 
                 '$.title', ?,
+                '$.bg_photo', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [title, description, id]
+            [title, bg_photo, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -150,9 +152,9 @@ export const updateAdminAboutUsMision = async (req, res) => {
 
 export const updateAdminAboutUsVision = async (req, res) => {
     const { id } = req.params;
-    const { title, description } = req.body;
+    const { title, bg_photo, description } = req.body;
 
-    if (!id || !title || !description) {
+    if (!id || !title || !bg_photo || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -164,9 +166,10 @@ export const updateAdminAboutUsVision = async (req, res) => {
             `UPDATE ${db}.parametersAboutUs 
              SET section_six = JSON_SET(section_six, 
                 '$.title', ?, 
+                '$.bg_photo', ?, 
                 '$.description', ?)
              WHERE id = ?`,
-            [title, description, id]
+            [title, bg_photo, description, id]
         );
 
         if (update.affectedRows === 0) {

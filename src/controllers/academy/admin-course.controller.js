@@ -46,7 +46,7 @@ export const saveAdminCourse = async (req, res) => {
 // -----------------------------------------------------------------------
 // ----------------------------- Delete Course ---------------------------
 // -----------------------------------------------------------------------
-
+//  .
 export const deleteAdminCourse = async (req, res) => {
   const { id } = req.params;
   if (!id) {

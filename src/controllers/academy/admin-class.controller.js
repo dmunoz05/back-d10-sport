@@ -29,9 +29,17 @@ export const saveAdminClass = async (req, res) => {
     try {
         await conn.beginTransaction();
 
+        const { id_course, class_title, class_description, class_content } = req.body;
+
+        if (!id_course || !class_title || !class_description || !class_content) {
+            throw new Error("Datos incompletos");
+        }
+
+        const classContentJSON = JSON.stringify({ video: class_content });
+
         const [insertContent] = await conn.query(
             `INSERT INTO ${db}.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
-            [req.body.id_course, req.body.class_title, req.body.class_description, JSON.stringify(req.body.class_content || { video: "https://example.com/default-video.mp4" })]
+            [id_course, class_title, class_description, classContentJSON]
         );
 
         if (!insertContent.insertId) throw new Error("Error al insertar en content_course");
@@ -40,16 +48,16 @@ export const saveAdminClass = async (req, res) => {
 
         const [insertClass] = await conn.query(
             `INSERT INTO ${db}.class_course (id_course, id_content) VALUES (?, ?)`,
-            [req.body.id_course, lastContentId]
+            [id_course, lastContentId]
         );
 
         if (!insertClass.affectedRows) throw new Error("Error al insertar en class_course");
 
         await conn.commit();
-        return res.json(responseQueries.success({ message: "Curso creado con éxito" }));
+        return res.json(responseQueries.success({ message: "Clase creada con éxito" }));
     } catch (error) {
         await conn.rollback();
-        return res.json(responseQueries.error({ message: "Error al crear curso" }));
+        return res.json(responseQueries.error({ message: error.message || "Error al crear la clase" }));
     }
 };
 
@@ -98,19 +106,21 @@ export const deleteAdminClass = async (req, res) => {
 
 export const updateAdminClass = async (req, res) => {
     const { id } = req.params;
-    const { class_title, class_description } = req.body;
+    const { class_title, class_description, class_content } = req.body;
 
-    if (!id || !class_title || !class_description) {
+    if (!id || !class_title || !class_description || !class_content) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
+
+    const classContentJSON = JSON.stringify({ video: class_content });
 
     try {
         const conn = await getConnection();
         const db = variablesDB.academy;
 
         const update = await conn.query(
-            `UPDATE ${db}.content_course SET class_title = ?, class_description = ? WHERE id = ?`,
-            [class_title, class_description, id]
+            `UPDATE ${db}.content_course SET class_title = ?, class_description = ?, class_content = ? WHERE id = ?`,
+            [class_title, class_description, classContentJSON, id]
         );
 
         if (update.affectedRows === 0) {

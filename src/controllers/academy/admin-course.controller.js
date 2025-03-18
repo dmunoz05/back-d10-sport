@@ -22,18 +22,24 @@ export const getAdminCourseAcademy = async (req, res) => {
 // -----------------------------------------------------------------------
 
 export const saveAdminCourse = async (req, res) => {
-  const { course_title, description_course } = req.body;
-  const main_photo = JSON.stringify({ bg_photo: "https://landing-page-d10.s3.sa-east-1.amazonaws.com/icons/logo_company.png" });
-  if (!course_title || !description_course) {
+  const { course_title, main_photo, description_course } = req.body;
+
+  if (!course_title || !main_photo || !description_course) {
     return res.json(responseQueries.error({ message: "Datos incompletos" }));
   }
+
+  const mainPhotoJSON = JSON.stringify({ bg_photo: main_photo });
+
   const conn = await getConnection();
   const db = variablesDB.academy;
+
   const insert = await conn.query(
     `INSERT INTO ${db}.course_user (course_title, main_photo, description_course) VALUES (?, ?, ?)`,
-    [course_title, main_photo, description_course]
+    [course_title, mainPhotoJSON, description_course]
   );
+
   if (!insert) return res.json(responseQueries.error({ message: "Error al crear curso" }));
+
   return res.json(responseQueries.success({ message: "Curso creado con éxito" }));
 };
 
@@ -83,19 +89,21 @@ export const deleteAdminCourse = async (req, res) => {
 
 export const updateAdminCourse = async (req, res) => {
   const { id } = req.params;
-  const { course_title, description_course } = req.body;
+  const { course_title, main_photo, description_course } = req.body;
 
-  if (!id || !course_title || !description_course) {
+  if (!id || !course_title || !main_photo || !description_course) {
     return res.json(responseQueries.error({ message: "Datos incompletos" }));
   }
+
+  const mainPhotoJSON = JSON.stringify({ bg_photo: main_photo });
 
   try {
     const conn = await getConnection();
     const db = variablesDB.academy;
 
     const update = await conn.query(
-      `UPDATE ${db}.course_user SET course_title = ?, description_course = ? WHERE id = ?`,
-      [course_title, description_course, id]
+      `UPDATE ${db}.course_user SET course_title = ?, main_photo = ?, description_course = ? WHERE id = ?`,
+      [course_title, mainPhotoJSON, description_course, id]
     );
 
     if (update.affectedRows === 0) {

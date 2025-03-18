@@ -20,7 +20,7 @@ export const getAdminCourseAcademy = async (req, res) => {
 // -----------------------------------------------------------------------
 // ----------------------------- Post Course -----------------------------
 // -----------------------------------------------------------------------
-// .
+
 export const saveAdminCourse = async (req, res) => {
   const { course_title, main_photo, description_course } = req.body;
 

@@ -49,7 +49,7 @@ import {
     getDepartmentColombianRapidapi,
     getCitiesOneCountryIDAndDepartmentIDRapidapi
 } from '../controllers/academy/external.controller.js';
-import { uploadFileS3, upload, handleMulterError } from '../lib/s3/s3.js';
+import { uploadFileS3, deleteFileS3, upload, handleMulterError } from '../lib/s3/s3.js';
 
 // Database
 import { getConnect } from '../database/conection.controller.js';
@@ -103,7 +103,7 @@ export const routes = () => {
     router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsMision);
     router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsVision);
 
-    router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, saveGalleryImage)
+    router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
     router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)
     router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
 
@@ -163,7 +163,7 @@ export const routes = () => {
 
     //S3
     router.post('/external/p/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, uploadFileS3);
-
+    router.post('/external/d/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, deleteFileS3);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

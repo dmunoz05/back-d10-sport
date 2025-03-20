@@ -1,6 +1,7 @@
-import getConnection from "../../database/connection.mysql.js";
-import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { uploadFileS3Function, deleteFileS3Function } from "../../lib/s3/s3.js";
+import { variablesDB } from "../../utils/params/const.database.js";
+import getConnection from "../../database/connection.mysql.js";
 
 // -----------------------------------------------------------------------
 // ---------------------------- Save GAllery -----------------------------
@@ -9,9 +10,13 @@ import { responseQueries } from "../../common/enum/queries/response.queries.js";
 export const saveGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;
-        const { imageUrl } = req.body;
+        const file = req.file;
+        const linkFile = await uploadFileS3Function({ page: 'academy', ...file});
+        if (linkFile.error) {
+            return res.json(responseQueries.error({ message: linkFile.error }));
+        }
 
-        if (!id || !imageUrl) {
+        if (!id || !linkFile.url) {
             return res.json(responseQueries.error({ message: "Datos incompletos" }));
         }
 
@@ -24,7 +29,7 @@ export const saveGalleryImage = async (req, res) => {
             WHERE id = ?;
         `;
 
-        const [result] = await conn.query(updateQuery, [imageUrl, id]);
+        const [result] = await conn.query(updateQuery, [linkFile.url, id]);
 
         if (result.affectedRows === 0) {
             return res.json(responseQueries.error({ message: "No se encontró la galería o no se actualizó" }));
@@ -79,10 +84,15 @@ export const updateGalleryImage = async (req, res) => {
 export const deleteGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;
-        const { index } = req.body;
+        const { index, url } = req.body;
 
-        if (!id || index === undefined) {
+        if (!id || index === undefined || !url) {
             return res.json(responseQueries.error({ message: "Datos incompletos" }));
+        }
+
+        const deleteFiles3 = await deleteFileS3Function(url);
+        if (deleteFiles3.error) {
+            return res.json(responseQueries.error({ message: deleteFiles3.message }));
         }
 
         const conn = await getConnection();

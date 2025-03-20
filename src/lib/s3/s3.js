@@ -1,5 +1,6 @@
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { responseS3File } from "../../common/enum/s3/response.s3.js";
 import { variablesS3 } from "../../utils/params/const.database.js";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -56,6 +57,49 @@ const getFileCategory = (mimetype) => {
     return null;
 };
 
+
+// Controlador para subir archivos a S3 desde otros endpoints
+export const uploadFileS3Function = async (file) => {
+    try {
+        if (!file) {
+            return { error: 'No se ha proporcionado ningún archivo' };
+        }
+
+        const { page } = file; // Se obtiene el parámetro `page`
+        const bucketName = getBucketName(page);
+        if (!bucketName) {
+            return responseS3File.error({ message: "Parámetro 'page' inválido. Debe ser 'academy' o 'landing'." });
+        }
+
+        const fileCategory = getFileCategory(file.mimetype);
+        if (!fileCategory) {
+            return responseS3File.error({ message: "Tipo de archivo no soportado. Solo se permiten imágenes, videos e iconos." });
+        }
+
+        const uniqueFileName = generateUniqueFileName(file.originalname);
+        const objectKey = `${fileCategory}/${uniqueFileName}`;
+
+        // Configuración para subir a S3
+        const bucketParams = {
+            Bucket: bucketName,
+            Key: objectKey,
+            Body: file.buffer,
+            ContentType: file.mimetype,
+        };
+
+        // Subir archivo a S3
+        const command = new PutObjectCommand(bucketParams);
+        await s3Client.send(command);
+
+        // Generar URL del archivo
+        const fileUrl = `https://${bucketName}.s3.${variablesS3.region}.amazonaws.com/${objectKey}`;
+
+        return responseS3File.success({ message: 'Archivo subido exitosamente', url: fileUrl });
+    } catch (error) {
+        return responseS3File.error({ message: 'Error al subir el archivo a S3', msg: error.message });
+    }
+};
+
 // Controlador para subir archivos a S3
 export const uploadFileS3 = async (req, res) => {
     try {
@@ -98,7 +142,71 @@ export const uploadFileS3 = async (req, res) => {
             fileName: uniqueFileName
         });
     } catch (error) {
-        console.error('Error al subir el archivo:', error);
         res.status(500).json({ error: 'Error al subir el archivo a S3', msg: error.message });
+    }
+};
+
+// Eliminar archivos a S3 desde otros endpoints
+export const deleteFileS3Function = async (fileUrl) => {
+    try {
+        if (!fileUrl) {
+            return responseS3File.error({ message: "Se requiere 'fileUrl' para eliminar la imagen." });
+        }
+
+        // Extraer el bucket y la key desde la URL
+        const urlParts = new URL(fileUrl);
+        const bucketName = urlParts.host.split(".")[0];
+        const objectKey = urlParts.pathname.substring(1);
+
+        if (!bucketName || !objectKey) {
+            return responseS3File.error({ message: "No se pudo extraer el bucket o la clave del archivo desde la URL." });
+        }
+
+        // Configuración para eliminar el archivo de S3
+        const deleteParams = {
+            Bucket: bucketName,
+            Key: objectKey,
+        };
+
+        const command = new DeleteObjectCommand(deleteParams);
+        await s3Client.send(command);
+
+        return responseS3File.success({ message: "Archivo eliminado exitosamente" });
+    } catch (error) {
+        return responseS3File.error({ message: "Error al eliminar el archivo en S3", msg: error.message });
+    }
+};
+
+// Eliminar archivos a S3
+export const deleteFileS3 = async (req, res) => {
+    try {
+        const { fileUrl } = req.body;
+
+        if (!fileUrl) {
+            return res.status(400).json({ error: "Se requiere 'fileUrl' para eliminar la imagen." });
+        }
+
+        // Extraer el bucket y la key desde la URL
+        const urlParts = new URL(fileUrl);
+        const bucketName = urlParts.host.split(".")[0];
+        const objectKey = urlParts.pathname.substring(1);
+
+        if (!bucketName || !objectKey) {
+            return res.status(400).json({ error: "No se pudo extraer el bucket o la clave del archivo desde la URL." });
+        }
+
+        // Configuración para eliminar el archivo de S3
+        const deleteParams = {
+            Bucket: bucketName,
+            Key: objectKey,
+        };
+
+        const command = new DeleteObjectCommand(deleteParams);
+        await s3Client.send(command);
+
+        res.status(200).json({ message: "Archivo eliminado exitosamente" });
+    } catch (error) {
+        console.error("Error al eliminar el archivo:", error);
+        res.status(500).json({ error: "Error al eliminar el archivo en S3", msg: error.message });
     }
 };

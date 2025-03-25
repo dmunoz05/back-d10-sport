@@ -2,6 +2,7 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
+// Obtener todas las clases
 export const getClassMenu = async (req, res) => {
     const { id_course } = req.query;
     const conn = await getConnection();
@@ -11,6 +12,7 @@ export const getClassMenu = async (req, res) => {
     return res.json(responseQueries.success({ data: select[0] }));
 }
 
+// Obtener contenido de una clase
 export const getClassContent = async (req, res) => {
     const { id } = req.query;
     const conn = await getConnection();
@@ -20,6 +22,7 @@ export const getClassContent = async (req, res) => {
     return res.json(responseQueries.success({ data: select[0] }));
 }
 
+// Obtener comentarios de una clase
 export const getClassComments = async (req, res) => {
     const { id_class } = req.query;
     const conn = await getConnection();
@@ -47,6 +50,7 @@ export const getClassComments = async (req, res) => {
     return res.json(responseQueries.success({ data: select[0] }));
 };
 
+// Guardar comentario de una clase
 export const saveClassComment = async (req, res) => {
     const { id_class, comment, id_user } = req.body;
     if (!id_class || !comment || !id_user) {

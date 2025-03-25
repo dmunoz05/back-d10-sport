@@ -12,27 +12,28 @@ import { getDataServices, saveDataServices } from '../controllers/landing/servic
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
-import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin.controller.js';
+import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin-landing.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
-import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/landing/admin-home.controller.js'
-import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/academy/admin-services.controller.js'
-import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/academy/admin-aboutus.controller.js';
-import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/academy/admin-gallery.controller.js';
-import { saveNews, updateNews, deleteNews } from '../controllers/academy/admin-news.controller.js';
+
+// Admin Landing
+import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/admin/admin-aboutus.controller.js';
+import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/admin/admin-home.controller.js'
+import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/admin/admin-services.controller.js'
+import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/admin/admin-course.controller.js';
+import { getAdminClass, saveAdminClass, deleteAdminClass, updateAdminClass } from '../controllers/admin/admin-class.controller.js';
+import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/admin/admin-gallery.controller.js';
+import { saveNews, updateNews, deleteNews } from '../controllers/admin/admin-news.controller.js';
+import { getAdminAcademy } from '../controllers/admin/admin.controller.js';
 
 // Academy
-import { getAdminAcademy } from '../controllers/academy/admin.controller.js';
 import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
 import { getClub, searchClubFilter, registerClub } from '../controllers/academy/club.controller.js';
 import { getCoach, searchCoachFilter, registerCoach } from '../controllers/academy/coach.controller.js';
-import { getUserFileAccess } from '../controllers/academy/user_file_access.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
 import { getSolitudeUsersCoach, getSolitudeUsersClub, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
-import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/academy/admin-course.controller.js';
-import { getAdminClass, saveAdminClass, deleteAdminClass, updateAdminClass } from '../controllers/academy/admin-class.controller.js';
 import { getAllRoles } from '../controllers/academy/role.controller.js';
 
 // External
@@ -133,7 +134,6 @@ export const routes = () => {
     router.get('/academy/g/coach', ConexionVerify, getCoach);
     router.get('/academy/g/search/coach/:filter', ConexionVerify, searchCoachFilter);
     router.post('/academy/register/coach', ConexionVerify, registerCoach);
-    router.get('/academy/g/user_file_access', ConexionVerify, getUserFileAccess);
     router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
     router.get('/academy/g/courses', ConexionVerify, AuthorizationVerify, getCoursesAcademy);
     router.get('/academy/g/class/menu', ConexionVerify, AuthorizationVerify, getClassMenu);

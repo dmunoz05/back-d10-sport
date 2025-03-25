@@ -2,10 +2,8 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
-// -----------------------------------------------------------------------
-// ----------------------------- Get Class -------------------------------
-// -----------------------------------------------------------------------
 
+// Obtener todas las clases
 export const getAdminClass = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.academy;
@@ -17,10 +15,8 @@ export const getAdminClass = async (req, res) => {
     return res.json(select[0]);
 }
 
-// -----------------------------------------------------------------------
-// ----------------------------- Post Class ------------------------------
-// -----------------------------------------------------------------------
 
+// Guardar una clase
 export const saveAdminClass = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.academy;
@@ -61,10 +57,7 @@ export const saveAdminClass = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// ----------------------------- Delete Class ----------------------------
-// -----------------------------------------------------------------------
-
+// Eliminar una clase
 export const deleteAdminClass = async (req, res) => {
     const { id } = req.params;
     if (!id) {
@@ -100,10 +93,7 @@ export const deleteAdminClass = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// ----------------------------- Update Class ----------------------------
-// -----------------------------------------------------------------------
-
+// Actualizar una clase
 export const updateAdminClass = async (req, res) => {
     const { id } = req.params;
     const { class_title, class_description, class_content } = req.body;

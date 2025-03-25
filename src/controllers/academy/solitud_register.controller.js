@@ -1,10 +1,8 @@
-import { getAthleteByIdFunction, deleteAthleteByIdFunction } from "./athletes.controller.js";
 import { getClubByIdUserFunction, deleteClubByIdFunction } from "./club.controller.js";
 import { getCoachByIdFunction, deleteCoachByIdFunction } from "./coach.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
-import { getAdminByIdUserFunction } from "./admin.controller.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
 import getConnection from "../../database/connection.mysql.js";
 
@@ -163,7 +161,6 @@ export const deniedSolitude = async (req, res) => {
   }
 }
 
-
 //Obtener todas las solicitudes de registro de entrenadores
 export const getSolitudeUsersCoach = async (req, res) => {
   const conn = await getConnection();
@@ -181,8 +178,6 @@ export const getSolitudeUsersCoach = async (req, res) => {
   if (!select) return res.json(responseQueries.error({ message: "Error query get solitude users" }));
   return res.json(responseQueries.success({ message: "Success", data: select[0] }));
 }
-
-
 
 //Obtener todas las solicitudes de registro de clubes
 export const getSolitudeUsersClub = async (req, res) => {

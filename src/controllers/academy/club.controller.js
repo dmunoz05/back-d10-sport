@@ -1,11 +1,11 @@
 import { createSolitudLoginUser, createSolitudeRegisterUser, validateNotRegisterMail, searchLoginUserById } from "./users.controller.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { searchAdminAvailable } from "../admin/admin.controller.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
-import { getIdRole, getRoleByIdRole, createRoleUser } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { sendEmailFunction } from "../../lib/api/email.api.js";
-import { searchAdminAvailable } from "./admin.controller.js";
+import { createRoleUser } from "./role.controller.js";
 
 // Obtener todos los clubes
 export const getClub = async (req, res) => {

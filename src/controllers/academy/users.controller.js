@@ -1,12 +1,12 @@
 import { getClubByIdFunction, getClubByIdUserFunction } from "./club.controller.js";
 import { hashPassword, verifyPassword } from "../../utils/auth/handle-password.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { getRoleUser, getAllRolesFunction } from "./role.controller.js";
+import { getAdminByIdUserFunction } from "../admin/admin.controller.js";
 import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { generateToken } from "../../utils/token/handle-token.js";
 import { getAthleteByIdFunction } from "./athletes.controller.js";
-import { getAdminByIdUserFunction } from "./admin.controller.js";
-import { getRoleUser, getAllRolesFunction } from "./role.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
 

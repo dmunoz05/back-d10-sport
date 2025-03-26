@@ -1,19 +1,19 @@
 import express from 'express';
 
 // Middlewares
-import { ConexionVerify } from '../middlewares/connection.js';
 import { AuthorizationVerify } from '../middlewares/authorization.js';
+import { ConexionVerify } from '../middlewares/connection.js';
 
 // Landing
 import { getDataLayout, saveDataLayout, getDataMaintenance } from '../controllers/landing/layout.controller.js';
-import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
-import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
-import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
-import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
-import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin-landing.controller.js';
+import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
+import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
+import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
+import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
+import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 
 // Admin Landing
@@ -27,13 +27,14 @@ import { saveNews, updateNews, deleteNews } from '../controllers/admin/admin-new
 import { getAdminAcademy } from '../controllers/admin/admin.controller.js';
 
 // Academy
-import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
-import { getClub, searchClubFilter, registerClub } from '../controllers/academy/club.controller.js';
+import { getAllPermissionsAndRole, getPermissionsByIdUser, getPermissionsByRoleAdmin, getPermissionsByRoleUser } from '../controllers/academy/permissions.controller.js';
+import { getSolitudeUsersCoach, getSolitudeUsersClub, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
+import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
 import { getCoach, searchCoachFilter, registerCoach } from '../controllers/academy/coach.controller.js';
+import { getClub, searchClubFilter, registerClub } from '../controllers/academy/club.controller.js';
+import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
-import { getClassMenu, getClassContent, getClassComments, saveClassComment } from '../controllers/academy/class.controller.js';
-import { getSolitudeUsersCoach, getSolitudeUsersClub, approvedSolitude, deniedSolitude } from '../controllers/academy/solitud_register.controller.js';
 import { getAllRoles } from '../controllers/academy/role.controller.js';
 
 // External
@@ -144,6 +145,10 @@ export const routes = () => {
     router.get('/academy/solitude/register/users/club', ConexionVerify, AuthorizationVerify, getSolitudeUsersClub);
     router.post('/academy/solitude/approved', ConexionVerify, AuthorizationVerify, approvedSolitude);
     router.post('/academy/solitude/denied', ConexionVerify, AuthorizationVerify, deniedSolitude);
+    router.get('/academy/permissions/roles', ConexionVerify, AuthorizationVerify, getAllPermissionsAndRole);
+    router.post('/academy/permissions/user/:id_user', ConexionVerify, AuthorizationVerify, getPermissionsByIdUser);
+    router.get('/academy/permissions/user/admin', ConexionVerify, AuthorizationVerify, getPermissionsByRoleAdmin);
+    router.get('/academy/permissions/user/:role_id', ConexionVerify, AuthorizationVerify, getPermissionsByRoleUser);
 
     //External
     router.post('/external/p/send/mail', AuthorizationVerify, sendEmail)

@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js"
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Guardar datos de diseño
 export const saveDataLayout = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -22,6 +23,7 @@ export const saveDataLayout = async (req, res) => {
   });
 }
 
+// Actualizar datos de diseño
 export const getDataMaintenance = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -36,6 +38,7 @@ export const getDataMaintenance = async (req, res) => {
   return res.json(select[0]);
 }
 
+// Actualizar datos de diseño
 export const getDataLayout = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;

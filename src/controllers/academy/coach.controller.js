@@ -124,4 +124,3 @@ export const registerCoach = async (req, res) => {
     }))
   }
 }
-

@@ -2,10 +2,7 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
-// -----------------------------------------------------------------------
-// ----------------------------- Get Course ------------------------------
-// -----------------------------------------------------------------------
-
+// Obtener cursos
 export const getAdminCourseAcademy = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
@@ -17,10 +14,7 @@ export const getAdminCourseAcademy = async (req, res) => {
   return res.json(select[0]);
 }
 
-// -----------------------------------------------------------------------
-// ----------------------------- Post Course -----------------------------
-// -----------------------------------------------------------------------
-
+// Guardar un curso
 export const saveAdminCourse = async (req, res) => {
   const { course_title, main_photo, description_course } = req.body;
 
@@ -43,10 +37,7 @@ export const saveAdminCourse = async (req, res) => {
   return res.json(responseQueries.success({ message: "Curso creado con éxito" }));
 };
 
-// -----------------------------------------------------------------------
-// ----------------------------- Delete Course ---------------------------
-// -----------------------------------------------------------------------
-
+// Eliminar un curso
 export const deleteAdminCourse = async (req, res) => {
   const { id } = req.params;
   if (!id) {
@@ -83,10 +74,7 @@ export const deleteAdminCourse = async (req, res) => {
   }
 };
 
-// -----------------------------------------------------------------------
-// ----------------------------- Update Course ---------------------------
-// -----------------------------------------------------------------------
-
+// Actualizar un curso
 export const updateAdminCourse = async (req, res) => {
   const { id } = req.params;
   const { course_title, main_photo, description_course } = req.body;

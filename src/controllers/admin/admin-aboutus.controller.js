@@ -2,15 +2,12 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
-// -----------------------------------------------------------------------
-// ------------------------ Update Services Title ------------------------
-// -----------------------------------------------------------------------
-
-export const updateAdminServicesTitle = async (req, res) => {
+// Actualizar sección de Conócenos
+export const updateAdminAboutUsConocenos = async (req, res) => {
     const { id } = req.params;
-    const { title } = req.body;
+    const { title, description } = req.body;
 
-    if (!id || !title) {
+    if (!id || !title || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -19,11 +16,12 @@ export const updateAdminServicesTitle = async (req, res) => {
         const db = variablesDB.landing;
 
         const update = await conn.query(
-            `UPDATE ${db}.parametersServices 
-             SET section_one = JSON_SET(section_one, 
-                '$.title', ?)
+            `UPDATE ${db}.parametersAboutUs
+             SET section_one = JSON_SET(section_one,
+                '$.title', ?,
+                '$.description', ?)
              WHERE id = ?`,
-            [title, id]
+            [title, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -36,15 +34,13 @@ export const updateAdminServicesTitle = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// ------------------------- Update Services One -------------------------
-// -----------------------------------------------------------------------
 
-export const updateAdminServicesOne = async (req, res) => {
+// Actualizar sección de Fundador
+export const updateAdminAboutUsFundador = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const { title1, title2, bg_photo, subtitle, description } = req.body;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    if (!id || !title1 || !title2 || !bg_photo || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -53,14 +49,15 @@ export const updateAdminServicesOne = async (req, res) => {
         const db = variablesDB.landing;
 
         const update = await conn.query(
-            `UPDATE ${db}.parametersServices 
-             SET section_two = JSON_SET(section_two, 
-                '$.photo', ?, 
-                '$.title', ?, 
-                '$.subtitle', ?, 
+            `UPDATE ${db}.parametersAboutUs
+             SET section_two = JSON_SET(section_two,
+                '$.title1', ?,
+                '$.title2', ?,
+                '$.bg_photo', ?,
+                '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [title1, title2, bg_photo, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -73,15 +70,13 @@ export const updateAdminServicesOne = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// --------------------------- Update Services Two -----------------------
-// -----------------------------------------------------------------------
 
-export const updateAdminServicesTwo = async (req, res) => {
+// Actualizar sección de Objetivos
+export const updateAdminAboutUsObjetivos = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const { title, description } = req.body;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    if (!id || !title || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -90,14 +85,12 @@ export const updateAdminServicesTwo = async (req, res) => {
         const db = variablesDB.landing;
 
         const update = await conn.query(
-            `UPDATE ${db}.parametersServices 
-             SET section_three = JSON_SET(section_three, 
-                '$.photo', ?, 
-                '$.title', ?, 
-                '$.subtitle', ?, 
+            `UPDATE ${db}.parametersAboutUs
+             SET section_three = JSON_SET(section_three,
+                '$.title', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [title, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -110,15 +103,13 @@ export const updateAdminServicesTwo = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// ------------------------- Update Services Three -----------------------
-// -----------------------------------------------------------------------
 
-export const updateAdminServicesThree = async (req, res) => {
+// Actualizar sección de Misión
+export const updateAdminAboutUsMision = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const { title, bg_photo, description } = req.body;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    if (!id || !title || !bg_photo || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -127,14 +118,46 @@ export const updateAdminServicesThree = async (req, res) => {
         const db = variablesDB.landing;
 
         const update = await conn.query(
-            `UPDATE ${db}.parametersServices 
-             SET section_four = JSON_SET(section_four, 
-                '$.photo', ?, 
-                '$.title', ?, 
-                '$.subtitle', ?, 
+            `UPDATE ${db}.parametersAboutUs
+             SET section_four = JSON_SET(section_four,
+                '$.title', ?,
+                '$.bg_photo', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [title, bg_photo, description, id]
+        );
+
+        if (update.affectedRows === 0) {
+            return res.json(responseQueries.error({ message: "No se encontró el registro" }));
+        }
+
+        return res.json(responseQueries.success({ message: "Datos actualizados con éxito" }));
+    } catch (error) {
+        return res.json(responseQueries.error({ message: "Error al actualizar los datos", error }));
+    }
+};
+
+// Actualizar sección de Visión
+export const updateAdminAboutUsVision = async (req, res) => {
+    const { id } = req.params;
+    const { title, bg_photo, description } = req.body;
+
+    if (!id || !title || !bg_photo || !description) {
+        return res.json(responseQueries.error({ message: "Datos incompletos" }));
+    }
+
+    try {
+        const conn = await getConnection();
+        const db = variablesDB.landing;
+
+        const update = await conn.query(
+            `UPDATE ${db}.parametersAboutUs
+             SET section_six = JSON_SET(section_six,
+                '$.title', ?,
+                '$.bg_photo', ?,
+                '$.description', ?)
+             WHERE id = ?`,
+            [title, bg_photo, description, id]
         );
 
         if (update.affectedRows === 0) {

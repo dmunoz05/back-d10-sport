@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Obtener página de administrador
 export const getAdminPage = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -12,6 +13,7 @@ export const getAdminPage = async (req, res) => {
   return res.json(select[0]);
 }
 
+// Guardar página de administrador
 export const validLoginAdminLanding = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;

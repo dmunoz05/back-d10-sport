@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js"
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Guardar datos de error
 export const saveDataError = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -22,6 +23,7 @@ export const saveDataError = async (req, res) => {
   });
 }
 
+// Actualizar datos de error
 export const getDataError = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;

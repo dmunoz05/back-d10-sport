@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js"
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Guardar datos de galería
 export const getDataGallery = async (req, res) => {
     const conn = await getConnection();
     const db = variablesDB.landing;

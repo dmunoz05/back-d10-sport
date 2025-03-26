@@ -3,6 +3,7 @@ import { generateToken } from "../../utils/token/handle-token.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js"
 
+// Guardar datos de Inicio
 export const saveDataHome = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -25,8 +26,8 @@ export const saveDataHome = async (req, res) => {
   });
 }
 
+// Actualizar datos de Inicio
 export const getDataHome = async (req, res) => {
-
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `

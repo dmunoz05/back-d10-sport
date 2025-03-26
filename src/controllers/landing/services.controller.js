@@ -1,7 +1,7 @@
 import getConnection from "../../database/connection.mysql.js"
 import { variablesDB } from "../../utils/params/const.database.js";
 
-
+// Guardar datos de servicios
 export const saveDataServices = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -24,7 +24,7 @@ export const saveDataServices = async (req, res) => {
   });
 }
 
-
+// Actualizar datos de servicios
 export const getDataServices = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;

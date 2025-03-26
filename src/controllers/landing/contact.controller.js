@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js"
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Guardar datos de contacto
 export const saveDataContact = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
@@ -20,6 +21,7 @@ export const saveDataContact = async (req, res) => {
   });
 }
 
+// Actualizar datos de contacto
 export const getDataContact = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;

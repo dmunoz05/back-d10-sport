@@ -3,10 +3,7 @@ import { uploadFileS3Function, deleteFileS3Function } from "../../lib/s3/s3.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import getConnection from "../../database/connection.mysql.js";
 
-// -----------------------------------------------------------------------
-// ---------------------------- Save GAllery -----------------------------
-// -----------------------------------------------------------------------
-
+// Guardar imagen en la galería
 export const saveGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;
@@ -42,10 +39,7 @@ export const saveGalleryImage = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// --------------------------- Update Gallery ----------------------------
-// -----------------------------------------------------------------------
-
+// Actualizar imagen en la galería
 export const updateGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;
@@ -77,10 +71,7 @@ export const updateGalleryImage = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// --------------------------- Delete Gallery ----------------------------
-// -----------------------------------------------------------------------
-
+// Eliminar imagen en la galería
 export const deleteGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;

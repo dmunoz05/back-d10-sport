@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 
+// Obtener datos de cursos
 export const getCoursesAcademy = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;

@@ -2,10 +2,8 @@ import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
 
-// -----------------------------------------------------------------------
-// ---------------------------- Save News ------------------------------ 
-// -----------------------------------------------------------------------
 
+// Guardar noticias
 export const saveNews = async (req, res) => {
     try {
         const { id } = req.params;
@@ -41,10 +39,8 @@ export const saveNews = async (req, res) => {
     }
 };
 
-// -----------------------------------------------------------------------
-// --------------------------- Update News ----------------------------
-// -----------------------------------------------------------------------
 
+// Actualizar noticias
 export const updateNews = async (req, res) => {
     try {
         const { id } = req.params;
@@ -81,10 +77,7 @@ export const updateNews = async (req, res) => {
 };
 
 
-// -----------------------------------------------------------------------
-// --------------------------- Delete News ----------------------------- 
-// -----------------------------------------------------------------------
-
+// Eliminar noticias
 export const deleteNews = async (req, res) => {
     try {
         const { id } = req.params;

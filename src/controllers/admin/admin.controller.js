@@ -33,4 +33,3 @@ export const getAdminAcademy = async (req, res) => {
   if (!select) return responseQueries.error({ message: "Error connecting" });
   return responseQueries.success({ data: select[0] });
 }
-

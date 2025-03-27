@@ -51,7 +51,7 @@ import {
     getDepartmentColombianRapidapi,
     getCitiesOneCountryIDAndDepartmentIDRapidapi
 } from '../controllers/academy/external.controller.js';
-import { uploadFileS3, deleteFileS3, upload, handleMulterError } from '../lib/s3/s3.js';
+import { uploadFileS3, deleteFileS3, upload, readFileS3, handleMulterError } from '../lib/s3/s3.js';
 
 // Database
 import { getConnect } from '../database/conection.controller.js';
@@ -102,7 +102,7 @@ export const routes = () => {
     router.put('/landing/u/update-aboutus-conocenos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsConocenos);
     router.put('/landing/u/update-aboutus-fundador/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsFundador);
     router.put('/landing/u/update-aboutus-objetivos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsObjetivos);
-    router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsMision);
+    router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsMision);
     router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsVision);
 
     router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
@@ -168,7 +168,8 @@ export const routes = () => {
 
     //S3
     router.post('/external/p/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, uploadFileS3);
-    router.post('/external/d/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, deleteFileS3);
+    router.post('/external/d/s3/', AuthorizationVerify, deleteFileS3);
+    router.get('/external/g/s3/:rute/filename/:page/', AuthorizationVerify, readFileS3);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

@@ -8,7 +8,7 @@ export const saveGalleryImage = async (req, res) => {
     try {
         const { id } = req.params;
         const file = req.file;
-        const linkFile = await uploadFileS3Function({ page: 'academy', ...file});
+        const linkFile = await uploadFileS3Function({ page: req.body.page, ...file});
         if (linkFile.error) {
             return res.json(responseQueries.error({ message: linkFile.error }));
         }

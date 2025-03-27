@@ -12,5 +12,7 @@ export const variablesS3 = ({
   secret_key: process.env.S3_SECRET_ACCESS_KEY,
   region: process.env.S3_REGION,
   bucketAcademy: process.env.S3_BUCKET_ACADEMY,
-  bucketLanding: process.env.S3_BUCKET_LANDING
+  bucketLanding: process.env.S3_BUCKET_LANDING,
+  domain_name_academy: process.env.DOMAIN_NAME_ACADEMY,
+  domain_name_landing: process.env.DOMAIN_NAME_LANDING
 })

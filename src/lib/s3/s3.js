@@ -1,6 +1,7 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { responseS3File } from "../../common/enum/s3/response.s3.js";
 import { variablesS3 } from "../../utils/params/const.database.js";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -57,6 +58,29 @@ const getFileCategory = (mimetype) => {
     return null;
 };
 
+// Leer imagen
+export const readFileS3 = async (req, res) => {
+    try {
+        const { rute, filename, page} = req.params;
+        const bucketName = getBucketName(page);
+        if (!bucketName) {
+            return res.status(400).json({ error: "Parámetro 'page' inválido. Debe ser 'academy' o 'landing'." });
+        }
+
+        const params = {
+          Bucket: bucketName,
+          Key: rute + '/' + filename,
+          Expires: 3600
+        };
+
+        const command = new GetObjectCommand(params);
+        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+        res.redirect(signedUrl);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al leer el archivo de S3', msg: error.message });
+    }
+};
+
 
 // Controlador para subir archivos a S3 desde otros endpoints
 export const uploadFileS3Function = async (file) => {
@@ -85,6 +109,7 @@ export const uploadFileS3Function = async (file) => {
             Key: objectKey,
             Body: file.buffer,
             ContentType: file.mimetype,
+            ACL: 'private'
         };
 
         // Subir archivo a S3
@@ -127,6 +152,7 @@ export const uploadFileS3 = async (req, res) => {
             Key: objectKey,
             Body: req.file.buffer,
             ContentType: req.file.mimetype,
+            ACL: 'private'
         };
 
         // Subir archivo a S3

@@ -31,3 +31,7 @@ dist-ssr
 schema.sql
 paramsD10Academy.json
 paramsD10Page.json
+
+#Keys
+private_key.pem
+public_key.pem

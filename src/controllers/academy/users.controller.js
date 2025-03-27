@@ -1,6 +1,7 @@
 import { getClubByIdFunction, getClubByIdUserFunction } from "./club.controller.js";
 import { hashPassword, verifyPassword } from "../../utils/auth/handle-password.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { getPermissionsByIdUserFunction } from "./permissions.controller.js";
 import { getRoleUser, getAllRolesFunction } from "./role.controller.js";
 import { getAdminByIdUserFunction } from "../admin/admin.controller.js";
 import { responseJWT } from "../../common/enum/jwt/response.jwt.js";
@@ -9,7 +10,6 @@ import { generateToken } from "../../utils/token/handle-token.js";
 import { getAthleteByIdFunction } from "./athletes.controller.js";
 import getConnection from "../../database/connection.mysql.js";
 import { getCoachByIdFunction } from "./coach.controller.js";
-
 
 // Buscar usuario por id
 export async function searchLoginUserById(data) {
@@ -183,7 +183,7 @@ export const validLoginUsersAcademy = async (req, res) => {
         res.json(responseJWT.error({ message: role.message, status: role.status, token: null, user: null }))
         return
     }
-    if (role.data[0].id_role !== req.body.role_user.role_id ) {
+    if (role.data[0].id_role !== req.body.role_user.role_id) {
         res.json(responseJWT.error({ message: 'Invalid role', status: 200, token: null, user: null }))
         return
     }
@@ -194,12 +194,20 @@ export const validLoginUsersAcademy = async (req, res) => {
                 const updatePassword = await updatePasswordHashUser({ id: id_user, password: passwordHash.password, verify: !verify })
                 if (updatePassword.success) {
                     const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user.description_role })
+                    if (dataUser.error) {
+                        return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
+                    }
+                    const permission = await getPermissionsByIdUserFunction(id_user);
+                    if (permission.error) {
+                        return res.json(responseJWT.error({ message: permission.message, status: permission.status, token: null, user: null }))
+                    }
                     const user = {
                         id_login: id_user,
                         username: username,
                         email: email,
                         role: role.data[0].name_role,
                         id_role: role.data[0].id_role,
+                        permissions: permission.data,
                         ...dataUser.data
                     }
                     const payload = {
@@ -222,12 +230,17 @@ export const validLoginUsersAcademy = async (req, res) => {
                 if (dataUser.error) {
                     return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
                 }
+                const permission = await getPermissionsByIdUserFunction(id_user);
+                if (permission.error) {
+                    return res.json(responseJWT.error({ message: permission.message, status: permission.status, token: null, user: null }))
+                }
                 const user = {
                     id_login: id_user,
                     username: username,
                     email: email,
                     role: role.data[0].name_role,
                     id_role: role.data[0].id_role,
+                    permissions: permission.data,
                     ...dataUser.data
                 }
                 const payload = {

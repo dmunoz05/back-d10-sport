@@ -11,7 +11,9 @@ export const getAllPermissionsAndRole = async (req, res) => {
         r.id AS role_id,
         r.name_role AS role_name,
         p.id AS permission_id,
-        p.name_permission AS permission_name
+        p.name_permission AS permission_name,
+        p.description_permission,
+        p.link
       FROM ${db}.role_permissions rp
       JOIN ${db}.role_system r ON rp.id_role = r.id
       JOIN ${db}.permissions p ON rp.id_permission = p.id
@@ -40,8 +42,7 @@ export async function getPermissionsByIdUserFunction(id) {
   const db = variablesDB.academy
   try {
     const response = await pool.query(`SELECT
-        p.name_permission,
-        rs.name_role
+      p.id id_permission, p.name_permission, p.description_permission, rs.name_role, p.link
       FROM ${db}.role_user ru
       JOIN ${db}.role_permissions rp ON ru.id_role = rp.id_role
       JOIN ${db}.permissions p ON rp.id_permission = p.id
@@ -72,8 +73,7 @@ export const getPermissionsByIdUser = async (req, res) => {
   const db = variablesDB.academy
   try {
     const response = await pool.query(`SELECT
-        p.name_permission,
-        rs.name_role
+      p.id id_permission, p.name_permission, p.description_permission, rs.name_role, p.link
       FROM ${db}.role_user ru
       JOIN ${db}.role_permissions rp ON ru.id_role = rp.id_role
       JOIN ${db}.permissions p ON rp.id_permission = p.id

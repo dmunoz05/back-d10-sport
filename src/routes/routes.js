@@ -169,7 +169,7 @@ export const routes = () => {
     //S3
     router.post('/external/p/s3/', AuthorizationVerify, upload.single('file'), handleMulterError, uploadFileS3);
     router.post('/external/d/s3/', AuthorizationVerify, deleteFileS3);
-    router.get('/external/g/s3/:rute/filename/:page/', AuthorizationVerify, readFileS3);
+    router.get('/external/g/s3/:bucket/:rute/:filename/', AuthorizationVerify, readFileS3);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

@@ -7,7 +7,6 @@ import { ConexionVerify } from '../middlewares/connection.js';
 // Landing
 import { getDataLayout, saveDataLayout, getDataMaintenance } from '../controllers/landing/layout.controller.js';
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
-import { getAdminPage, validLoginAdminLanding } from '../controllers/landing/admin-landing.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
@@ -81,12 +80,8 @@ export const routes = () => {
     router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
     router.get('/landing/g/gallery', ConexionVerify, AuthorizationVerify, getDataGallery)
 
-    // Admin
-    router.post('/landing/admin/login', ConexionVerify, AuthorizationVerify, validLoginAdminLanding);
-    router.get('/landing/admin/user', ConexionVerify, getAdminPage);
-    router.get('/landing/g/contact', ConexionVerify, getDataContact);
-
     // Admin Landing
+    router.get('/landing/g/contact', ConexionVerify, getDataContact);
     router.put('/landing/u/update-home/:id', ConexionVerify, AuthorizationVerify, updateAdminHome);
     router.put('/landing/u/update-nosotros/:id', ConexionVerify, AuthorizationVerify, updateAdminNosotros);
     router.put('/landing/u/update-comercial/:id', ConexionVerify, AuthorizationVerify, updateAdminComercial);

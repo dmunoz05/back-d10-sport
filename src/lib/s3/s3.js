@@ -1,7 +1,6 @@
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { responseS3File } from "../../common/enum/s3/response.s3.js";
 import { variablesS3 } from "../../utils/params/const.database.js";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from "multer";
 import crypto from "crypto";
 import path from "path";
@@ -50,6 +49,21 @@ const getBucketName = (page) => {
     return null;
 };
 
+const getDomainName = (page) => {
+    if (page === 'academy') return variablesS3.domain_name_academy;
+    if (page === 'landing') return variablesS3.domain_name_landing;
+    return null;
+};
+
+const getBucketNameByDomain = (domain) => {
+    if (domain === variablesS3.domain_name_academy) {
+        return variablesS3.bucketAcademy;
+    }
+    if (domain === variablesS3.domain_name_landing) {
+        return variablesS3.bucketLanding;
+    }
+};
+
 // Función para determinar la carpeta según el tipo de archivo
 const getFileCategory = (mimetype) => {
     if (mimetype.startsWith('image/')) return 'images';
@@ -61,21 +75,13 @@ const getFileCategory = (mimetype) => {
 // Leer imagen
 export const readFileS3 = async (req, res) => {
     try {
-        const { rute, filename, page} = req.params;
-        const bucketName = getBucketName(page);
+        const { bucket, rute, filename } = req.params;
+        const bucketName = getDomainName(bucket);
         if (!bucketName) {
-            return res.status(400).json({ error: "Parámetro 'page' inválido. Debe ser 'academy' o 'landing'." });
+            return res.status(400).json({ error: "Parámetro 'bucket' inválido. Debe ser 'academy' o 'landing'." });
         }
-
-        const params = {
-          Bucket: bucketName,
-          Key: rute + '/' + filename,
-          Expires: 3600
-        };
-
-        const command = new GetObjectCommand(params);
-        const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
-        res.redirect(signedUrl);
+        const fileUrl = `https://${bucketName}/${rute}/${filename}`;
+        res.status(200).json(responseS3File.success({ message: 'Archivo leído exitosamente', url: fileUrl }))
     } catch (error) {
         return res.status(500).json({ error: 'Error al leer el archivo de S3', msg: error.message });
     }
@@ -91,6 +97,7 @@ export const uploadFileS3Function = async (file) => {
 
         const { page } = file; // Se obtiene el parámetro `page`
         const bucketName = getBucketName(page);
+        const domainName = getDomainName(page);
         if (!bucketName) {
             return responseS3File.error({ message: "Parámetro 'page' inválido. Debe ser 'academy' o 'landing'." });
         }
@@ -117,7 +124,7 @@ export const uploadFileS3Function = async (file) => {
         await s3Client.send(command);
 
         // Generar URL del archivo
-        const fileUrl = `https://${bucketName}.s3.${variablesS3.region}.amazonaws.com/${objectKey}`;
+        const fileUrl = `https://${domainName}/${objectKey}`;
 
         return responseS3File.success({ message: 'Archivo subido exitosamente', url: fileUrl });
     } catch (error) {
@@ -134,6 +141,7 @@ export const uploadFileS3 = async (req, res) => {
 
         const { page } = req.body; // Se obtiene el parámetro `page`
         const bucketName = getBucketName(page);
+        const domainName = getDomainName(page);
         if (!bucketName) {
             return res.status(400).json({ error: "Parámetro 'page' inválido. Debe ser 'academy' o 'landing'." });
         }
@@ -160,7 +168,7 @@ export const uploadFileS3 = async (req, res) => {
         await s3Client.send(command);
 
         // Generar URL del archivo
-        const fileUrl = `https://${bucketName}.s3.${variablesS3.region}.amazonaws.com/${objectKey}`;
+        const fileUrl = `https://${domainName}/${objectKey}`;
 
         res.status(200).json({
             message: 'Archivo subido exitosamente',
@@ -181,7 +189,7 @@ export const deleteFileS3Function = async (fileUrl) => {
 
         // Extraer el bucket y la key desde la URL
         const urlParts = new URL(fileUrl);
-        const bucketName = urlParts.host.split(".")[0];
+        const bucketName = getBucketNameByDomain(urlParts.host.split(".")[0] + '.cloudfront.net');
         const objectKey = urlParts.pathname.substring(1);
 
         if (!bucketName || !objectKey) {
@@ -191,7 +199,7 @@ export const deleteFileS3Function = async (fileUrl) => {
         // Configuración para eliminar el archivo de S3
         const deleteParams = {
             Bucket: bucketName,
-            Key: objectKey,
+            Key: objectKey
         };
 
         const command = new DeleteObjectCommand(deleteParams);
@@ -214,7 +222,7 @@ export const deleteFileS3 = async (req, res) => {
 
         // Extraer el bucket y la key desde la URL
         const urlParts = new URL(fileUrl);
-        const bucketName = urlParts.host.split(".")[0];
+        const bucketName = getBucketNameByDomain(urlParts.host.split(".")[0] + '.cloudfront.net');
         const objectKey = urlParts.pathname.substring(1);
 
         if (!bucketName || !objectKey) {

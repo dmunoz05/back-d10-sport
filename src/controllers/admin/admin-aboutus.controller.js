@@ -39,9 +39,25 @@ export const updateAdminAboutUsConocenos = async (req, res) => {
 // Actualizar sección de Fundador
 export const updateAdminAboutUsFundador = async (req, res) => {
     const { id } = req.params;
-    const { title1, title2, bg_photo, subtitle, description } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { title1, title2, bg_photo, subtitle, description } = data;
 
-    if (!id || !title1 || !title2 || !bg_photo || !subtitle || !description) {
+    const deleteFiles3 = await deleteFileS3Function(bg_photo);
+    if (deleteFiles3.error) {
+        return req.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({
+        page: req.body.page, ...file
+    });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({
+            message: linkFile.error
+        }));
+    }
+
+    if (!id || !title1 || !title2 || !linkFile.url || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -58,7 +74,7 @@ export const updateAdminAboutUsFundador = async (req, res) => {
                 '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [title1, title2, bg_photo, subtitle, description, id]
+            [title1, title2, linkFile.url, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -153,9 +169,27 @@ export const updateAdminAboutUsMision = async (req, res) => {
 // Actualizar sección de Visión
 export const updateAdminAboutUsVision = async (req, res) => {
     const { id } = req.params;
-    const { title, bg_photo, description } = req.body;
+    const file = req.file;
+    const data = JSON.parce(req.body.data);
+    const { title, description, bg_photo } = data;
 
-    if (!id || !title || !bg_photo || !description) {
+    const deleteFiles3 = await deleteFileS3Function(bg_photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({
+            message: deleteFileS3.message
+        }));
+    }
+
+    const linkFile = await uploadFileS3Function({
+        page: req.body.page, ...file
+    });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({
+            message: linkFile.error
+        }));
+    }
+
+    if (!id || !title || !linkFile.url || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -170,7 +204,7 @@ export const updateAdminAboutUsVision = async (req, res) => {
                 '$.bg_photo', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [title, bg_photo, description, id]
+            [title, linkFile.url, description, id]
         );
 
         if (update.affectedRows === 0) {

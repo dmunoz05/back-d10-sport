@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { deleteFileS3Function, uploadFileS3Function } from "../../lib/s3/s3.js";
 
 // Actualizar título de servicios
 export const updateAdminServicesTitle = async (req, res) => {
@@ -36,9 +37,27 @@ export const updateAdminServicesTitle = async (req, res) => {
 // Actualizar servicios uno
 export const updateAdminServicesOne = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { photo, title, subtitle, description } = data;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    const deleteFiles3 = await deleteFileS3Function(photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({
+            message: deleteFiles3.message
+        }));
+    }
+
+    const linkFile = await uploadFileS3Function({
+        page: req.body.page, ...file
+    });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({
+            message: linkFile.error
+        }));
+    }
+
+    if (!id || !linkFile.url || !title || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -54,7 +73,7 @@ export const updateAdminServicesOne = async (req, res) => {
                 '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [linkFile.url, title, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -70,9 +89,21 @@ export const updateAdminServicesOne = async (req, res) => {
 // Actualizar servicios dos
 export const updateAdminServicesTwo = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { photo, title, subtitle, description } = data;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    const deleteFiles3 = await deleteFileS3Function(photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({ message: linkFile.error }));
+    }
+
+    if (!id || !linkFile.url || !title || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -88,7 +119,7 @@ export const updateAdminServicesTwo = async (req, res) => {
                 '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [linkFile.url, title, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -104,9 +135,21 @@ export const updateAdminServicesTwo = async (req, res) => {
 // Actualizar servicios tres
 export const updateAdminServicesThree = async (req, res) => {
     const { id } = req.params;
-    const { photo, title, subtitle, description } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { photo, title, subtitle, description } = data;
 
-    if (!id || !photo || !title || !subtitle || !description) {
+    const deleteFiles3 = await deleteFileS3Function(photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({ message: linkFile.error }));
+    }
+
+    if (!id || !linkFile.url || !title || !subtitle || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -122,7 +165,7 @@ export const updateAdminServicesThree = async (req, res) => {
                 '$.subtitle', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [photo, title, subtitle, description, id]
+            [linkFile.url, title, subtitle, description, id]
         );
 
         if (update.affectedRows === 0) {

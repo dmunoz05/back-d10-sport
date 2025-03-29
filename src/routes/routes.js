@@ -83,22 +83,22 @@ export const routes = () => {
     // Admin Landing
     router.get('/landing/g/contact', ConexionVerify, getDataContact);
     router.put('/landing/u/update-home/:id', ConexionVerify, AuthorizationVerify, updateAdminHome);
-    router.put('/landing/u/update-nosotros/:id', ConexionVerify, AuthorizationVerify, updateAdminNosotros);
-    router.put('/landing/u/update-comercial/:id', ConexionVerify, AuthorizationVerify, updateAdminComercial);
+    router.put('/landing/u/update-nosotros/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminNosotros);
+    router.put('/landing/u/update-comercial/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminComercial);
     router.put('/landing/u/update-news/:id', ConexionVerify, AuthorizationVerify, updateAdminNews);
-    router.put('/landing/u/update-academia/:id', ConexionVerify, AuthorizationVerify, updateAdminAcademia);
+    router.put('/landing/u/update-academia/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAcademia);
     router.put('/landing/u/update-aliados/:id', ConexionVerify, AuthorizationVerify, updateAdminAliados);
 
     router.put('/landing/u/update-services-title/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTitle);
-    router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesOne);
-    router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTwo);
-    router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesThree);
+    router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesOne);
+    router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesTwo);
+    router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesThree);
 
     router.put('/landing/u/update-aboutus-conocenos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsConocenos);
-    router.put('/landing/u/update-aboutus-fundador/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsFundador);
+    router.put('/landing/u/update-aboutus-fundador/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsFundador);
     router.put('/landing/u/update-aboutus-objetivos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsObjetivos);
     router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsMision);
-    router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsVision);
+    router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsVision);
 
     router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
     router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)

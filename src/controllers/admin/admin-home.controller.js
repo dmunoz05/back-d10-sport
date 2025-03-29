@@ -41,9 +41,21 @@ export const updateAdminHome = async (req, res) => {
 // Actualizar sección de Nosotros
 export const updateAdminNosotros = async (req, res) => {
     const { id } = req.params;
-    const { title, bg_photo, description } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { title, bg_photo, description } = data;
 
-    if (!id || !title || !bg_photo || !description) {
+    const deleteFiles3 = await deleteFileS3Function(bg_photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({ message: linkFile.error }));
+    }
+
+    if (!id || !title || !linkFile.url || !description) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -58,7 +70,7 @@ export const updateAdminNosotros = async (req, res) => {
                 '$.bg_photo', ?,
                 '$.description', ?)
              WHERE id = ?`,
-            [title, bg_photo, description, id]
+            [title, linkFile.url, description, id]
         );
 
         if (update.affectedRows === 0) {
@@ -75,9 +87,21 @@ export const updateAdminNosotros = async (req, res) => {
 // Actualizar sección de Comercial
 export const updateAdminComercial = async (req, res) => {
     const { id } = req.params;
-    const { video } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { video } = data;
 
-    if (!id || !video) {
+    const deleteFiles3 = await deleteFileS3Function(video);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({ message: linkFile.error }));
+    }
+
+    if (!id || !linkFile.url) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -90,7 +114,7 @@ export const updateAdminComercial = async (req, res) => {
              SET section_three = JSON_SET(section_three,
                 '$.video', ?)
              WHERE id = ?`,
-            [video, id]
+            [linkFile.url, id]
         );
 
         if (update.affectedRows === 0) {
@@ -139,9 +163,21 @@ export const updateAdminNews = async (req, res) => {
 // Actualizar sección de Academia
 export const updateAdminAcademia = async (req, res) => {
     const { id } = req.params;
-    const { link, title_1, title_2, bg_photo, text_link } = req.body;
+    const file = req.file;
+    const data = JSON.parse(req.body.data);
+    const { link, title_1, title_2, bg_photo, text_link } = data;
 
-    if (!id || !link || !title_1 || !title_2 || !bg_photo || !text_link) {
+    const deleteFiles3 = await deleteFileS3Function(bg_photo);
+    if (deleteFiles3.error) {
+        return res.json(responseQueries.error({ message: deleteFiles3.message }));
+    }
+
+    const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+    if (linkFile.error) {
+        return res.json(responseQueries.error({ message: linkFile.error }));
+    }
+
+    if (!id || !link || !title_1 || !title_2 || !linkFile.url || !text_link) {
         return res.json(responseQueries.error({ message: "Datos incompletos" }));
     }
 
@@ -158,7 +194,7 @@ export const updateAdminAcademia = async (req, res) => {
                 '$.bg_photo', ?,
                 '$.text_link', ?)
              WHERE id = ?`,
-            [link, title_1, title_2, bg_photo, text_link, id]
+            [link, title_1, title_2, linkFile.url, text_link, id]
         );
 
         if (update.affectedRows === 0) {

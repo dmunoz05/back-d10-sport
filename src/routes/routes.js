@@ -19,10 +19,10 @@ import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/admin/admin-aboutus.controller.js';
 import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/admin/admin-home.controller.js'
 import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/admin/admin-services.controller.js'
-import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse, updateAdminCourse } from '../controllers/admin/admin-course.controller.js';
-import { getAdminClass, saveAdminClass, deleteAdminClass, updateAdminClass } from '../controllers/admin/admin-class.controller.js';
+import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse } from '../controllers/admin/admin-course.controller.js';
+import { getAdminClass, saveAdminClass, deleteAdminClass } from '../controllers/admin/admin-class.controller.js';
 import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/admin/admin-gallery.controller.js';
-import { saveNews, updateNews, deleteNews } from '../controllers/admin/admin-news.controller.js';
+import { saveNews, deleteNews } from '../controllers/admin/admin-news.controller.js';
 import { getAdminAcademy } from '../controllers/admin/admin.controller.js';
 
 // Academy
@@ -104,20 +104,20 @@ export const routes = () => {
     router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)
     router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
 
-    router.put('/landing/i/save-news-admin/:id', ConexionVerify, AuthorizationVerify, saveNews)
-    router.put('/landing/u/update-news-admin/:id', ConexionVerify, AuthorizationVerify, updateNews)
+    router.put('/landing/i/save-news-admin/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveNews)
+    // router.put('/landing/u/update-news-admin/:id', ConexionVerify, AuthorizationVerify, updateNews)
     router.put('/landing/d/delete-news-admin/:id', ConexionVerify, AuthorizationVerify, deleteNews)
 
     // Admin Academy
     router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
-    router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, saveAdminCourse);
+    router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminCourse);
     router.delete('/academy/d/delete-course/:id', ConexionVerify, AuthorizationVerify, deleteAdminCourse);
-    router.put('/academy/u/update-course/:id', ConexionVerify, AuthorizationVerify, updateAdminCourse);
+    // router.put('/academy/u/update-course/:id', ConexionVerify, AuthorizationVerify, updateAdminCourse);
 
     router.get('/academy/g/admin-class', ConexionVerify, AuthorizationVerify, getAdminClass);
-    router.post('/academy/i/add-class', ConexionVerify, AuthorizationVerify, saveAdminClass);
+    router.post('/academy/i/add-class', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminClass);
     router.delete('/academy/d/delete-class/:id', ConexionVerify, AuthorizationVerify, deleteAdminClass);
-    router.put('/academy/u/update-class/:id', ConexionVerify, AuthorizationVerify, updateAdminClass);
+    // router.put('/academy/u/update-class/:id', ConexionVerify, AuthorizationVerify, updateAdminClass);
 
     // Academy
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);

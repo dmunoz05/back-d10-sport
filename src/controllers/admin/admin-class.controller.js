@@ -1,6 +1,7 @@
 import getConnection from "../../database/connection.mysql.js";
 import { variablesDB } from "../../utils/params/const.database.js";
 import { responseQueries } from "../../common/enum/queries/response.queries.js";
+import { deleteFileS3Function, uploadFileS3Function } from "../../lib/s3/s3.js";
 
 
 // Obtener todas las clases
@@ -25,13 +26,25 @@ export const saveAdminClass = async (req, res) => {
     try {
         await conn.beginTransaction();
 
-        const { id_course, class_title, class_description, class_content } = req.body;
+        const file = req.file;
+        const data = JSON.parse(req.body.data);
+        const { id_course, class_title, class_description, class_content } = data;
 
-        if (!id_course || !class_title || !class_description || !class_content) {
+        const deleteFiles3 = await deleteFileS3Function(class_content);
+        if (deleteFiles3.error) {
+            return res.json(responseQueries.error({ message: deleteFiles3.message }));
+        }
+
+        const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
+        if (linkFile.error) {
+            return res.json(responseQueries.error({ message: linkFile.error }));
+        }
+
+        if (!id_course || !class_title || !class_description || !linkFile.url) {
             throw new Error("Datos incompletos");
         }
 
-        const classContentJSON = JSON.stringify({ video: class_content });
+        const classContentJSON = JSON.stringify({ video: linkFile.url });
 
         const [insertContent] = await conn.query(
             `INSERT INTO ${db}.content_course (id_course, class_title, class_description, class_content) VALUES (?, ?, ?, ?)`,
@@ -94,31 +107,31 @@ export const deleteAdminClass = async (req, res) => {
 };
 
 // Actualizar una clase
-export const updateAdminClass = async (req, res) => {
-    const { id } = req.params;
-    const { class_title, class_description, class_content } = req.body;
+// export const updateAdminClass = async (req, res) => {
+//     const { id } = req.params;
+//     const { class_title, class_description, class_content } = req.body;
 
-    if (!id || !class_title || !class_description || !class_content) {
-        return res.json(responseQueries.error({ message: "Datos incompletos" }));
-    }
+//     if (!id || !class_title || !class_description || !class_content) {
+//         return res.json(responseQueries.error({ message: "Datos incompletos" }));
+//     }
 
-    const classContentJSON = JSON.stringify({ video: class_content });
+//     const classContentJSON = JSON.stringify({ video: class_content });
 
-    try {
-        const conn = await getConnection();
-        const db = variablesDB.academy;
+//     try {
+//         const conn = await getConnection();
+//         const db = variablesDB.academy;
 
-        const update = await conn.query(
-            `UPDATE ${db}.content_course SET class_title = ?, class_description = ?, class_content = ? WHERE id = ?`,
-            [class_title, class_description, classContentJSON, id]
-        );
+//         const update = await conn.query(
+//             `UPDATE ${db}.content_course SET class_title = ?, class_description = ?, class_content = ? WHERE id = ?`,
+//             [class_title, class_description, classContentJSON, id]
+//         );
 
-        if (update.affectedRows === 0) {
-            return res.json(responseQueries.error({ message: "No se encontró el contenido" }));
-        }
+//         if (update.affectedRows === 0) {
+//             return res.json(responseQueries.error({ message: "No se encontró el contenido" }));
+//         }
 
-        return res.json(responseQueries.success({ message: "Contenido actualizado con éxito" }));
-    } catch (error) {
-        return res.json(responseQueries.error({ message: "Error al actualizar contenido", error }));
-    }
-};
+//         return res.json(responseQueries.success({ message: "Contenido actualizado con éxito" }));
+//     } catch (error) {
+//         return res.json(responseQueries.error({ message: "Error al actualizar contenido", error }));
+//     }
+// };

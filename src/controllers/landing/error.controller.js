@@ -15,11 +15,11 @@ export const saveDataError = async (req, res) => {
   ]);
   if (!insert) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error guardando los datos'
   });
   return res.json({
     status: 200,
-    message: 'Data inserted'
+    message: 'Datos guardados con éxito',
   });
 }
 
@@ -33,7 +33,7 @@ export const getDataError = async (req, res) => {
   const select = await conn.query(query);
   if (!select) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error obteniendo los datos'
   });
   return res.json(select[0]);
 }

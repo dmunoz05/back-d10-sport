@@ -11,7 +11,7 @@ export const getDataGallery = async (req, res) => {
     const select = await conn.query(query);
     if (!select) return res.json({
         status: 500,
-        message: 'Error connecting'
+        message: 'Error obteniendo los datos'
     });
     return res.json(select[0]);
 }

@@ -1,5 +1,5 @@
 export const responseQueries = {
-  success: ({ message = "Success", status = 200, data = null }) => ({
+  success: ({ message = "Éxito", status = 200, data = null }) => ({
     status: status,
     success: true,
     error: false,

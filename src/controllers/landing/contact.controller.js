@@ -13,7 +13,7 @@ export const saveDataContact = async (req, res) => {
   const insert = await conn.query(query, [JSON.stringify(json)]);
   if (!insert) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error guardando los datos'
   });
   return res.json({
     status: 200,
@@ -31,7 +31,7 @@ export const getDataContact = async (req, res) => {
   const select = await conn.query(query);
   if (!select) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error obteniendo los datos'
   });
   return res.json(select[0]);
 }

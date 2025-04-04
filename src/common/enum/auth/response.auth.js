@@ -1,5 +1,5 @@
 export const responseAuth = {
-  success: ({ message = "Success", data = undefined }) => ({
+  success: ({ message = "Éxito", data = undefined }) => ({
     status: 200,
     success: true,
     error: false,

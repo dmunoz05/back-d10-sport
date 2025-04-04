@@ -11,7 +11,7 @@ export const getAdminClass = async (req, res) => {
     const select = await conn.query(`SELECT * FROM ${db}.course_user`);
     if (!select) return res.json({
         status: 500,
-        message: 'Error connecting'
+        message: 'Error obteniendo las clases',
     });
     return res.json(select[0]);
 }

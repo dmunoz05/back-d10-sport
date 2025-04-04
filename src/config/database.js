@@ -12,7 +12,7 @@ const connectionMysql = async () => {
     }).promise();
     return connection;
   } catch (error) {
-    console.error("Error connecting to MySQL:", error);
+    console.error("Error conectando a MySQL:", error);
   }
 }
 

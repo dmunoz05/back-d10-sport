@@ -66,8 +66,8 @@ export async function searchUserLogin(data) {
     }
 }
 
-// Actualizar password del usuario
-async function updatePasswordHashUser(data) {
+// Actualizar password del usuario y validación de actualización de contraseña
+export async function updatePasswordHashUser(data) {
     const { id, password, verify } = data
     const pool = await getConnection()
     const db = variablesDB.academy
@@ -91,6 +91,32 @@ async function updatePasswordHashUser(data) {
     }
 }
 
+// Actualizar solo password del usuario
+export async function updateOnlyPasswordHashUser(data) {
+    const { id, password } = data
+    const pool = await getConnection()
+    const db = variablesDB.academy
+    try {
+        const response = await pool.query(`UPDATE ${db}.login_users SET password=? WHERE id_user=?`, [password, id])
+        if (response[0].affectedRows === 0) {
+            return responseQueries.error({
+                message: "Error update password",
+                data: response[0]
+            });
+        }
+        return responseQueries.success({
+            message: "Success update",
+            data: response[0]
+        });
+    } catch (error) {
+        return responseQueries.error({
+            message: "Error update password",
+            error
+        });
+    }
+}
+
+// Obtener datos del usuario por id y rol
 async function getDataUser(data) {
     const { id_user, role_user } = data
     try {
@@ -184,14 +210,15 @@ export const validLoginUsersAcademy = async (req, res) => {
         return
     }
     if (role.data[0].id_role !== req.body.role_user.role_id) {
-        res.json(responseJWT.error({ message: 'Invalid role', status: 200, token: null, user: null }))
+        res.json(responseJWT.error({ message: 'Role invalido', status: 200, token: null, user: null }))
         return
     }
     if (userExist.success) {
         if (verify === 0) {
+            const isPassword = await verifyPassword(req.body.password, password)
             if (req.body.password == password) {
                 const passwordHash = await hashPassword({ id: id_user, username: username, email: email, password: password })
-                const updatePassword = await updatePasswordHashUser({ id: id_user, password: passwordHash.password, verify: !verify })
+                const updatePassword = await updateOnlyPasswordHashUser({ id: id_user, password: passwordHash.password })
                 if (updatePassword.success) {
                     const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user.description_role })
                     if (dataUser.error) {
@@ -214,13 +241,37 @@ export const validLoginUsersAcademy = async (req, res) => {
                         sub: id_user,
                         user: user
                     }
-                    const token = await generateToken(payload, '1h')
-                    return res.json(responseJWT.success({ message: 'Success access', token }))
+                    const token = await generateToken(payload, '3h')
+                    return res.json(responseJWT.success({ message: 'Acceso exitoso', token }))
                 } else {
                     return res.json(responseJWT.error({ message: updatePassword.message, status: updatePassword.status, token: null, user: null }))
                 }
+            } else if (isPassword) {
+                const dataUser = await getDataUser({ id_user: id_user, role_user: req.body.role_user.description_role })
+                if (dataUser.error) {
+                    return res.json(responseJWT.error({ message: dataUser.message, status: dataUser.status, token: null, user: null }))
+                }
+                const permission = await getPermissionsByIdUserFunction(id_user);
+                if (permission.error) {
+                    return res.json(responseJWT.error({ message: permission.message, status: permission.status, token: null, user: null }))
+                }
+                const user = {
+                    id_login: id_user,
+                    username: username,
+                    email: email,
+                    role: role.data[0].name_role,
+                    id_role: role.data[0].id_role,
+                    permissions: permission.data,
+                    ...dataUser.data
+                }
+                const payload = {
+                    sub: id_user,
+                    user: user
+                }
+                const token = await generateToken(payload, '3h')
+                return res.json(responseJWT.success({ message: 'Acceso exitoso', token }))
             } else {
-                return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))
+                return res.json(responseJWT.error({ message: 'Contraseña o nombre de usuario no válidos', status: 200, token: null, user: null }))
             }
         }
         else {
@@ -247,14 +298,14 @@ export const validLoginUsersAcademy = async (req, res) => {
                     sub: id_user,
                     user: user
                 }
-                const token = await generateToken(payload, '1h')
-                return res.json(responseJWT.success({ message: 'Success access', token }))
+                const token = await generateToken(payload, '3h')
+                return res.json(responseJWT.success({ message: 'Acceso exitoso', token }))
             } else {
-                return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))
+                return res.json(responseJWT.error({ message: 'Contraseña o nombre de usuario no válidos', status: 200, token: null, user: null }))
             }
         }
     } else {
-        return res.json(responseJWT.error({ message: 'Invalid password or username', status: 200, token: null, user: null }))
+        return res.json(responseJWT.error({ message: 'Contraseña o nombre de usuario no válidos', status: 200, token: null, user: null }))
     }
 }
 

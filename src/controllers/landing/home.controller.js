@@ -18,11 +18,11 @@ export const saveDataHome = async (req, res) => {
   ]);
   if (!insert) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error guardando los datos'
   });
   return res.json({
     status: 200,
-    message: 'Data inserted'
+    message: 'Datos guardados con éxito',
   });
 }
 
@@ -37,7 +37,7 @@ export const getDataHome = async (req, res) => {
   const select = await conn.query(query);
 
   if (!select || select.length === 0) {
-    return res.json(responseQueries.error({ message: "Error connecting" }));
+    return res.json(responseQueries.error({ message: "Error obteniendo los datos" }));
   }
 
   const encryptedData = await generateToken({ sub: select[0][0].id, data: select[0] });

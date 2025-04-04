@@ -34,12 +34,12 @@ app.use('/d10/server/v1', routes());
 const connDb = await getConnection();
 if (!connDb) {
     console.log("\n*****************************");
-    console.log("Error connecting to database");
+    console.log("Error conectando la base de datos");
     console.log("*****************************\n");
 }
 else {
     console.log("\n*****************************");
-    console.log("Connected to database");
+    console.log("Base de datos conectada correctamente");
     console.log("*****************************\n");
 }
 
@@ -50,6 +50,6 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log("*****************************");
-    console.log(`Server listen on http://localhost:${PORT}/d10/server/v1`);
+    console.log(`Servicio iniciado en http://localhost:${PORT}/d10/server/v1`);
     console.log("*****************************\n");
 });

@@ -21,10 +21,10 @@ export const saveAdminCourse = async (req, res) => {
   const data = JSON.parse(req.body.data);
   const { course_title, main_photo, description_course } = data;
 
-  const deleteFiles3 = await deleteFileS3Function(main_photo);
-  if (deleteFiles3.error) {
-    return res.json(responseQueries.error({ message: deleteFiles3.message }));
-  }
+  // const deleteFiles3 = await deleteFileS3Function(main_photo);
+  // if (deleteFiles3.error) {
+  //   return res.json(responseQueries.error({ message: deleteFiles3.message }));
+  // }
 
   const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
   if (linkFile.error) {

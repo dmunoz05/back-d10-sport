@@ -11,13 +11,6 @@ export const saveNews = async (req, res) => {
     const data = JSON.parse(req.body.data);
     const { date, image, title, description } = data;
 
-    const deleteFiles3 = await deleteFileS3Function(image);
-    if (deleteFiles3.error) {
-        return res.json(responseQueries.error({
-            message: deleteFiles3.message
-        }));
-    }
-
     const linkFile = await uploadFileS3Function({
         page: req.body.page, ...file
     });
@@ -57,44 +50,6 @@ export const saveNews = async (req, res) => {
         return res.json(responseQueries.error({ message: "Error interno del servidor" }));
     }
 };
-
-
-// Actualizar noticias
-// export const updateNews = async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const { index, date, image, title, description } = req.body;
-
-//         if (!id || index === undefined || !date || !image || !title || !description) {
-//             return res.json(responseQueries.error({ message: "Datos incompletos" }));
-//         }
-
-//         const conn = await getConnection();
-//         const db = variablesDB.landing;
-
-//         const updateQuery = `
-//             UPDATE ${db}.parametersNews
-//             SET section_one = JSON_SET(
-//                 section_one,
-//                 CONCAT('$.news.new', ?),
-//                 JSON_OBJECT('date', ?, 'image', ?, 'title', ?, 'description', ?)
-//             )
-//             WHERE id = ?;
-//         `;
-
-//         const [result] = await conn.query(updateQuery, [index, date, image, title, description, id]);
-
-//         if (result.affectedRows === 0) {
-//             return res.json(responseQueries.error({ message: "No se encontró la noticia o el índice no es válido" }));
-//         }
-
-//         return res.json(responseQueries.success({ message: "Noticia actualizada correctamente" }));
-//     } catch (error) {
-//         console.error("Error al actualizar la noticia:", error);
-//         return res.json(responseQueries.error({ message: "Error interno del servidor" }));
-//     }
-// };
-
 
 // Eliminar noticias
 export const deleteNews = async (req, res) => {

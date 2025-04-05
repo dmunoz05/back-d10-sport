@@ -18,10 +18,10 @@ import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 // Admin Landing
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/admin/admin-aboutus.controller.js';
 import { updateAdminHome, updateAdminNosotros, updateAdminComercial, updateAdminNews, updateAdminAcademia, updateAdminAliados } from '../controllers/admin/admin-home.controller.js'
-import { updateAdminServicesTitle, updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/admin/admin-services.controller.js'
+import { updateAdminServicesOne, updateAdminServicesTwo, updateAdminServicesThree } from '../controllers/admin/admin-services.controller.js'
 import { getAdminCourseAcademy, saveAdminCourse, deleteAdminCourse } from '../controllers/admin/admin-course.controller.js';
 import { getAdminClass, saveAdminClass, deleteAdminClass } from '../controllers/admin/admin-class.controller.js';
-import { saveGalleryImage, updateGalleryImage, deleteGalleryImage } from '../controllers/admin/admin-gallery.controller.js';
+import { saveGalleryImage, deleteGalleryImage } from '../controllers/admin/admin-gallery.controller.js';
 import { saveNews, deleteNews } from '../controllers/admin/admin-news.controller.js';
 import { getAdminAcademy } from '../controllers/admin/admin.controller.js';
 
@@ -89,7 +89,6 @@ export const routes = () => {
     router.put('/landing/u/update-academia/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAcademia);
     router.put('/landing/u/update-aliados/:id', ConexionVerify, AuthorizationVerify, updateAdminAliados);
 
-    router.put('/landing/u/update-services-title/:id', ConexionVerify, AuthorizationVerify, updateAdminServicesTitle);
     router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesOne);
     router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesTwo);
     router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesThree);
@@ -101,11 +100,9 @@ export const routes = () => {
     router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsVision);
 
     router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
-    router.put('/landing/u/update-gallery/:id', ConexionVerify, AuthorizationVerify, updateGalleryImage)
     router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
 
     router.put('/landing/i/save-news-admin/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveNews)
-    // router.put('/landing/u/update-news-admin/:id', ConexionVerify, AuthorizationVerify, updateNews)
     router.put('/landing/d/delete-news-admin/:id', ConexionVerify, AuthorizationVerify, deleteNews)
 
     // Admin Academy

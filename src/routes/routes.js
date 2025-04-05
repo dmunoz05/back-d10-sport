@@ -32,6 +32,7 @@ import { getClassMenu, getClassContent, getClassComments, saveClassComment } fro
 import { getCoach, searchCoachFilter, registerCoach } from '../controllers/academy/coach.controller.js';
 import { getClub, searchClubFilter, registerClub } from '../controllers/academy/club.controller.js';
 import { getAthletes, registerAthlete } from '../controllers/academy/athletes.controller.js';
+import { updateUserLoginById, getUserInfo } from '../controllers/academy/configuration.controller.js';
 import { validLoginUsersAcademy } from '../controllers/academy/users.controller.js';
 import { getCoursesAcademy } from '../controllers/academy/courses.controller.js';
 import { getAllRoles } from '../controllers/academy/role.controller.js';
@@ -51,6 +52,7 @@ import {
     getCitiesOneCountryIDAndDepartmentIDRapidapi
 } from '../controllers/academy/external.controller.js';
 import { uploadFileS3, deleteFileS3, upload, readFileS3, handleMulterError } from '../lib/s3/s3.js';
+
 
 // Database
 import { getConnect } from '../database/conection.controller.js';
@@ -141,6 +143,8 @@ export const routes = () => {
     router.post('/academy/permissions/user/:id_user', ConexionVerify, AuthorizationVerify, getPermissionsByIdUser);
     router.get('/academy/permissions/user/admin', ConexionVerify, AuthorizationVerify, getPermissionsByRoleAdmin);
     router.get('/academy/permissions/user/:role_id', ConexionVerify, AuthorizationVerify, getPermissionsByRoleUser);
+    router.post('/academy/config/user/p/login', ConexionVerify, AuthorizationVerify, updateUserLoginById);
+    router.get('/academy/config/user/g/login/:id_user', ConexionVerify, AuthorizationVerify, getUserInfo);
 
     //External
     router.post('/external/p/send/mail', AuthorizationVerify, sendEmail)

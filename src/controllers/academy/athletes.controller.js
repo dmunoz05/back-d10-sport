@@ -13,7 +13,7 @@ export const getAthletes = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`SELECT * FROM ${db}.athlete`);
-  if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
+  if (!select) return res.json(responseQueries.error({ message: "Error obteniendo los atletas" }));
   return res.json(responseQueries.success({ data: select[0] }));
 }
 
@@ -23,7 +23,7 @@ export const getAthleteById = async (req, res) => {
   const db = variablesDB.academy;
   const id = req.params.id;
   const select = await conn.query(`SELECT * FROM ${db}.athlete WHERE id = ?`, [id]);
-  if (!select) return res.json(responseQueries.error({ message: "Error connecting" }));
+  if (!select) return res.json(responseQueries.error({ message: "Error obteniendo el atleta" }));
   return res.json(responseQueries.success({ data: select[0] }));
 }
 
@@ -34,7 +34,7 @@ export async function getAthleteByIdFunction(id) {
   const select = await conn.query(`
     SELECT id_user, first_names, last_names, gender, date_birth, country, city, contact, mail, social_networks, academic_level, first_names_family, last_names_family, contact_family
     FROM ${db}.athlete WHERE id_user = ?`, [id]);
-  if (!select) return responseQueries.error({ message: "Error connecting" });
+  if (!select) return responseQueries.error({ message: "Error filtrando el atleta" });
   return responseQueries.success({ data: select[0] });
 }
 
@@ -43,7 +43,7 @@ export async function deleteAthleteByIdFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`DELETE FROM ${db}.athlete WHERE id_user = ?`, [id]);
-  if (!select) return responseQueries.error({ message: "Error connecting" });
+  if (!select) return responseQueries.error({ message: "Error eliminando el atleta" });
   return responseQueries.success({ data: select[0] });
 }
 

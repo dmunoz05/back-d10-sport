@@ -10,7 +10,7 @@ export const getAdminCourseAcademy = async (req, res) => {
   const select = await conn.query(`SELECT * FROM ${db}.course_user`);
   if (!select) return res.json({
     status: 500,
-    message: 'Error connecting'
+    message: 'Error obteniendo los cursos',
   });
   return res.json(select[0]);
 }

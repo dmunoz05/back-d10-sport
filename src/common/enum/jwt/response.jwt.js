@@ -1,5 +1,5 @@
 export const responseJWT = {
-  success: ({ message = "Success", status = 200, token = undefined, user = undefined }) => ({
+  success: ({ message = "Éxito", status = 200, token = undefined, user = undefined }) => ({
     status: status,
     success: true,
     error: false,

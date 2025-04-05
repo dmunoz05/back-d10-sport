@@ -92,7 +92,7 @@ export const approvedSolitude = async (req, res) => {
       user.username = searchUser.data[0].mail;
       user.password = `${searchUser.data[0].last_names.charAt(0).toUpperCase() + searchUser.data[0].last_names.slice(1)}${numberRandom}*`
       user.id_user = id_user;
-      user.verified_at = 'CURRENT_TIMESTAMP()';
+      user.verified_at = 'NULL';
       const updateLogin = await updateLoginUser(user);
       if (updateLogin.success) {
         const tokenUsername = await generateToken({

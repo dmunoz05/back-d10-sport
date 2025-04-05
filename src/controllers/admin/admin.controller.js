@@ -20,7 +20,7 @@ export async function getAdminByIdUserFunction(id) {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`SELECT id, id_user, first_names, last_names, gender, email FROM ${db}.admin_user WHERE id_user = ?`, [id]);
-  if (!select) return responseQueries.error({ message: "Error connecting" });
+  if (!select) return responseQueries.error({ message: "Error obteniendo administrador" });
   return responseQueries.success({ data: select[0] });
 }
 
@@ -30,6 +30,6 @@ export const getAdminAcademy = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.academy;
   const select = await conn.query(`SELECT * FROM ${db}.admin_user`);
-  if (!select) return responseQueries.error({ message: "Error connecting" });
+  if (!select) return responseQueries.error({ message: "Error obteniendo los administradores" });
   return responseQueries.success({ data: select[0] });
 }

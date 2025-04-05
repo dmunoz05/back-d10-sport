@@ -1,5 +1,5 @@
 export const responseS3File = {
-  success: ({ message = "Success", status = 200, url = null }) => ({
+  success: ({ message = "Éxito", status = 200, url = null }) => ({
     status: status,
     success: true,
     error: false,

@@ -1,5 +1,5 @@
 export const responseEmail = {
-  success: ({ message = "Success",messageId = undefined, mail = undefined }) => ({
+  success: ({ message = "Éxito",messageId = undefined, mail = undefined }) => ({
     status: 200,
     success: true,
     error: false,

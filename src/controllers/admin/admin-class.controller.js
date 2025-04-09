@@ -30,10 +30,10 @@ export const saveAdminClass = async (req, res) => {
         const data = JSON.parse(req.body.data);
         const { id_course, class_title, class_description, class_content } = data;
 
-        const deleteFiles3 = await deleteFileS3Function(class_content);
-        if (deleteFiles3.error) {
-            return res.json(responseQueries.error({ message: deleteFiles3.message }));
-        }
+        // const deleteFiles3 = await deleteFileS3Function(class_content);
+        // if (deleteFiles3.error) {
+        //     return res.json(responseQueries.error({ message: deleteFiles3.message }));
+        // }
 
         const linkFile = await uploadFileS3Function({ page: req.body.page, ...file });
         if (linkFile.error) {

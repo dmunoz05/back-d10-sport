@@ -39,38 +39,6 @@ export const saveGalleryImage = async (req, res) => {
     }
 };
 
-// Actualizar imagen en la galería
-export const updateGalleryImage = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const { index, imageUrl } = req.body;
-
-        if (!id || index === undefined || !imageUrl) {
-            return res.json(responseQueries.error({ message: "Datos incompletos" }));
-        }
-
-        const conn = await getConnection();
-        const db = variablesDB.landing;
-
-        const updateQuery = `
-            UPDATE ${db}.parametersGallery
-            SET section_one = JSON_REPLACE(section_one, '$[?].gallery', ?)
-            WHERE id = ?;
-        `;
-
-        const [result] = await conn.query(updateQuery, [index, imageUrl, id]);
-
-        if (result.affectedRows === 0) {
-            return res.json(responseQueries.error({ message: "No se encontró la galería o el índice no es válido" }));
-        }
-
-        return res.json(responseQueries.success({ message: "Imagen actualizada correctamente" }));
-    } catch (error) {
-        console.error("Error al actualizar la imagen en la galería:", error);
-        return res.json(responseQueries.error({ message: "Error interno del servidor" }));
-    }
-};
-
 // Eliminar imagen en la galería
 export const deleteGalleryImage = async (req, res) => {
     try {

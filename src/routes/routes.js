@@ -63,92 +63,90 @@ const router = express();
 
 export const routes = () => {
     // Landing
-    router.get('/landing/g/layout/maintenance', ConexionVerify, AuthorizationVerify, getDataMaintenance);
-    router.post('/landing/i/layout', ConexionVerify, AuthorizationVerify, saveDataLayout);
-    router.get('/landing/g/layout', ConexionVerify, AuthorizationVerify, getDataLayout);
-    router.post('/landing/i/contact', ConexionVerify, AuthorizationVerify, saveDataContact);
-    router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
-    router.post('/landing/i/news', ConexionVerify, AuthorizationVerify, saveDataNews);
-    router.get('/landing/g/news', ConexionVerify, AuthorizationVerify, getDataNews);
-    router.get('/landing/i/collections', ConexionVerify, AuthorizationVerify, saveDataCollections);
-    router.get('/landing/g/collections', ConexionVerify, AuthorizationVerify, getDataCollections);
-    router.get('/landing/i/services', ConexionVerify, AuthorizationVerify, saveDataServices);
-    router.get('/landing/g/services', ConexionVerify, AuthorizationVerify, getDataServices);
-    router.get('/landing/i/aboutus', ConexionVerify, AuthorizationVerify, saveDataAboutUs);
-    router.get('/landing/g/aboutus', ConexionVerify, AuthorizationVerify, getDataAboutUs);
-    router.post('/landing/i/home', ConexionVerify, AuthorizationVerify, saveDataHome);
-    router.get('/landing/g/home', ConexionVerify, AuthorizationVerify, getDataHome);
-    router.get('/landing/g/contact', ConexionVerify, AuthorizationVerify, getDataContact);
-    router.post('/landing/i/error', ConexionVerify, AuthorizationVerify, saveDataError);
-    router.get('/landing/g/error', ConexionVerify, AuthorizationVerify, getDataError);
-    router.get('/landing/g/gallery', ConexionVerify, AuthorizationVerify, getDataGallery)
+    router.get('/landing/g/layout/maintenance', AuthorizationVerify, getDataMaintenance);
+    router.post('/landing/i/layout', AuthorizationVerify, saveDataLayout);
+    router.get('/landing/g/layout', AuthorizationVerify, getDataLayout);
+    router.post('/landing/i/contact', AuthorizationVerify, saveDataContact);
+    router.get('/landing/g/contact', AuthorizationVerify, getDataContact);
+    router.post('/landing/i/news', AuthorizationVerify, saveDataNews);
+    router.get('/landing/g/news', AuthorizationVerify, getDataNews);
+    router.get('/landing/i/collections', AuthorizationVerify, saveDataCollections);
+    router.get('/landing/g/collections', AuthorizationVerify, getDataCollections);
+    router.get('/landing/i/services', AuthorizationVerify, saveDataServices);
+    router.get('/landing/g/services', AuthorizationVerify, getDataServices);
+    router.get('/landing/i/aboutus', AuthorizationVerify, saveDataAboutUs);
+    router.get('/landing/g/aboutus', AuthorizationVerify, getDataAboutUs);
+    router.post('/landing/i/home', AuthorizationVerify, saveDataHome);
+    router.get('/landing/g/home', AuthorizationVerify, getDataHome);
+    router.get('/landing/g/contact', AuthorizationVerify, getDataContact);
+    router.post('/landing/i/error', AuthorizationVerify, saveDataError);
+    router.get('/landing/g/error', AuthorizationVerify, getDataError);
+    router.get('/landing/g/gallery', AuthorizationVerify, getDataGallery)
 
     // Admin Landing
-    router.get('/landing/g/contact', ConexionVerify, getDataContact);
-    router.put('/landing/u/update-home/:id', ConexionVerify, AuthorizationVerify, updateAdminHome);
-    router.put('/landing/u/update-nosotros/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminNosotros);
-    router.put('/landing/u/update-comercial/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminComercial);
-    router.put('/landing/u/update-news/:id', ConexionVerify, AuthorizationVerify, updateAdminNews);
-    router.put('/landing/u/update-academia/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAcademia);
-    router.put('/landing/u/update-aliados/:id', ConexionVerify, AuthorizationVerify, updateAdminAliados);
+    router.get('/landing/g/contact', getDataContact);
+    router.put('/landing/u/update-home/:id', AuthorizationVerify, updateAdminHome);
+    router.put('/landing/u/update-nosotros/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminNosotros);
+    router.put('/landing/u/update-comercial/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminComercial);
+    router.put('/landing/u/update-news/:id', AuthorizationVerify, updateAdminNews);
+    router.put('/landing/u/update-academia/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAcademia);
+    router.put('/landing/u/update-aliados/:id', AuthorizationVerify, updateAdminAliados);
 
-    router.put('/landing/u/update-services-one/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesOne);
-    router.put('/landing/u/update-services-two/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesTwo);
-    router.put('/landing/u/update-services-three/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesThree);
+    router.put('/landing/u/update-services-one/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesOne);
+    router.put('/landing/u/update-services-two/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesTwo);
+    router.put('/landing/u/update-services-three/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminServicesThree);
 
-    router.put('/landing/u/update-aboutus-conocenos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsConocenos);
-    router.put('/landing/u/update-aboutus-fundador/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsFundador);
-    router.put('/landing/u/update-aboutus-objetivos/:id', ConexionVerify, AuthorizationVerify, updateAdminAboutUsObjetivos);
-    router.put('/landing/u/update-aboutus-mision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsMision);
-    router.put('/landing/u/update-aboutus-vision/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsVision);
+    router.put('/landing/u/update-aboutus-conocenos/:id', AuthorizationVerify, updateAdminAboutUsConocenos);
+    router.put('/landing/u/update-aboutus-fundador/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsFundador);
+    router.put('/landing/u/update-aboutus-objetivos/:id', AuthorizationVerify, updateAdminAboutUsObjetivos);
+    router.put('/landing/u/update-aboutus-mision/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsMision);
+    router.put('/landing/u/update-aboutus-vision/:id', AuthorizationVerify, upload.single('file'), handleMulterError, updateAdminAboutUsVision);
 
-    router.put('/landing/i/save-gallery/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
-    router.put('/landing/d/delete-gallery/:id', ConexionVerify, AuthorizationVerify, deleteGalleryImage)
+    router.put('/landing/i/save-gallery/:id', AuthorizationVerify, upload.single('file'), handleMulterError, saveGalleryImage)
+    router.put('/landing/d/delete-gallery/:id', AuthorizationVerify, deleteGalleryImage)
 
-    router.put('/landing/i/save-news-admin/:id', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveNews)
-    router.put('/landing/d/delete-news-admin/:id', ConexionVerify, AuthorizationVerify, deleteNews)
+    router.put('/landing/i/save-news-admin/:id', AuthorizationVerify, upload.single('file'), handleMulterError, saveNews)
+    router.put('/landing/d/delete-news-admin/:id', AuthorizationVerify, deleteNews)
 
     // Admin Academy
-    router.get('/academy/g/admin-course', ConexionVerify, AuthorizationVerify, getAdminCourseAcademy);
-    router.post('/academy/i/add-course', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminCourse);
-    router.delete('/academy/d/delete-course/:id', ConexionVerify, AuthorizationVerify, deleteAdminCourse);
-    // router.put('/academy/u/update-course/:id', ConexionVerify, AuthorizationVerify, updateAdminCourse);
+    router.get('/academy/g/admin-course', AuthorizationVerify, getAdminCourseAcademy);
+    router.post('/academy/i/add-course', AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminCourse);
+    router.delete('/academy/d/delete-course/:id', AuthorizationVerify, deleteAdminCourse);
 
-    router.get('/academy/g/admin-class', ConexionVerify, AuthorizationVerify, getAdminClass);
-    router.post('/academy/i/add-class', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminClass);
-    router.delete('/academy/d/delete-class/:id', ConexionVerify, AuthorizationVerify, deleteAdminClass);
-    // router.put('/academy/u/update-class/:id', ConexionVerify, AuthorizationVerify, updateAdminClass);
+    router.get('/academy/g/admin-class', AuthorizationVerify, getAdminClass);
+    router.post('/academy/i/add-class', AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminClass);
+    router.delete('/academy/d/delete-class/:id', AuthorizationVerify, deleteAdminClass);
 
-    router.get('/academy/g/users-from-club', ConexionVerify, AuthorizationVerify, getUsersFromClub);
-    router.get('/academy/g/all-users', ConexionVerify, AuthorizationVerify, getAllUsers);
+    router.get('/academy/g/users-from-club', AuthorizationVerify, getUsersFromClub);
+    router.get('/academy/g/all-users', AuthorizationVerify, getAllUsers);
 
     // Academy
-    router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);
-    router.get('/academy/g/role', ConexionVerify, getAllRoles);
-    router.get('/academy/g/athletes', ConexionVerify, getAthletes);
-    router.post('/academy/register/athletes', ConexionVerify, registerAthlete);
-    router.get('/academy/g/club', ConexionVerify, getClub);
-    router.get('/academy/g/search/club/:filter', ConexionVerify, searchClubFilter);
-    router.post('/academy/register/club', ConexionVerify, registerClub);
-    router.get('/academy/g/coach', ConexionVerify, getCoach);
-    router.get('/academy/g/search/coach/:filter', ConexionVerify, searchCoachFilter);
-    router.post('/academy/register/coach', ConexionVerify, registerCoach);
-    router.post('/academy/users/login', ConexionVerify, AuthorizationVerify, validLoginUsersAcademy);
-    router.get('/academy/g/courses', ConexionVerify, AuthorizationVerify, getCoursesAcademy);
-    router.get('/academy/g/class/menu', ConexionVerify, AuthorizationVerify, getClassMenu);
-    router.get('/academy/g/class/content', ConexionVerify, AuthorizationVerify, getClassContent);
-    router.get('/academy/g/class/comments', ConexionVerify, AuthorizationVerify, getClassComments);
-    router.post('/academy/i/class/post-comments', ConexionVerify, AuthorizationVerify, saveClassComment)
-    router.get('/academy/solitude/register/users/coach', ConexionVerify, AuthorizationVerify, getSolitudeUsersCoach);
-    router.get('/academy/solitude/register/users/club', ConexionVerify, AuthorizationVerify, getSolitudeUsersClub);
-    router.post('/academy/solitude/approved', ConexionVerify, AuthorizationVerify, approvedSolitude);
-    router.post('/academy/solitude/denied', ConexionVerify, AuthorizationVerify, deniedSolitude);
-    router.get('/academy/permissions/roles', ConexionVerify, AuthorizationVerify, getAllPermissionsAndRole);
-    router.post('/academy/permissions/user/:id_user', ConexionVerify, AuthorizationVerify, getPermissionsByIdUser);
-    router.get('/academy/permissions/user/admin', ConexionVerify, AuthorizationVerify, getPermissionsByRoleAdmin);
-    router.get('/academy/permissions/user/:role_id', ConexionVerify, AuthorizationVerify, getPermissionsByRoleUser);
-    router.post('/academy/config/user/p/login', ConexionVerify, AuthorizationVerify, updateUserLoginById);
-    router.get('/academy/config/user/g/login/:id_user', ConexionVerify, AuthorizationVerify, getUserInfo);
+    router.get('/academy/g/admin', getAdminAcademy);
+    router.get('/academy/g/role', getAllRoles);
+    router.get('/academy/g/athletes', getAthletes);
+    router.post('/academy/register/athletes', registerAthlete);
+    router.get('/academy/g/club', getClub);
+    router.get('/academy/g/search/club/:filter', searchClubFilter);
+    router.post('/academy/register/club', registerClub);
+    router.get('/academy/g/coach', getCoach);
+    router.get('/academy/g/search/coach/:filter', searchCoachFilter);
+    router.post('/academy/register/coach', registerCoach);
+    router.post('/academy/users/login', AuthorizationVerify, validLoginUsersAcademy);
+    router.get('/academy/g/courses', AuthorizationVerify, getCoursesAcademy);
+    router.get('/academy/g/class/menu', AuthorizationVerify, getClassMenu);
+    router.get('/academy/g/class/content', AuthorizationVerify, getClassContent);
+    router.get('/academy/g/class/comments', AuthorizationVerify, getClassComments);
+    router.post('/academy/i/class/post-comments', AuthorizationVerify, saveClassComment)
+    router.get('/academy/solitude/register/users/coach', AuthorizationVerify, getSolitudeUsersCoach);
+    router.get('/academy/solitude/register/users/club', AuthorizationVerify, getSolitudeUsersClub);
+    router.post('/academy/solitude/approved', AuthorizationVerify, approvedSolitude);
+    router.post('/academy/solitude/denied', AuthorizationVerify, deniedSolitude);
+    router.get('/academy/permissions/roles', AuthorizationVerify, getAllPermissionsAndRole);
+    router.post('/academy/permissions/user/:id_user', AuthorizationVerify, getPermissionsByIdUser);
+    router.get('/academy/permissions/user/admin', AuthorizationVerify, getPermissionsByRoleAdmin);
+    router.get('/academy/permissions/user/:role_id', AuthorizationVerify, getPermissionsByRoleUser);
+    router.post('/academy/config/user/p/login', AuthorizationVerify, updateUserLoginById);
+    router.get('/academy/config/user/g/login/:id_user', AuthorizationVerify, getUserInfo);
 
     //External
     router.post('/external/p/send/mail', AuthorizationVerify, sendEmail)

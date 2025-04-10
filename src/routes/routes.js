@@ -24,6 +24,7 @@ import { getAdminClass, saveAdminClass, deleteAdminClass } from '../controllers/
 import { saveGalleryImage, deleteGalleryImage } from '../controllers/admin/admin-gallery.controller.js';
 import { saveNews, deleteNews } from '../controllers/admin/admin-news.controller.js';
 import { getAdminAcademy } from '../controllers/admin/admin.controller.js';
+import { getUsersFromClub, getAllUsers } from '../controllers/admin/graph-users.controller.js'
 
 // Academy
 import { getAllPermissionsAndRole, getPermissionsByIdUser, getPermissionsByRoleAdmin, getPermissionsByRoleUser } from '../controllers/academy/permissions.controller.js';
@@ -117,6 +118,9 @@ export const routes = () => {
     router.post('/academy/i/add-class', ConexionVerify, AuthorizationVerify, upload.single('file'), handleMulterError, saveAdminClass);
     router.delete('/academy/d/delete-class/:id', ConexionVerify, AuthorizationVerify, deleteAdminClass);
     // router.put('/academy/u/update-class/:id', ConexionVerify, AuthorizationVerify, updateAdminClass);
+
+    router.get('/academy/g/users-from-club', ConexionVerify, AuthorizationVerify, getUsersFromClub);
+    router.get('/academy/g/all-users', ConexionVerify, AuthorizationVerify, getAllUsers);
 
     // Academy
     router.get('/academy/g/admin', ConexionVerify, getAdminAcademy);

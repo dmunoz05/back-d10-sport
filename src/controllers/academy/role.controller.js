@@ -51,6 +51,33 @@ export async function getAllRolesFunction() {
 }
 
 // Obtener rol de usuario
+export const getRoleUserByIdUser = async (req, res) => {
+    const id = req.params.id_user;
+    const pool = await getConnection()
+    const db = variablesDB.academy
+    try {
+        const response = await pool.query(`SELECT rs.name_role, ru.id_role FROM ${db}.role_user ru
+        INNER JOIN ${db}.role_system rs ON ru.id_role = rs.id
+        WHERE ru.id_user = ?;`, [id])
+        if (response[0].length === 0) {
+            return res.json(responseQueries.error({
+                message: "Error query role user",
+                data: response[0]
+            }));
+        }
+        return res.json(responseQueries.success({
+            message: "Success query",
+            data: response[0]
+        }));
+    } catch (error) {
+        return res.json(responseQueries.error({
+            message: "Error query role user",
+            error
+        }));
+    }
+}
+
+// Obtener rol de usuario
 export async function getRoleUser(id) {
     const pool = await getConnection()
     const db = variablesDB.academy

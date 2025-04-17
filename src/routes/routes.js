@@ -14,6 +14,7 @@ import { getDataError, saveDataError } from '../controllers/landing/error.contro
 import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
 import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
+import { mailContact } from '../lib/api/email.api.js';
 
 // Admin Landing
 import { updateAdminAboutUsConocenos, updateAdminAboutUsFundador, updateAdminAboutUsObjetivos, updateAdminAboutUsMision, updateAdminAboutUsVision } from '../controllers/admin/admin-aboutus.controller.js';
@@ -82,6 +83,7 @@ export const routes = () => {
     router.post('/landing/i/error', AuthorizationVerify, saveDataError);
     router.get('/landing/g/error', AuthorizationVerify, getDataError);
     router.get('/landing/g/gallery', AuthorizationVerify, getDataGallery)
+    router.post('/landing/i/mail-contact', AuthorizationVerify, mailContact);
 
     // Admin Landing
     router.get('/landing/g/contact', getDataContact);

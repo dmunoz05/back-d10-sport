@@ -2,6 +2,7 @@ import { htmlTemplateRegisterCoach } from "../../ui/template/registerCoach/index
 import { htmlTemplateRegisterClub } from "../../ui/template/registerClub/index.js";
 import { generateToken, verifyToken } from "../../utils/token/handle-token.js";
 import { htmlTemplateApproved } from "../../ui/template/approve/index.js";
+import { htmlTemplateContact } from "../../ui/template/contact/index.js";
 import { responseEmail } from "../../common/enum/email/response.email.js";
 import { htmlTemplateDenied } from "../../ui/template/denied/index.js";
 import { htmlTemplateAdmin } from "../../ui/template/admin/index.js";
@@ -189,6 +190,36 @@ async function mailDenied(name, email) {
             message: "Error send mail",
             data: []
         });
+    }
+}
+
+export const mailContact = async (req, res) => {
+    const { name, email, message } = req.body
+    try {
+        const my = await transporter.sendMail({
+            from: `D10+ Academy <${user_}>`,
+            to: `"${user_}"`,
+            subject: "Nuevo mensaje de contacto desde tu sitio web",
+            html: htmlTemplateContact(name, email, message)
+        });
+
+        res.json(
+            responseEmail.success({
+                message: "Success send mail",
+                messageId: my.messageId,
+                mail: {
+                    from: my.envelope.from,
+                    to: my.envelope.to
+                }
+            })
+        )
+    } catch (error) {
+        res.json(
+            responseEmail.error({
+                message: "Error send mail",
+                data: []
+            })
+        )
     }
 }
 

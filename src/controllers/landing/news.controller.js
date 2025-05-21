@@ -35,3 +35,18 @@ export const getDataNews = async (req, res) => {
   });
   return res.json(select[0]);
 }
+
+// Actualizar datos de noticias
+export const getDataLastNews = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.landing;
+  const query = `
+    SELECT id, section_one
+    FROM ${db}.parametersNews`;
+  const select = await conn.query(query);
+  if (!select) return res.json({
+    status: 500,
+    message: 'Error obteniendo los datos'
+  });
+  return res.json(select[0]);
+}

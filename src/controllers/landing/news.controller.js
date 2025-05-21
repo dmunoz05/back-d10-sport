@@ -44,9 +44,11 @@ export const getDataLastNews = async (req, res) => {
     SELECT id, section_one
     FROM ${db}.parametersNews`;
   const select = await conn.query(query);
+  const { section_one } = select[0][0];
+  const data = section_one.news.new1;
   if (!select) return res.json({
     status: 500,
     message: 'Error obteniendo los datos'
   });
-  return res.json(select[0]);
+  return res.json(data);
 }

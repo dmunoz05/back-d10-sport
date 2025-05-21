@@ -36,32 +36,19 @@ export const getDataNews = async (req, res) => {
   return res.json(select[0]);
 }
 
-// Obtener últimos datos de noticias
-export const getLastDataNews = async (req, res) => {
+// Actualizar datos de noticias
+export const getDataLastNews = async (req, res) => {
   const conn = await getConnection();
   const db = variablesDB.landing;
   const query = `
-    SELECT 
-      jt.date_col,
-      jt.image,
-      jt.title,
-      jt.description
-    FROM ${db}.parametersNews pn,
-    JSON_TABLE(
-      pn.section_one->'$.news',
-      '$.*' COLUMNS (
-        date_col VARCHAR(10) PATH '$.date',
-        image VARCHAR(255) PATH '$.image',
-        title TEXT PATH '$.title',
-        description TEXT PATH '$.description'
-      )
-    ) AS jt
-    ORDER BY jt.date_col DESC
-    LIMIT 1;`;
+    SELECT id, section_one
+    FROM ${db}.parametersNews`;
   const select = await conn.query(query);
+  const { section_one } = select[0][0];
+  const data = section_one.news.new1;
   if (!select) return res.json({
     status: 500,
     message: 'Error obteniendo los datos'
   });
-  return res.json(select[0]);
+  return res.json(data);
 }

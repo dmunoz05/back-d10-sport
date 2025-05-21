@@ -12,7 +12,7 @@ import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
 import { getDataError, saveDataError } from '../controllers/landing/error.controller.js';
 import { getDataHome, saveDataHome } from '../controllers/landing/home.controller.js';
-import { getDataNews, saveDataNews } from '../controllers/landing/news.controller.js';
+import { getDataNews, saveDataNews, getLastDataNews } from '../controllers/landing/news.controller.js';
 import { getDataGallery } from '../controllers/landing/gallery.controller.js';
 import { mailContact } from '../lib/api/email.api.js';
 
@@ -31,6 +31,7 @@ export const routes = () => {
     router.get('/landing/g/contact', AuthorizationVerify, getDataContact);
     router.post('/landing/i/news', AuthorizationVerify, saveDataNews);
     router.get('/landing/g/news', AuthorizationVerify, getDataNews);
+    router.get('/landing/g/last-news', AuthorizationVerify, getLastDataNews);
     router.get('/landing/i/collections', AuthorizationVerify, saveDataCollections);
     router.get('/landing/g/collections', AuthorizationVerify, getDataCollections);
     router.get('/landing/i/services', AuthorizationVerify, saveDataServices);

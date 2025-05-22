@@ -7,7 +7,7 @@ import { ConexionVerify } from '../middlewares/connection.js';
 // Landing
 import { getDataLayout, saveDataLayout, getDataMaintenance } from '../controllers/landing/layout.controller.js';
 import { getDataCollections, saveDataCollections } from '../controllers/landing/collections.controller.js';
-import { getDataNews, saveDataNews, getDataLastNews } from '../controllers/landing/news.controller.js';
+import { getDataNews, saveDataNews, getDataLastNews, getDataReNews, getDataNewsCategories, getDataLastReNews } from '../controllers/landing/news.controller.js';
 import { getDataServices, saveDataServices } from '../controllers/landing/services.controller.js';
 import { getDataAboutUs, saveDataAboutUs } from '../controllers/landing/aboutus.controller.js';
 import { getDataContact, saveDataContact } from '../controllers/landing/contact.controller.js';
@@ -45,6 +45,11 @@ export const routes = () => {
     router.get('/landing/g/error', AuthorizationVerify, getDataError);
     router.get('/landing/g/gallery', AuthorizationVerify, getDataGallery)
     router.post('/landing/i/mail-contact', AuthorizationVerify, mailContact);
+
+    // news
+    router.get('/landing/g/re-news', AuthorizationVerify, getDataReNews);
+    router.get('/landing/g/news-categories', AuthorizationVerify, getDataNewsCategories);
+    router.get('/landing/g/last-re-news', AuthorizationVerify, getDataLastReNews);
 
     // Database
     router.get('/conect/', ConexionVerify, getConnect);

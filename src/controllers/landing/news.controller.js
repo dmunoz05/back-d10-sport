@@ -52,3 +52,52 @@ export const getDataLastNews = async (req, res) => {
   });
   return res.json(data);
 }
+
+// -----------------------------------------------------------------
+// ------------ Re-estructuración de consultas de News -------------
+// -----------------------------------------------------------------
+
+export const getDataReNews = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.landing;
+  const query = `
+    SELECT 
+    id, title, description, image, DATE_FORMAT(date, '%Y-%m-%d') as date, category_id 
+    FROM ${db}.news;`;
+  const select = await conn.query(query);
+  if (!select) return res.json({
+    status: 500,
+    message: 'Error obteniendo los datos'
+  });
+  return res.json(select[0]);
+}
+
+export const getDataNewsCategories = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.landing;
+  const query = `
+    SELECT *
+    FROM ${db}.news_categories`;
+  const select = await conn.query(query);
+  if (!select) return res.json({
+    status: 500,
+    message: 'Error obteniendo los datos'
+  });
+  return res.json(select[0]);
+}
+
+export const getDataLastReNews = async (req, res) => {
+  const conn = await getConnection();
+  const db = variablesDB.landing;
+  const query = `
+    SELECT id, title, description, image, DATE_FORMAT(date, '%Y-%m-%d') as date, category_id 
+    FROM ${db}.news
+    ORDER BY date DESC
+    LIMIT 1;`;
+  const select = await conn.query(query);
+  if (!select) return res.json({
+    status: 500,
+    message: 'Error obteniendo los datos'
+  });
+  return res.json(select[0]);
+}
